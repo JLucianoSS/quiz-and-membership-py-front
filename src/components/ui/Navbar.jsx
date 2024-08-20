@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui"; // Ruta donde guardaste el store
-import { LOGO } from "@/config/theme";
+import { COLOR_PRIMARY, LOGO } from "@/config/theme";
 
-export const Navbar = () => {
+export const Navbar = ({ user }) => {
   const { toggleSidebar } = useSidebarStore();
+  console.log(user);
 
   return (
     <nav className="bg-white border-2 border-b-gray-100 fixed w-full z-40">
@@ -14,22 +15,30 @@ export const Navbar = () => {
         <div className="flex justify-between items-center h-12">
           <div className="flex items-center gap-4">
             {/* DRAWER AVATAR PERFIL */}
-            <button className="flex-shrink-0" onClick={toggleSidebar}>
-              <UserAvatar userName="John Doe" />
-            </button>
-            
+            {user ? (
+              <button className="flex-shrink-0" onClick={toggleSidebar}>
+                <UserAvatar userName="John Doe" />
+              </button>
+            ) : (
+              <Link
+                className={`bg-[${COLOR_PRIMARY}] flex items-center justify-center rounded-full py-1 px-4`}
+                href="/login"
+              >
+                <span className="text-sm text-white">Iniciar Sesión</span>
+              </Link>
+            )}
           </div>
 
           {/* LOGO */}
           <Link href="/" className="focus:outline-none">
-              <Image
-                src={LOGO}
-                width={500}
-                height={500}
-                alt="logo"
-                className="w-[100px] h-full object-cover"
-              />
-            </Link>
+            <Image
+              src={LOGO}
+              width={500}
+              height={500}
+              alt="logo"
+              className="w-[100px] h-full object-cover"
+            />
+          </Link>
         </div>
       </div>
     </nav>

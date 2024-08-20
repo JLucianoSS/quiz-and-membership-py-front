@@ -1,4 +1,5 @@
 import { globalFont } from "../config/fonts";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 export const metadata = {
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={globalFont.className}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

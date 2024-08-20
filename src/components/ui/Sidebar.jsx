@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { IoHomeOutline, IoCloseOutline } from "react-icons/io5";
+import { IoHomeOutline, IoCloseOutline, IoLogOutOutline } from "react-icons/io5";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui"; // Ruta donde guardaste el store
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 export const Sidebar = () => {
@@ -30,6 +31,11 @@ export const Sidebar = () => {
       document.body.style.overflow = "";
     };
   }, [isOpen, closeSidebar]);
+
+  const logout = async() => {
+    await signOut();
+    window.location.replace("/login");
+  };
 
   return (
     <>
@@ -79,8 +85,29 @@ export const Sidebar = () => {
               <IoHomeOutline className="w-5 h-5" />
               <span className="mx-4 font-medium">Item2</span>
             </Link>
+            <Link
+              href="#"
+              className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
+                active === "Item2" ? "bg-gray-100" : "hover:bg-gray-100 hover:text-gray-700"
+              }`}
+              onClick={() => setActive("Item2")}
+            >
+              <IoHomeOutline className="w-5 h-5" />
+              <span className="mx-4 font-medium">Item2</span>
+            </Link>
           </div>
         </div>
+
+        <div className="absolute bottom-0 px-4 py-4 bg-white border-t">
+          <button
+            onClick={logout}
+            className="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+          >
+            <IoLogOutOutline className="w-5 h-5" />
+            <span className="mx-4 font-medium">Cerrar sesión</span>
+          </button>
+        </div>
+
       </aside>
     </>
   );
