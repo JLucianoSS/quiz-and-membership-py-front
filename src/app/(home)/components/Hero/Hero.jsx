@@ -1,4 +1,3 @@
-import { COLOR_PRIMARY, COLOR_SECONDARY } from "@/config/theme";
 
 export const Hero = () => {
   return (
@@ -8,7 +7,7 @@ export const Hero = () => {
           <div className="lg:max-w-lg">
             <h1 className="text-3xl font-semibold text-gray-800 lg:text-4xl">
               Best place to choose <br /> your{" "}
-              <span className={`text-[${COLOR_PRIMARY}]`}>clothes</span>
+              <span className={`text-primary`}>clothes</span>
             </h1>
 
             <p className="mt-3 text-gray-600">
@@ -17,7 +16,7 @@ export const Hero = () => {
               perspiciatis optio.
             </p>
 
-            <button className={`w-full px-5 py-2 mt-6 text-sm tracking-wider text-white uppercase transition-colors duration-300 transform bg-[${COLOR_PRIMARY}] rounded-lg lg:w-auto hover:bg-[${COLOR_SECONDARY}] focus:outline-none focus:bg-[${COLOR_SECONDARY}]`}>
+            <button className={`w-full px-5 py-2 mt-6 text-sm tracking-wider text-white uppercase transition-colors duration-300 transform bg-primary rounded-lg lg:w-auto hover:bg-secondary focus:outline-none focus:bg-secondary`}>
               Shop Now
             </button>
           </div>

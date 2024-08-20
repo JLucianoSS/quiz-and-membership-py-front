@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui"; // Ruta donde guardaste el store
-import { COLOR_PRIMARY, LOGO } from "@/config/theme";
+import { LOGO } from "@/config/theme";
 
 export const Navbar = ({ user }) => {
   const { toggleSidebar } = useSidebarStore();
@@ -21,7 +21,7 @@ export const Navbar = ({ user }) => {
               </button>
             ) : (
               <Link
-                className={`bg-[${COLOR_PRIMARY}] flex items-center justify-center rounded-full py-1 px-4`}
+                className={`bg-primary flex items-center justify-center rounded-full py-1 px-4`}
                 href="/login"
               >
                 <span className="text-sm text-white">Iniciar Sesión</span>

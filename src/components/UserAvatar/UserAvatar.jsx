@@ -1,12 +1,12 @@
-import { COLOR_PRIMARY } from "@/config/theme";
+
 import { getFirstLetterCapitalize } from "@/utils/capitalize";
 import Image from "next/image";
 
 export const UserAvatar = ({
   avatarUrl = "",
   userName = "User",
-  classWidth = "w-[30px]",
-  classHeight = "h-[30px]",
+  classWidth = "w-[39px]",
+  classHeight = "h-[39px]",
   classText = "text-base",
 }) => {
   return (
@@ -21,7 +21,7 @@ export const UserAvatar = ({
         />
       ) : (
         <div
-          className={`mx-auto border-2 border-[${COLOR_PRIMARY}] rounded-full w-full h-full flex justify-center items-center`}
+          className={`mx-auto border-2 border-primary rounded-full w-full h-full flex justify-center items-center`}
         >
           <span
             className={`bg-gray-100 w-full h-full ${classText} rounded-full flex justify-center items-center`}

@@ -36,8 +36,6 @@ export const FormSignIn = () => {
       toast.error("Credenciales incorrectas");
       setLoading(false);
     }
-
-    
   };
 
   const togglePasswordVisibility = () => {
@@ -125,7 +123,7 @@ export const FormSignIn = () => {
       <div className="mt-6">
         <button
           type="submit"
-          className={`w-full px-6 py-3 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-[${COLOR_PRIMARY}] rounded-lg hover:bg-[${COLOR_SECONDARY}]  focus:outline-none`}
+          className={`w-full px-6 py-3 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-primary rounded-lg hover:bg-secondary  focus:outline-none`}
         >
          {loading ? "Cargando..." : "Acceder"}
         </button>
@@ -143,7 +141,7 @@ export const FormSignIn = () => {
         <div className="mt-6 text-center">
           <Link
             href="#"
-            className={`text-sm text-[${COLOR_PRIMARY}] hover:underline`}
+            className={`text-sm text-primary hover:underline`}
           >
             ¿Aun no tienes cuenta? Regístrate
           </Link>

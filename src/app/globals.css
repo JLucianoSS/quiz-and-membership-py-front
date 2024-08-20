@@ -31,3 +31,36 @@
     text-wrap: balance;
   }
 } */
+
+
+/* COLORES GLOBALES DEL TEMA */
+/* fondos */
+.bg-primary {
+  @apply bg-[#d9b16b]
+}
+.bg-secondary {
+  @apply bg-[#e8cf9a]
+}
+.bg-tertiary {
+  @apply bg-[#f1e5cb]
+}
+/* textos */
+.text-primary {
+  @apply text-[#d9b16b]
+}
+.text-secondary {
+  @apply text-[#e8cf9a]
+}
+.text-tertiary {
+  @apply text-[#f1e5cb]
+}
+/* bordes */
+.border-primary {
+  @apply border-[#d9b16b]
+}
+.border-secondary {
+  @apply border-[#e8cf9a]
+}
+.border-tertiary {
+  @apply border-[#f1e5cb]
+}
