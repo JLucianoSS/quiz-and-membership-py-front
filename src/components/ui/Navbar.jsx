@@ -10,7 +10,7 @@ export const Navbar = () => {
 
   return (
     <nav className="bg-white border-2 border-b-gray-100 fixed w-full z-40">
-      <div className=" mx-auto px-6">
+      <div className=" mx-auto px-6 lg:px-20 xl:px-44">
         <div className="flex justify-between items-center h-12">
           <div className="flex items-center gap-4">
             {/* DRAWER AVATAR PERFIL */}
