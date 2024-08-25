@@ -7,7 +7,7 @@ import { LOGO } from "@/config/theme";
 
 export const Navbar = ({ user }) => {
   const { toggleSidebar } = useSidebarStore();
-  console.log(user);
+  // console.log(user);
 
   return (
     <nav className="bg-white border-2 border-b-gray-100 fixed w-full z-40">

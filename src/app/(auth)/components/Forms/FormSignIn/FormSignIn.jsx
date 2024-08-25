@@ -20,7 +20,7 @@ export const FormSignIn = () => {
 
 
   const onSubmit = async(data) => {
-    console.log(data);
+    // console.log(data);
     // Lógica de inicio de sesión
     setLoading(true);
     const { email, password } = data;
@@ -29,7 +29,7 @@ export const FormSignIn = () => {
       email,
       password
     });
-    console.log(result);
+    // console.log(result);
     if (result.ok) {
       window.location.replace("/");
     } else {
