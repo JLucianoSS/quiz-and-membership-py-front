@@ -9,8 +9,8 @@ export default function HistorialPage() {
       <Headerpage titulo="Historial" />
 
       <div className="flex flex-col gap-2">
-        {resultados.map((resultado) => (
-          <HistorialCard {...resultado} />
+        {resultados.map((resultado, index) => (
+          <HistorialCard key={index} {...resultado} />
         ))}
       </div>
     </div>
