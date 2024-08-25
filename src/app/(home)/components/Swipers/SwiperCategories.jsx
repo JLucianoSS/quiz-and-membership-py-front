@@ -3,7 +3,7 @@ import { CategoryCard, CustomSwiper } from "@/components";
 
 export const SwiperCategories = ({ especialidades }) => {
   const categorySlides = especialidades.map((especialidad, index) => (
-    <CategoryCard key={index} name={especialidad.nombre} image={especialidad.imagen} />
+    <CategoryCard key={index} id={especialidad.id} name={especialidad.nombre} image={especialidad.imagen} />
   ));
 
   const categoryConfig = {

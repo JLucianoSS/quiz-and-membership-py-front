@@ -128,7 +128,7 @@ export const FormSignIn = () => {
          {loading ? "Cargando..." : "Acceder"}
         </button>
 
-        <p className="mt-4 text-center text-gray-600">o inicia con</p>
+        {/* <p className="mt-4 text-center text-gray-600">o inicia con</p>
 
         <Link
           href="#"
@@ -136,7 +136,7 @@ export const FormSignIn = () => {
         >
           <FaGoogle className="w-6 h-6 mx-2" />
           <span className="mx-2">Google</span>
-        </Link>
+        </Link> */}
 
         <div className="mt-6 text-center">
           <Link
