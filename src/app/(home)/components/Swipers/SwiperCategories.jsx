@@ -2,8 +2,8 @@ import { CategoryCard, CustomSwiper } from "@/components";
 
 
 export const SwiperCategories = ({ especialidades }) => {
-  const categorySlides = especialidades.map((especialidad) => (
-    <CategoryCard name={especialidad.nombre} image={especialidad.imagen} />
+  const categorySlides = especialidades.map((especialidad, index) => (
+    <CategoryCard key={index} name={especialidad.nombre} image={especialidad.imagen} />
   ));
 
   const categoryConfig = {

@@ -1,16 +1,23 @@
 import React from 'react';
-import { IoPlayOutline, IoFilterOutline, IoBarChartOutline, IoStarOutline, IoTimeOutline, IoPersonOutline } from 'react-icons/io5';
+import { IoPlayOutline, IoFilterOutline, IoBarChartOutline, IoStarOutline, IoTimeOutline, IoPersonOutline, IoAddOutline } from 'react-icons/io5';
 import { ActionCard, CustomSwiper } from "@/components";
 
-export const SwiperActions = ({ hasStarted }) => {
-  const actionSlides = [
-    <ActionCard action={hasStarted ? "Continuar" : "Nuevo"} icon={<IoPlayOutline size={24} color="#fff" />} />,
-    <ActionCard action="Filtros" icon={<IoFilterOutline size={24} color="#fff" />} />,
-    <ActionCard action="Desempeño" icon={<IoBarChartOutline size={24} color="#fff" />} />,
-    <ActionCard action="Favoritas" icon={<IoStarOutline size={24} color="#fff" />} />,
-    <ActionCard action="Historial" icon={<IoTimeOutline size={24} color="#fff" />} />,
-    <ActionCard action="Perfil" icon={<IoPersonOutline size={24} color="#fff" />} />,
+export const SwiperActions = () => {
+  
+  const hasStarted = "Nuevo";
+
+  const actions = [
+    { action: hasStarted ? "Continuar" : "Nuevo", icon: hasStarted ? <IoPlayOutline size={24} color="#fff" /> : <IoAddOutline size={24} color="#fff" /> },
+    { action: "Filtros", icon: <IoFilterOutline size={24} color="#fff" /> },
+    { action: "Desempeño", icon: <IoBarChartOutline size={24} color="#fff" /> },
+    { action: "Favoritas", icon: <IoStarOutline size={24} color="#fff" /> },
+    { action: "Historial", icon: <IoTimeOutline size={24} color="#fff" /> },
+    { action: "Perfil", icon: <IoPersonOutline size={24} color="#fff" /> },
   ];
+
+  const actionSlides = actions.map(({ action, icon }, index) => (
+    <ActionCard key={index} action={action} icon={icon} />
+  ));
 
   const actionConfig = {
     slidesPerView: 3, // Default for small screens
