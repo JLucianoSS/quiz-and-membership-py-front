@@ -4,7 +4,7 @@
  export default function DesempenoPage() {
    return (
      <div>
-       <h1>Hello Page</h1>
+       <h1>Page Desempeno</h1>
      </div>
    );
  }

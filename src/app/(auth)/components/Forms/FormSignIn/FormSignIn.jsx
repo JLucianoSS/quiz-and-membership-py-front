@@ -1,9 +1,8 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { COLOR_PRIMARY, COLOR_SECONDARY, LOGO } from "@/config/theme";
+import { LOGO } from "@/config/theme";
 import { IoMailOutline, IoLockClosedOutline, IoEyeOff, IoEye, } from "react-icons/io5";
-import { FaGoogle } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { signIn } from "next-auth/react";

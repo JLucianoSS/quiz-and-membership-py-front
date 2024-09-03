@@ -1,4 +1,6 @@
 
+
+import { login } from "../data/usuarios";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -23,50 +25,33 @@ export const authOptions = {
         },
       },
       async authorize(credentials) {
-        // Aquí puedes hacer la consulta a un backend externo Ejemplo:
-        // const user = await loginUser({
-        //     email: credentials.email,
-        //     password: credentials.password,
-        //   });
+        // Usamos la función login para verificar las credenciales
+        const result = login(credentials.email, credentials.password);
 
-        // Por ahora, se utiliza un usuario hardcodeado
-        const user = {
-          id: "1",
-          name: "John Doe",
-          email: "johndoe@example.com",
-        };
-
-        if (
-          credentials.email === "test@test.com" &&
-          credentials.password === "test123"
-        ) {
-          return user;
-        } else {
-          return null;
+        // Si el login es exitoso, devolvemos el usuario
+        if (result.success) {
+          return {
+            id: result.user.id,
+            name: `${result.user.nombre} ${result.user.apellido}`,
+            email: result.user.email,
+            role: result.user.role,
+          };
         }
+
+        // Si no se encuentra el usuario, devolvemos null
+        return null;
       },
     }),
   ],
   callbacks: {
     async signIn({ account, profile }) {
-      // Aquí verificas si el usuario ya existe en tu base de datos: Ejemplo
-      // const user = await loginUser({ providerId: account.providerAccountId });
-      const user = {
-        id: "1",
-        name: "John Doe",
-        email: "johndoe@example.com",
-      };
-
-      // Si el usuario no existe, lo registras
-      if (!user) {
-        // await registerUser({
-        //   name: profile.name,
-        //   email: profile.email,
-        //   provider: account.provider,
-        //   providerId: account.providerAccountId,
-        //   image: profile.picture,
-        // });
-      }
+      // Aquí puedes agregar lógica para verificar o registrar el usuario
+      // en una base de datos real si es necesario
+      // const result = login(credentials.email, credentials.password);
+      // const { user } = result;
+      // if (!user) {
+      //   await registerUser({ user..});
+      // }
 
       return true;
     },
@@ -86,3 +71,6 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
+
+
+
