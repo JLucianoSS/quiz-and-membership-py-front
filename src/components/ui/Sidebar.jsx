@@ -1,15 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { IoCloseOutline, IoHomeOutline, IoLogOutOutline, IoSettingsOutline  } from "react-icons/io5";
+import React, { useEffect } from "react";
+import { IoCloseOutline, IoHomeOutline, IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui";
 import { signOut } from "next-auth/react";
 import { routeActions } from "../../config/routes";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 export const Sidebar = ({ user }) => {
   const { isOpen, closeSidebar } = useSidebarStore();
-  const [active, setActive] = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -38,6 +39,10 @@ export const Sidebar = ({ user }) => {
     window.location.replace("/login");
   };
 
+  const handleItemClick = () => {
+    closeSidebar(); // Cerrar el sidebar después de hacer clic
+  };
+
   return (
     <>
       {/* Overlay oscuro detrás del sidebar */}
@@ -49,7 +54,7 @@ export const Sidebar = ({ user }) => {
       ></div>
 
       <aside
-        className={`fixed top-0 left-0 w-64 h-full px-4 py-8 overflow-y-auto bg-white border-r transform ${
+        className={`fixed top-0 left-0 w-64 h-full px-4 py-8 bg-white border-r transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out z-50`}
       >
@@ -61,7 +66,7 @@ export const Sidebar = ({ user }) => {
         </button>
 
         {/* HEADER */}
-        <div className="flex flex-col items-center mt-6 -mx-2">
+        <div className="flex flex-col items-center mt-2 -mx-2">
           <UserAvatar
             userName={`${user.nombre} ${user.apellido}`}
             classHeight="h-24"
@@ -76,19 +81,19 @@ export const Sidebar = ({ user }) => {
           </p>
         </div>
 
-        {/* ITEMS */}
-        <div className="flex flex-col justify-between flex-1 mt-4">
+        {/* ITEMS CON SCROLL */}
+        <div className="flex flex-col justify-between flex-1 mt-4 overflow-y-auto">
           <div className="space-y-1">
 
             {user.role === "Administrador" && (
               <Link
-                href="#"
+                href="/admin"
                 className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
-                  active === "Dashboard"
+                  pathname === "/admin"
                     ? "bg-gray-100"
                     : "hover:bg-gray-100 hover:text-gray-700"
                 }`}
-                onClick={() => setActive("Dashboard")}
+                onClick={handleItemClick}
               >
                 <IoSettingsOutline className="w-5 h-5" size="18px" color="text-gray-800"/>
                 <span className="mx-2 font-medium text-sm">Administración</span>
@@ -98,11 +103,11 @@ export const Sidebar = ({ user }) => {
             <Link
               href="/"
               className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
-                active === "/"
+                pathname === "/"
                   ? "bg-gray-100"
                   : "hover:bg-gray-100 hover:text-gray-700"
               }`}
-              onClick={() => setActive("/")}
+              onClick={handleItemClick}
             >
               <IoHomeOutline className="w-5 h-5" size="18px" color="text-gray-800"/>
               <span className="mx-2 font-medium text-sm">Inicio</span>
@@ -113,11 +118,11 @@ export const Sidebar = ({ user }) => {
                 key={index}
                 href={item.link}
                 className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
-                  active === item.action
+                  pathname === item.link
                     ? "bg-gray-100"
                     : "hover:bg-gray-100 hover:text-gray-700"
                 }`}
-                onClick={() => setActive(item.action)}
+                onClick={handleItemClick}
               >
                 {React.cloneElement(item.icon, { color: "text-gray-800", size:"18px" })}
                 <span className="mx-2 font-medium text-sm">{item.action}</span>
@@ -126,10 +131,10 @@ export const Sidebar = ({ user }) => {
           </div>
         </div>
 
-        <div className="absolute bottom-0 px-4 py-3 bg-white border-t">
+        <div className="absolute left-0 bottom-0 bg-white border-t w-full flex justify-center items-center py-2">
           <button
             onClick={logout}
-            className="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+            className="flex items-center py-2 px-6 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-700"
           >
             <IoLogOutOutline className="w-5 h-5" color="text-gray-800"/>
             <span className="mx-2 font-medium text-sm">Cerrar sesión</span>
