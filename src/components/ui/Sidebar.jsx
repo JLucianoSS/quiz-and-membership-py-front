@@ -66,7 +66,7 @@ export const Sidebar = ({ user }) => {
         </button>
 
         {/* HEADER */}
-        <div className="flex flex-col items-center mt-2 -mx-2">
+        <div className="flex flex-col items-center mt-2 -mx-2 h-[30%]">
           <UserAvatar
             userName={`${user.nombre} ${user.apellido}`}
             classHeight="h-24"
@@ -82,7 +82,7 @@ export const Sidebar = ({ user }) => {
         </div>
 
         {/* ITEMS CON SCROLL */}
-        <div className="flex flex-col justify-between flex-1 mt-4 overflow-y-auto h-[60vh]">
+        <div className="flex flex-col justify-between flex-1 mt-4 overflow-y-auto h-[55%]">
           <div className="space-y-1">
 
             {user.role === "Administrador" && (
@@ -91,7 +91,7 @@ export const Sidebar = ({ user }) => {
                 className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
                   pathname === "/admin"
                     ? "bg-gray-100"
-                    : "hover:bg-gray-100 hover:text-gray-700"
+                    : ""
                 }`}
                 onClick={handleItemClick}
               >
@@ -105,7 +105,7 @@ export const Sidebar = ({ user }) => {
               className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
                 pathname === "/"
                   ? "bg-gray-100"
-                  : "hover:bg-gray-100 hover:text-gray-700"
+                  : ""
               }`}
               onClick={handleItemClick}
             >
@@ -120,7 +120,7 @@ export const Sidebar = ({ user }) => {
                 className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
                   pathname === item.link
                     ? "bg-gray-100"
-                    : "hover:bg-gray-100 hover:text-gray-700"
+                    : ""
                 }`}
                 onClick={handleItemClick}
               >
@@ -131,10 +131,12 @@ export const Sidebar = ({ user }) => {
           </div>
         </div>
 
+        <div className="h-[15%]"></div>
+
         <div className="absolute left-0 bottom-0 bg-white border-t w-full flex justify-center items-center py-2">
           <button
             onClick={logout}
-            className="flex items-center py-2 px-6 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+            className="flex items-center py-2 px-6 text-gray-700 rounded-lg "
           >
             <IoLogOutOutline className="w-5 h-5" color="text-gray-800"/>
             <span className="mx-2 font-medium text-sm">Cerrar sesión</span>
