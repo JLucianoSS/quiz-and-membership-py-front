@@ -66,7 +66,7 @@ export const Sidebar = ({ user }) => {
         </button>
 
         {/* HEADER */}
-        <div className="flex flex-col items-center mt-2 -mx-2 h-[30%]">
+        <div className="flex flex-col items-center mt-2 -mx-2 h-auto">
           <UserAvatar
             userName={`${user.nombre} ${user.apellido}`}
             classHeight="h-24"
@@ -82,7 +82,7 @@ export const Sidebar = ({ user }) => {
         </div>
 
         {/* ITEMS CON SCROLL */}
-        <div className="flex flex-col justify-between flex-1 mt-4 overflow-y-auto h-[55%]">
+        <div className="flex flex-col justify-between flex-1 mt-4 overflow-y-auto h-[60%]">
           <div className="space-y-1">
 
             {user.role === "Administrador" && (
@@ -131,7 +131,7 @@ export const Sidebar = ({ user }) => {
           </div>
         </div>
 
-        <div className="h-[15%]"></div>
+        <div className="h-[10%]"></div>
 
         <div className="absolute left-0 bottom-0 bg-white border-t w-full flex justify-center items-center py-2">
           <button
