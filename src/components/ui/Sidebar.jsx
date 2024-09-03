@@ -76,13 +76,13 @@ export const Sidebar = ({ user }) => {
           <h4 className="mx-2 mt-2 font-medium text-gray-800">
             {user.nombre} {user.apellido}
           </h4>
-          <p className="mx-2 mt-1 text-sm font-medium text-gray-600">
+          <span className="mx-2 mt-1 text-sm font-medium text-gray-600 no-underline">
             {user.email}
-          </p>
+          </span>
         </div>
 
         {/* ITEMS CON SCROLL */}
-        <div className="flex flex-col justify-between flex-1 mt-4 overflow-y-auto">
+        <div className="flex flex-col justify-between flex-1 mt-4 overflow-y-auto h-[60vh]">
           <div className="space-y-1">
 
             {user.role === "Administrador" && (
