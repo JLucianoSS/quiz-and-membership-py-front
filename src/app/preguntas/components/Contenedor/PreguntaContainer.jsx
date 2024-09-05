@@ -1,27 +1,38 @@
-
 "use client"
 import { useState } from "react";
 import { getOpcionesPorPregunta } from "@/data/preguntas";
 import { ExplicationSection, RespuestaCard } from "..";
 
-export const PreguntaContainer = ({ preguntas, page }) => {
-  const [selectedOption, setSelectedOption] = useState(null); // Almacenar la opción seleccionada
-  const [showExplanation, setShowExplanation] = useState(false); // Mostrar la explicación
+export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
+  const [selectedOption, setSelectedOption] = useState(null); // Opción seleccionada
+  const [showExplanation, setShowExplanation] = useState(false); // Mostrar explicación
   const [disableClicks, setDisableClicks] = useState(false); // Desactivar clics después de la selección
+  const [tachedOptions, setTachedOptions] = useState([]); // Opciones tachadas
 
   const options = getOpcionesPorPregunta(preguntas[parseInt(page - 1)].id);
 
   const handleSelectOption = (index, isCorrect) => {
     if (disableClicks) return; // No permitir más clics si ya se ha seleccionado una opción
-
     setSelectedOption(index); // Guardar la opción seleccionada
     setShowExplanation(true); // Mostrar la explicación después de seleccionar
+    onComplete()
+    setDisableClicks(true); // Desactivar los clics después de la selección
 
-    if (isCorrect) {
-      setDisableClicks(true); // Si es correcta, desactivar los clics
-    } else {
-      // Si es incorrecta, mostrar la correcta y desactivar los clics
-      setDisableClicks(true);
+     // Consologuear la opción seleccionada y su estado de corrección
+     console.log(`Opción seleccionada: ${options[index].textOpcion}`);
+     console.log(`¿Es correcta?: ${isCorrect ? 'Sí' : 'No'}`);
+     console.log(`Explicación: ${options[index].explicacion}`);
+ 
+  };
+
+  // Manejar el tachado o destachado de una opción
+  const handleToggleStrike = (index) => {
+    // Si la opción ya está tachada, destacharla
+    if (tachedOptions.includes(index)) {
+      setTachedOptions(tachedOptions.filter((i) => i !== index));
+    } else if (tachedOptions.length < options.length - 1) {
+      // Solo permitir tachar si hay más de una opción sin tachar
+      setTachedOptions([...tachedOptions, index]);
     }
   };
 
@@ -42,7 +53,7 @@ export const PreguntaContainer = ({ preguntas, page }) => {
 
       {/* OPCIONES, RESPUESTAS O ALTERNATIVAS */}
       <div className="flex flex-col gap-2 mt-6">
-        {options.map((option, index) => (
+        {options.length > 0 ? options.map((option, index) => (
           <RespuestaCard
             key={index}
             letter={String.fromCharCode(65 + index)} // Convertir index en letras A, B, C, D
@@ -52,8 +63,11 @@ export const PreguntaContainer = ({ preguntas, page }) => {
             isSelected={selectedOption === index} // Respuesta seleccionada
             showCorrect={selectedOption !== null && option.esCorrecta} // Mostrar correcta después de selección
             disableClicks={disableClicks} // Desactivar los clics después de la selección
-          />
-        ))}
+            isStriked={tachedOptions.includes(index)} // Ver si la opción está tachada
+            onToggleStrike={() => handleToggleStrike(index)} // Manejar el tachado
+            disableStrike={tachedOptions.length === options.length - 1 && !tachedOptions.includes(index)} // Deshabilitar el tachado si ya solo queda una opción sin tachar
+          /> 
+        )) : <div className="w-full flex items-center justify-center h-[150px]"><span className="text-[13px] text-red-400">No hay opciones o alternativas establecidas</span></div>}
       </div>
 
       {/* EXPLICACIÓN */}
