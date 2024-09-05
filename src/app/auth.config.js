@@ -26,7 +26,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         // Usamos la función login para verificar las credenciales
-        const result = login(credentials.email, credentials.password);
+        const result = login(credentials.email, credentials.password); // esto debe ser asincrono
 
         // Si el login es exitoso, devolvemos el usuario
         if (result.success) {
@@ -68,6 +68,12 @@ export const authOptions = {
       }
       return session;
     },
+  },
+  session: {
+    // Duración de la sesión en segundos (24 horas)
+    maxAge: 24 * 60 * 60, // 24 horas
+    // Renovar la sesión cada 12 horas
+    updateAge: 12 * 60 * 60, // 12 horas
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
