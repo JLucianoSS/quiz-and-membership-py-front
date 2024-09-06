@@ -13,3 +13,5 @@ export * from "./Cards/ActionCard";
 export * from "./Cards/HeroCard";
 export * from "./Cards/SubEspecialidadCard";
 export * from "./Cards/TemaCard";
+
+export * from "./OffCanvas/OffCanvas";
