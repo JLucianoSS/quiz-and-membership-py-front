@@ -9,7 +9,7 @@ export const routeActions = [
     link: hasStarted ? "" : "/iniciar-quiz",
   },
   {
-    action: "Filtros",
+    action: "Filtrar",
     icon: <IoFilterOutline size={24} color="#fff" />,
     link: "/filtros",
   },

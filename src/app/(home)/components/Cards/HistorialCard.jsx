@@ -1,4 +1,4 @@
-import { IoCloseCircleOutline, IoCheckmarkCircleOutline,IoCheckmarkDoneCircleOutline } from 'react-icons/io5';
+import { IoCloseCircleOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
 
 export const HistorialCard = ({ pregunta, respuestaDada, fechaRespuesta, esCorresta }) => {
   return (
