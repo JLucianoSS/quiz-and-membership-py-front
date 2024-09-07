@@ -1,6 +1,6 @@
 // ESTE ES PARA EL SIDEBAR DEL ADMINISTRADOR
 
-import create from 'zustand';
+import { create } from 'zustand';
 
 export const useSideBarStore2 = create((set) => ({
   isOpen: false,

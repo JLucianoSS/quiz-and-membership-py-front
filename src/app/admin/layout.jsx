@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }) {
     <>
       <NavbarAdmin user={user}/>
       <SidebarAdmin />
-      <div className="h-full pt-[70px] md:pl-[240px]">
+      <div className="h-full pt-[60px] md:pl-[240px]">
         {children}
       </div>
     </>

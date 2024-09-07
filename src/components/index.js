@@ -15,3 +15,4 @@ export * from "./Cards/SubEspecialidadCard";
 export * from "./Cards/TemaCard";
 
 export * from "./OffCanvas/OffCanvas";
+export * from "./OffCanvas/OffCanvas2";
