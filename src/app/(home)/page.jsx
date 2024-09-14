@@ -11,15 +11,15 @@ export default async function HomePage() {
   const user = getUser(session?.user?.id);
 
   return (
-    <>
+    <div className="relative">
       <div className="px-6 lg:px-20 xl:px-44">
         <SwiperHeros/>
         <SwiperCategories especialidades={especialidades}/>
-        <SwiperActions/>
-        <div className="mb-20"></div>
+        {/* <div className="mb-20"></div> */}
       </div>
+      <SwiperActions/>
 
 
-    </>
+    </div>
   );
 }
