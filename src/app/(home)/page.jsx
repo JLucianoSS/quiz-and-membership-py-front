@@ -1,4 +1,4 @@
-import { Sidebar } from "@/components";
+
 import { SwiperActions, SwiperCategories, SwiperHeros } from "./components";
 import { especialidades } from "@/data/especialidades";
 import { getServerSession } from "next-auth";
@@ -15,11 +15,9 @@ export default async function HomePage() {
       <div className="px-6 lg:px-20 xl:px-44">
         <SwiperHeros/>
         <SwiperCategories especialidades={especialidades}/>
-        {/* <div className="mb-20"></div> */}
+        <div className="mb-20"></div>
       </div>
       <SwiperActions/>
-
-
     </div>
   );
 }
