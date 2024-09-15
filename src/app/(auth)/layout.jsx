@@ -8,7 +8,7 @@ export default async function AuthLayout({ children }) {
   /* RESTRINGIR SI HAY SESION ACTIVA */
   const session = await getServerSession(authOptions);
   if (session) {
-    redirect("/");
+    redirect("/inicio");
   }
 
   return (

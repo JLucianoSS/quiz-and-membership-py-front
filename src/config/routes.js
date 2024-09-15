@@ -6,31 +6,31 @@ export const routeActions = [
   {
     action: hasStarted ? "Continuar" : "Nuevo",
     icon: hasStarted ? <IoPlayOutline size={24} color="#fff" /> : <IoAddOutline size={24} color="#fff" />,
-    link: hasStarted ? "" : "/iniciar-quiz",
+    link: hasStarted ? "" : "/inicio/iniciar-quiz",
   },
   {
     action: "Filtrar",
     icon: <IoFilterOutline size={24} color="#fff" />,
-    link: "/filtros",
+    link: "/inicio/filtros",
   },
   {
     action: "Desempeño",
     icon: <IoBarChartOutline size={24} color="#fff" />,
-    link: "/desempeno",
+    link: "/inicio/desempeno",
   },
   {
     action: "Favoritas",
     icon: <IoStarOutline size={24} color="#fff" />,
-    link: "/favoritos",
+    link: "/inicio/favoritos",
   },
   {
     action: "Historial",
     icon: <IoTimeOutline size={24} color="#fff" />,
-    link: "/historial",
+    link: "/inicio/historial",
   },
   {
     action: "Perfil",
     icon: <IoPersonOutline size={24} color="#fff" />,
-    link: "/perfil",
+    link: "/inicio/perfil",
   },
 ];

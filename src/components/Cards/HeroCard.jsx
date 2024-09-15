@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import Link from 'next/link';
 
 export const HeroCard = ({ 
   title, 
@@ -11,7 +11,7 @@ export const HeroCard = ({
   imageAlt 
 }) => {
   return (
-    <div className="container py-5 px-4 mx-auto border rounded-lg border-gray-100">
+    <div className="py-5 px-10 flex items-center justify-center border rounded-xl border-gray-100 bg-gray-100">
       <div className="items-center lg:flex">
         <div className="w-full lg:w-1/2">
           <div className="lg:max-w-lg">
@@ -23,11 +23,11 @@ export const HeroCard = ({
               {description}
             </p>
 
-            <a href={buttonLink}>
+            <Link href={buttonLink}>
               <button className="w-full px-5 py-1 mt-4 text-sm tracking-wider text-white uppercase transition-colors duration-300 transform bg-primary rounded-lg lg:w-auto hover:bg-secondary focus:outline-none focus:bg-secondary">
                 {buttonText}
               </button>
-            </a>
+            </Link>
           </div>
         </div>
         <div className="hidden lg:flex items-center justify-center w-full mt-6 lg:mt-0 lg:w-1/2">

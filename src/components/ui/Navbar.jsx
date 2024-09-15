@@ -46,7 +46,7 @@ export const Navbar = ({ user }) => {
 
           {/* LOGO */}
           <div className="relative mb-[10px]">
-            <Link href="/" className="focus:outline-none">
+            <Link href="/inicio" className="focus:outline-none">
               <Image
                 src={LOGO}
                 width={500}

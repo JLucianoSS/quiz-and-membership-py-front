@@ -47,7 +47,7 @@ export const NavbarAdmin = ({ user }) => {
         </button>
       </div>
 
-      <Link href="/" className="flex items-center pr-6 text-sm text-gray-600" >
+      <Link href="/inicio" className="flex items-center pr-6 text-sm text-gray-600" >
         {/* <IoArrowBack /> */}
         <span className="ml-1 font-semibold text-gray-800 hover:underline hover:text-primary">Inicio</span>
       </Link>
