@@ -1,4 +1,4 @@
 
 
 export * from "./FormSignIn/FormSignIn"
-export * from "./FormRegister/FormRegister"
+export * from "./FormSignUp/FormSignUp"

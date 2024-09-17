@@ -71,3 +71,5 @@ export const LandingPlanes = forwardRef((props, ref) => {
     </section>
   );
 });
+
+LandingPlanes.displayName = "LandingPlanes";

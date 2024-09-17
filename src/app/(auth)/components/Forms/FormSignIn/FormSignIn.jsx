@@ -30,7 +30,7 @@ export const FormSignIn = () => {
     });
     // console.log(result);
     if (result.ok) {
-      window.location.replace("/");
+      window.location.replace("/inicio");
     } else {
       toast.error("Credenciales incorrectas");
       setLoading(false);
@@ -139,7 +139,7 @@ export const FormSignIn = () => {
 
         <div className="mt-6 text-center">
           <Link
-            href="#"
+            href="/register"
             className={`text-sm text-primary hover:underline`}
           >
             ¿Aun no tienes cuenta? Regístrate

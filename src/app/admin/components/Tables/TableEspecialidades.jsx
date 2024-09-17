@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export const TableEspecialidades = ({ especialidades }) => {
@@ -30,10 +31,12 @@ export const TableEspecialidades = ({ especialidades }) => {
               <td className="border border-gray-300 px-4 py-2">{especialidad.nombre}</td>
               <td className="border border-gray-300 px-4 py-2">
                 <div className="h-16 w-16">
-                  <img
+                  <Image
                     className="h-full w-full object-cover"
                     src={especialidad.imagen}
                     alt={especialidad.nombre}
+                    width={300}
+                    height={300}
                   />
                 </div>
               </td>
