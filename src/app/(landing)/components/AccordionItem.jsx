@@ -10,7 +10,7 @@ export function AccordionItem({ question, answer }) {
   };
 
   return (
-    <div className="border-2 border-gray-100 rounded-lg mb-4">
+    <div className="border-2 border-white bg-white rounded-lg mb-4">
       <button
         className="w-full flex justify-between items-center p-4 rounded-lg focus:outline-none"
         onClick={toggleAccordion}
@@ -19,7 +19,7 @@ export function AccordionItem({ question, answer }) {
         <span>{isOpen ? '-' : '+'}</span>
       </button>
       {isOpen && (
-        <div className="p-4 bg-white text-gray-700 rounded-b-lg">
+        <div className="p-4 bg-white text-gray-700 rounded-b-lg text-sm">
           {answer}
         </div>
       )}

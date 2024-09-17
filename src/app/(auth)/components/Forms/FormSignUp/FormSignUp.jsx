@@ -4,10 +4,12 @@ import Link from "next/link";
 import { LOGO } from "@/config/theme";
 import { IoMailOutline, IoLockClosedOutline, IoEyeOff, IoEye, IoPersonOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 export const FormSignUp = () => {
+  const searchParams = useSearchParams()
   const {
     register,
     handleSubmit,
@@ -15,29 +17,41 @@ export const FormSignUp = () => {
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [plan, setPlan] = useState("free");
 
   const onSubmit = async (data) => {
-    // Lógica de registro
     setLoading(true);
-    const { firstName, lastName, email, password, acceptTerms } = data;
-    if (!acceptTerms) {
-      toast.error("Debes aceptar los términos del servicio");
+    try {
+      // Simulación de registro (puedes hacer una llamada API aquí)
+      if (plan === "free") {
+        // Crear el usuario con rol de visitante
+        // await registerUser({ ...data, role: "visitante" });
+        toast.success("Registro exitoso como visitante");
+        router.push("/inicio"); // Redirige al home o a otra vista
+      } else if (plan === "premium") {
+        // Crear el usuario con rol premium
+        // await registerUser({ ...data, role: "premium" });
+        toast.success("Registro exitoso, redirigiendo al pago");
+        router.push("/inicio/comprar"); // Redirige a la vista de pago
+      }
+    } catch (error) {
+      toast.error("Error durante el registro");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // Simulación de lógica de registro
-    setTimeout(() => {
-      toast.success("Registro exitoso");
-      setLoading(false);
-      // Redirigir al usuario
-      window.location.replace("/");
-    }, 2000);
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+
+  // Obtener el plan de los query parameters
+  useEffect(() => {
+    const queryPlan = searchParams.get("plan") || "free";
+    setPlan(queryPlan);
+  }, []);
+  
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md">

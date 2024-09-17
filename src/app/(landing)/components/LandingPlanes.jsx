@@ -32,7 +32,7 @@ export const LandingPlanes = forwardRef((props, ref) => {
             </li>
           </ul>
 
-          <Link href="/free" className="flex justify-center w-full bg-primary text-white py-2 rounded-lg transition-all duration-300 hover:bg-primary-dark">
+          <Link href="/register?plan=free" className="flex justify-center w-full bg-primary text-white py-2 rounded-lg transition-all duration-300 hover:bg-primary-dark">
             Empezar gratis
           </Link>
         </div>
@@ -63,7 +63,7 @@ export const LandingPlanes = forwardRef((props, ref) => {
             </li>
           </ul>
 
-          <Link href="/premium" className="flex justify-center w-full bg-primary text-white py-2 rounded-lg transition-all duration-300 hover:bg-primary-dark">
+          <Link href="/register?plan=premium" className="flex justify-center w-full bg-primary text-white py-2 rounded-lg transition-all duration-300 hover:bg-primary-dark">
             Contratar Premium
           </Link>
         </div>

@@ -3,8 +3,8 @@ import Image from 'next/image';
 
 export const LandingInfo = ({ onScrollToPlans  }) => {
   return (
-    <section className="py-12 px-6 bg-gray-100 rounded-md">
-      <div className="container mx-auto flex flex-col md:flex-row items-center">
+    <section className="pt-6 md:pt-12 pb-12 px-6 bg-white rounded-md shadow-sm">
+      <div className=" mx-auto flex flex-col md:flex-row items-center">
         {/* Icono representativo */}
         <div className="flex justify-center mb-8 md:mb-0 md:w-1/3">
           <div className='w-[180px]'>

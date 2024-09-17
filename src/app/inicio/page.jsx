@@ -11,11 +11,11 @@ export default async function HomePage() {
   const user = getUser(session?.user?.id);
 
   return (
-    <div className="relative">
+    <div className="relative bg-gray-100">
       <div className="px-6 lg:px-20 xl:px-44">
-        <SwiperHeros/>
+        <div className="pt-4"><SwiperHeros/></div>
         <SwiperCategories especialidades={especialidades}/>
-        <div className="mb-20"></div>
+        <div className="pb-20"></div>
       </div>
       <SwiperActions/>
     </div>

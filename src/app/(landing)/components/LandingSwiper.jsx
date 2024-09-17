@@ -6,7 +6,7 @@ export const LandingSwiper = ({ onScrollToPlans }) => {
   // Definir la data de las tarjetas HeroCard
   const heroData = [
     {
-      title: "Únete a nuestro",
+      title: "Nuestro",
       highlightText: "Plan Premium",
       description: "Disfruta de beneficios exclusivos, contenido personalizado y mucho más. ¡Haz que tu experiencia sea aún mejor con nuestro plan premium!",
       buttonText: "Ver Planes",
@@ -20,10 +20,10 @@ export const LandingSwiper = ({ onScrollToPlans }) => {
       highlightText: "Anato plus",
       description: "Nuestra aplicación te permite gestionar tus preguntas, seguir tu progreso y obtener resultados en tiempo real. ¡Comienza a mejorar hoy!",
       buttonText: "Iniciar",
-      buttonLink: "/download",
+      buttonLink: "/register",
       imageSrc: "/imgs/img-p-2.png", // Asegúrate de que esta imagen exista en tu proyecto
       imageAlt: "Imagen de las Ventajas de la App",
-      handleAction: () => ""
+      handleAction: ""
     },
   ];
 
