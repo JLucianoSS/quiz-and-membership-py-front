@@ -1,11 +1,16 @@
+import { Headerpage } from "@/components";
+import { TableUsers } from "../components";
+import { getUsers } from "@/data/usuarios";
 
 
-export default function UsuariosAdminPage() {
+export default async function UsuariosAdminPage() {
+
+  const users = await getUsers(); 
+
   return (
     <div className="px-4 lg:px-10">
-      <div className="flex items-center justify-center h-[80vh] w-full">
-        <h1>Usuarios Page</h1>
-      </div>
+      <Headerpage titulo="Usuarios" />
+      <TableUsers users={users}/>
     </div>
   );
 }

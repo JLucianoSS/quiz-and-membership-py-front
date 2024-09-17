@@ -17,6 +17,9 @@ export * from "./Tables/TableEspecialidades";
 export * from "./Tables/TableSubespecialidades";
 export * from "./Tables/TableTemas";
 export * from "./Tables/TablePreguntas";
+export * from "./Tables/TableUsers";
+export * from "./Tables/TableSuscriptions";
+export * from "./Tables/TablePayments";
 
 export * from "./Forms/FormAddSubespecialidad";
 export * from "./Forms/FormAddEspecialidad";
