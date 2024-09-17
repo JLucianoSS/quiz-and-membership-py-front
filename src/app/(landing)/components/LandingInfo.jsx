@@ -1,8 +1,7 @@
-import { FaGraduationCap } from 'react-icons/fa';
-import Link from 'next/link';
+
 import Image from 'next/image';
 
-export const LandingInfo = () => {
+export const LandingInfo = ({ onScrollToPlans  }) => {
   return (
     <section className="py-12 px-6 bg-gray-100 rounded-md">
       <div className="container mx-auto flex flex-col md:flex-row items-center">
@@ -23,9 +22,9 @@ export const LandingInfo = () => {
             Encuentra quizes personalizados y preguntas relacionadas con tu área de estudio para aumentar tus posibilidades de éxito.
           </p>
           {/* Botón Ver planes */}
-          <Link href="/planes" className="bg-primary text-white px-6 py-3 rounded-lg  transition-all duration-300">
+          <button onClick={onScrollToPlans} className="bg-primary text-white px-6 py-3 rounded-lg  transition-all duration-300">
             Ver planes
-          </Link>
+          </button>
         </div>
       </div>
     </section>

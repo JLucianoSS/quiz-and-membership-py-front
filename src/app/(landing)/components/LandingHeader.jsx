@@ -21,10 +21,10 @@ export const LandingHeader = () => {
 
         {/* Navegación en el centro */}
         <nav aria-label="Main Navigation" className="hidden md:flex space-x-8">
-          <Link href="/unete" className="text-white hover:text-gray-900 font-medium">
+          <Link href="/unete" className="text-white hover:text-primary font-medium">
             Únete
           </Link>
-          <Link href="/planes" className="text-white hover:text-gray-900 font-medium">
+          <Link href="/planes" className="text-white hover:text-primary font-medium">
             Planes
           </Link>
         </nav>

@@ -17,7 +17,7 @@ export const LandingHero = () => {
   
         {/* Texto centrado */}
         <div className="relative z-10 flex items-center justify-center h-full px-6 lg:px-20 xl:px-44">
-          <h1 className="text-white text-2xl md:text-4xl font-bold text-center">
+          <h1 className="text-white text-xl md:text-3xl font-bold text-center px-10 md:px-40">
             Responde, aprende y supera tus límites en cada pregunta.
           </h1>
         </div>

@@ -2,7 +2,7 @@
 
 import { CustomSwiper, HeroCard } from "@/components";
 
-export const LandingSwiper = () => {
+export const LandingSwiper = ({ onScrollToPlans }) => {
   // Definir la data de las tarjetas HeroCard
   const heroData = [
     {
@@ -13,15 +13,17 @@ export const LandingSwiper = () => {
       buttonLink: "/premium",
       imageSrc: "/imgs/img-p-1.png", // Asegúrate de que esta imagen exista en tu proyecto
       imageAlt: "Imagen del Plan Premium",
+      handleAction: onScrollToPlans
     },
     {
-      title: "Descubre las",
-      highlightText: "Ventajas de Nuestra App",
+      title: "Descubre",
+      highlightText: "Anato plus",
       description: "Nuestra aplicación te permite gestionar tus preguntas, seguir tu progreso y obtener resultados en tiempo real. ¡Comienza a mejorar hoy!",
       buttonText: "Iniciar",
       buttonLink: "/download",
       imageSrc: "/imgs/img-p-2.png", // Asegúrate de que esta imagen exista en tu proyecto
       imageAlt: "Imagen de las Ventajas de la App",
+      handleAction: () => ""
     },
   ];
 
@@ -36,6 +38,7 @@ export const LandingSwiper = () => {
       buttonLink={hero.buttonLink}
       imageSrc={hero.imageSrc}
       imageAlt={hero.imageAlt}
+      handleAction={hero.handleAction}
     />
   ));
 

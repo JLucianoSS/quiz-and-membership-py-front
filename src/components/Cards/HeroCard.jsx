@@ -8,7 +8,8 @@ export const HeroCard = ({
   buttonText, 
   buttonLink, 
   imageSrc, 
-  imageAlt 
+  imageAlt,
+  handleAction
 }) => {
   return (
     <div className="py-5 px-10 flex items-center justify-center border rounded-xl border-gray-100 bg-gray-100">
@@ -23,11 +24,11 @@ export const HeroCard = ({
               {description}
             </p>
 
-            <Link href={buttonLink}>
+            <button onClick={handleAction}>
               <button className="w-full px-5 py-1 mt-4 text-sm tracking-wider text-white uppercase transition-colors duration-300 transform bg-primary rounded-lg lg:w-auto hover:bg-secondary focus:outline-none focus:bg-secondary">
                 {buttonText}
               </button>
-            </Link>
+            </button>
           </div>
         </div>
         <div className="hidden lg:flex items-center justify-center w-full mt-6 lg:mt-0 lg:w-1/2">

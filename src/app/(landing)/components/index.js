@@ -7,3 +7,5 @@ export * from "./LandingPlanes";
 export * from "./LandingInfo";
 export * from "./LandingFAQ";
 export * from "./AccordionItem";
+
+export * from "./Contenedor/LandingContent";
