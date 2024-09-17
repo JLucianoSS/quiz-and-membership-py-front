@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEdit } from "react-icons/fa";
@@ -37,8 +38,9 @@ export const FormEditUser = ({ user }) => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-xs rounded-lg shadow-sm bg-white p-6"
     >
-      <p className="text-center text-gray-500 text-sm mb-4">
+      <p className="text-center text-gray-500 text-sm mb-4 flex flex-col gap-[6px] items-center justify-center">
         Plan {user.role === "Suscriptor" ? "Premium" : "Free"}
+        <Link href="/inicio/planes" className="bg-primary py-1 px-2 rounded text-white">Renovar</Link>
       </p>
 
       {/* Email */}

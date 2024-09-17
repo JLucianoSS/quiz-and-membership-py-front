@@ -1,14 +1,14 @@
 import { CustomSwiper, HeroCard } from "@/components";
 
-export const SwiperHeros = () => {
+export const SwiperHeros = ({ userRole }) => {
   // Definir la data de las tarjetas HeroCard
   const heroData = [
     {
       title: "Nuestro",
       highlightText: "Plan Premium",
-      description: "Disfruta de beneficios exclusivos, contenido personalizado y mucho más. ¡Haz que tu experiencia sea aún mejor con nuestro plan premium!",
+      description: "Adquiere beneficios exclusivos, contenido personalizado y mucho más. ¡Haz que tu experiencia sea aún mejor con nuestro plan premium!",
       buttonText: "Ver Planes",
-      buttonLink: "/premium",
+      buttonLink: "/inicio/planes",
       imageSrc: "/imgs/img-p-1.png", // Asegúrate de que esta imagen exista en tu proyecto
       imageAlt: "Imagen del Plan Premium",
     },
@@ -23,8 +23,11 @@ export const SwiperHeros = () => {
     },
   ];
 
+  // Filtrar las tarjetas según el rol del usuario
+  const filteredHeroData = userRole === "Visitante" ? heroData : [heroData[1]];
+
   // Mapear los datos a HeroCards
-  const heroSlides = heroData.map((hero, index) => (
+  const heroSlides = filteredHeroData.map((hero, index) => (
     <HeroCard
       key={index}
       title={hero.title}

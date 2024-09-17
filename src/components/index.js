@@ -16,3 +16,10 @@ export * from "./Cards/TemaCard";
 
 export * from "./OffCanvas/OffCanvas";
 export * from "./OffCanvas/OffCanvas2";
+
+export * from "./Planes/PlansGrid";
+export * from "./Planes/PlanCard";
+
+
+
+
