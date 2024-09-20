@@ -1,34 +1,27 @@
-import { FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
-import Link from 'next/link';
-import Image from 'next/image';
-import { LOGO } from '@/config/theme';
+import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import Link from "next/link";
+import Image from "next/image";
+import { LOGO } from "@/config/theme";
 
 export const Footer = () => {
   return (
-    <footer className="bg-[#212121] text-white py-8">
-      <div className="flex flex-col md:flex-row justify-between items-center px-6 lg:px-20 xl:px-44">
+    <footer className="bg-[#212121] text-white py-10 w-full">
+      <div className="flex flex-col justify-center items-center gap-6 md:flex-row md:justify-between md:items-start w-full px-6 lg:px-20 xl:px-44">
         {/* Logo */}
-        <div className="mb-6 md:mb-0">
-          <Link href="/inicio" className="focus:outline-none">
-            <Image
-              src={LOGO}
-              width={500}
-              height={500}
-              alt="logo"
-              className="w-[120px] h-full object-cover"
-            />
-          </Link>
-        </div>
+        <Link href="/" className="focus:outline-none">
+          <Image
+            src={LOGO}
+            width={500}
+            height={500}
+            alt="logo"
+            className="w-[130px] h-full object-cover"
+          />
+        </Link>
 
         {/* Sección de enlaces */}
-        <div className="mb-6 md:mb-0">
-          <h4 className="text-lg font-bold mb-4">Navegación</h4>
-          <ul className="space-y-2">
-            <li>
-              <Link href="/about" className="hover:underline">
-                Acerca de
-              </Link>
-            </li>
+        <div className="flex flex-col items-center justify-center">
+          {/* <h4 className="text-lg font-bold mb-3 text-center">Nosotros</h4> */}
+          <ul className="space-y-2 text-center text-sm sm:text-base">
             <li>
               <Link href="/contact" className="hover:underline">
                 Contacto
@@ -48,26 +41,51 @@ export const Footer = () => {
         </div>
 
         {/* Sección de redes sociales */}
-        <div className="mb-6 md:mb-0">
-          <h4 className="text-lg font-bold mb-4 text-center md:text-start">Síguenos</h4>
-          <div className="flex justify-center gap-3">
-            <Link href="https://facebook.com" className="hover:text-primary" target="_blank" rel="noopener noreferrer">
+        <div className="">
+          {/* <h4 className="text-lg font-bold mb-4 text-center md:text-start">Síguenos</h4> */}
+          <div className="flex gap-3">
+            <Link
+              href="https://facebook.com"
+              className="hover:text-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaFacebookF size={24} />
             </Link>
-            <Link href="https://twitter.com" className="hover:text-primary" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://twitter.com"
+              className="hover:text-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaTwitter size={24} />
             </Link>
-            <Link href="https://linkedin.com" className="hover:text-primary" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://linkedin.com"
+              className="hover:text-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FaLinkedinIn size={24} />
             </Link>
           </div>
         </div>
-
       </div>
-        {/* Derechos reservados */}
-        <div className="text-center mt-10">
-          <p className="text-sm">&copy; {new Date().getFullYear()} AnatoPlus. Todos los derechos reservados.</p>
-        </div>
+
+      {/* Derechos reservados */}
+      <div className="flex items-center h-[30px] mt-10 px-6 lg:px-20 xl:px-44">
+        <p className="text-sm sm:text-base text-center md:text-start ">
+          &copy; {new Date().getFullYear()} AnatoPlus. Todos los derechos
+          reservados. Diseñada por{" "}
+          <Link
+            referrerPolicy="no-referrer"
+            href="https://www.instagram.com/auradigital.peru"
+            className="text-primary"
+          >
+            Aura Digital.
+          </Link>
+        </p>
+      </div>
     </footer>
   );
 };

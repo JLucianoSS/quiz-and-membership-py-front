@@ -22,7 +22,7 @@ export const LandingFAQ = () => {
     
     return (
     <div className="max-w-4xl mx-auto py-6 rounded-lg ">
-        <h2 className="text-2xl text-center font-semibold mb-6">Preguntas frecuentes</h2>
+        <h2 className="text-2xl text-center font-semibold mb-9">Preguntas frecuentes</h2>
         {faqs.map((faq, index) => (
             <AccordionItem key={index} question={faq.question} answer={faq.answer} />
         ))}

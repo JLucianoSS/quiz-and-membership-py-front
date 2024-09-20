@@ -4,7 +4,7 @@ export const LandingHero = () => {
 
   /* 61PX ES EL TAMAÑO DEL HEADER Y COMO ES FIJO POR ESO LE DOY PT DE 61 PX */
     return (
-      <div className="pt-[53px]">
+      <div className="pt-[53px] bg-[#212121]">
         <div className="relative w-full h-[60vh] sm:h-[72vh] overflow-hidden">
           {/* Video de fondo */}
           <video
