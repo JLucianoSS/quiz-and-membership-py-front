@@ -5,7 +5,7 @@ import { LOGO } from '@/config/theme';
 
 export const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-8">
+    <footer className="bg-[#212121] text-white py-8">
       <div className="flex flex-col md:flex-row justify-between items-center px-6 lg:px-20 xl:px-44">
         {/* Logo */}
         <div className="mb-6 md:mb-0">

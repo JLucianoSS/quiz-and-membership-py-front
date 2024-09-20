@@ -3,6 +3,7 @@
 import { CustomSwiper, HeroCard } from "@/components";
 
 export const LandingSwiper = ({ onScrollToPlans }) => {
+
   // Definir la data de las tarjetas HeroCard
   const heroData = [
     {
