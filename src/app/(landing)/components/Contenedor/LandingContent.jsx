@@ -66,7 +66,7 @@ export const LandingContent = () => {
           onScrollToFAQ={scrollToFAQ}
         />
       </div>
-      <div className="mt-10" ref={planesRef}>
+      <div className="mt-[190px] lg:mt-10" ref={planesRef}>
         <LandingPlanes />
       </div>
       <div className="mt-6" ref={faqRef}>
