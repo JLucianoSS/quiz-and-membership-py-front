@@ -1,0 +1,12 @@
+
+
+/* Puntitos de paginación inactivos */
+.swiper-pagination-bullet {
+  background-color: #cccccc; /* Color gris para inactivos */
+  opacity: 1; /* Asegura que no tengan opacidad baja */
+}
+
+/* Puntitos de paginación activos */
+.swiper-pagination-bullet-active {
+  background-color: #d9b16b; /* Color naranja (o el que prefieras) para el activo */
+}

@@ -1,6 +1,6 @@
 "use client"
 import { useRef, useEffect } from "react"
-import { LandingFAQ, LandingInfo, LandingPlanes, LandingSwiper } from ".."
+import { LandingFAQ, LandingInfo, LandingPlanes, LandingSwiper, LandingTestimonials } from ".."
 import { useScrollStore } from "../../../../store/ui"
 
 export const LandingContent = () => {
@@ -66,7 +66,10 @@ export const LandingContent = () => {
           onScrollToFAQ={scrollToFAQ}
         />
       </div>
-      <div className="mt-[190px] lg:mt-10" ref={planesRef}>
+      <div className="mt-[240px] lg:mt-10" ref={planesRef}>
+        <LandingTestimonials />
+      </div>
+      <div className="" ref={planesRef}>
         <LandingPlanes />
       </div>
       <div className="mt-6" ref={faqRef}>

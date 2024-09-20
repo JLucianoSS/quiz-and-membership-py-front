@@ -21,7 +21,7 @@ export const LandingInfo = ({ onScrollToPlans }) => {
             <h2 className="text-2xl font-bold text-gray-50">
               Te ayudamos a rendir tu examen de ingreso
             </h2>
-            <p className="text-gray-50 text-sm">
+            <p className="text-gray-50 text-sm lg:text-base">
               ¿Estás preparándote para ingresar a la universidad? Somos expertos en exámenes de admisión y te proporcionamos todas las herramientas necesarias para que puedas estudiar de manera eficiente.
               Encuentra quizes personalizados y preguntas relacionadas con tu área de estudio para aumentar tus posibilidades de éxito.
             </p>
