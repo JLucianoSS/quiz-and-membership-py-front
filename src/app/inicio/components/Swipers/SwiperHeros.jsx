@@ -45,6 +45,7 @@ export const SwiperHeros = ({ userRole }) => {
     spaceBetween: 10,
     loop: true,
     autoplay: { delay: 5000 },
+    pagination: { clickable: true },
   };
 
   return (
