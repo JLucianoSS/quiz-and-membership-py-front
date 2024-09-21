@@ -12,10 +12,10 @@ export default async function HomePage() {
 
   return (
     <div className="relative bg-gray-100">
+      <SwiperHeros userRole={user.role}/>
       <div className="px-6 lg:px-20 xl:px-44">
-        <div className="pt-4"><SwiperHeros userRole={user.role}/></div>
         <SwiperCategories especialidades={especialidades}/>
-        <div className="pb-20"></div>
+        <div className="pb-32"></div>
       </div>
       <SwiperActions/>
     </div>

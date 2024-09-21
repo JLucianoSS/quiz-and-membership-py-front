@@ -7,11 +7,11 @@ export const SwiperCategories = ({ especialidades }) => {
   ));
 
   const categoryConfig = {
-    slidesPerView: 2,
+    slidesPerView: 2.4,
     spaceBetween: 15,
     breakpoints: {
       640: {
-        slidesPerView: 3,
+        slidesPerView: 3.4,
         spaceBetween: 20,
       },
       1024: {
@@ -22,7 +22,7 @@ export const SwiperCategories = ({ especialidades }) => {
   };
   return (
     <>
-      <h1 className="text-2xl font-bold mt-4 mb-5">Especialidades</h1>
+      <h1 className="text-2xl font-bold mt-8 mb-5">Módulos</h1>
       <CustomSwiper slides={categorySlides} config={categoryConfig} />
     </>
   );

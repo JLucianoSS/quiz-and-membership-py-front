@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const ActionCard = ({ action, icon, link = "" }) => {
   return (
-    <Link href={link} className="bg-primary flex flex-col w-[60px] items-center justify-center rounded-lg p-1">
+    <Link href={link} className="flex flex-col w-[60px] items-center justify-center rounded-lg p-1">
       {/* Contenedor del icono con tamaño responsivo */}
       <div className="">
         {icon}

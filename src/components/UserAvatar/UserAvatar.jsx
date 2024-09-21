@@ -21,10 +21,10 @@ export const UserAvatar = ({
         />
       ) : (
         <div
-          className={`mx-auto border-2 border-primary rounded-full w-full h-full flex justify-center items-center`}
+          className={`mx-auto  rounded-full w-full h-full flex justify-center items-center`}
         >
           <span
-            className={`bg-gray-100 w-full h-full ${classText} rounded-full flex justify-center items-center`}
+            className={`bg-white w-full h-full ${classText} rounded-full flex justify-center items-center`}
           >
             {getFirstLetterCapitalize(userName)}
           </span>

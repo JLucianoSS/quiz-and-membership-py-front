@@ -59,13 +59,13 @@ export const Sidebar = ({ user }) => {
       ></div>
 
       <aside
-        className={`fixed top-0 left-0 w-64 h-full bg-white border-r transform ${
+        className={`fixed top-0 left-0 w-64 h-full bg-[#212121] transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out z-50 flex flex-col`}
       >
         <button
           onClick={closeSidebar}
-          className="absolute top-4 right-4 text-gray-800"
+          className="absolute top-4 right-4 text-gray-50"
         >
           <IoCloseOutline size={25} />
         </button>
@@ -78,45 +78,43 @@ export const Sidebar = ({ user }) => {
             classWidth="w-24"
             classText="text-3xl"
           />
-          <h4 className="mt-2 font-medium text-gray-800 text-center">
+          <h4 className="mt-2 font-medium text-gray-100 text-center">
             {user.nombre} {user.apellido}
           </h4>
-          <span className="mt-1 text-sm font-medium text-gray-600 no-underline text-center">
+          <span className="mt-1 text-sm font-medium text-gray-100 no-underline text-center">
             {user.email}
           </span>
         </div>
 
         {/* ITEMS CON SCROLL */}
         <div className="flex-1 overflow-y-auto px-4">
-          <div className="space-y-1">
+          <div className="space-y-1 text-gray-100">
             {user.role === "Administrador" && (
               <Link
                 href="/admin"
-                className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
-                  pathname === "/admin" ? "bg-gray-100" : ""
+                className={`flex items-center px-4 py-2  rounded-lg ${
+                  pathname === "/admin" ? "bg-primary" : ""
                 }`}
                 onClick={handleItemClick}
               >
                 <IoSettingsOutline
                   className="w-5 h-5"
                   size="18px"
-                  color="text-gray-800"
                 />
                 <span className="mx-2 font-medium text-sm">Administración</span>
               </Link>
             )}
 
             <Link
-              href="/"
-              className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
-                pathname === "/" ? "bg-gray-100" : ""
+              href="/inicio"
+              className={`flex items-center px-4 py-2 rounded-lg ${
+                pathname === "/inicio" ? "bg-primary" : ""
               }`}
               onClick={handleItemClick}
             >
               <IoHomeOutline
                 className="w-5 h-5"
                 size="18px"
-                color="text-gray-800"
               />
               <span className="mx-2 font-medium text-sm">Inicio</span>
             </Link>
@@ -125,8 +123,8 @@ export const Sidebar = ({ user }) => {
               <Link
                 key={index}
                 href={item.link}
-                className={`flex items-center px-4 py-2 text-gray-700 rounded-lg ${
-                  pathname === item.link ? "bg-gray-100" : ""
+                className={`flex items-center px-4 py-2 rounded-lg ${
+                  pathname === item.link ? "bg-primary" : ""
                 }`}
                 onClick={handleItemClick}
               >
@@ -140,10 +138,10 @@ export const Sidebar = ({ user }) => {
           </div>
         </div>
 
-        <div className="px-4 py-4 bg-white border-t">
+        <div className="px-4 py-4 bg-[#212121] border-t border-gray-600">
           <button
             onClick={logout}
-            className="w-full flex items-center py-2 px-4 text-gray-700 rounded-lg hover:bg-gray-100 hover:text-gray-700"
+            className="w-full flex items-center py-2 px-4 text-gray-100 rounded-lg hover:bg-primary hover:text-primary"
           >
             <IoLogOutOutline className="w-5 h-5" color="text-gray-800" />
             <span className="mx-2 font-medium text-sm">Cerrar sesión</span>

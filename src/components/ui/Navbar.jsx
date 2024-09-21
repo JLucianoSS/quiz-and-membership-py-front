@@ -25,7 +25,7 @@ export const Navbar = ({ user }) => {
   const roleInfo = user ? getRoleLabel(user.role) : { label: "", color: "" };
 
   return (
-    <nav className="bg-white border-2 border-b-gray-100 fixed w-full z-40">
+    <nav className="bg-[#212121] fixed w-full z-40">
       <div className="mx-auto px-6 lg:px-20 xl:px-44">
         <div className="flex justify-between items-center h-[52px]">
           <div className="flex items-center gap-4">
