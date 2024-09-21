@@ -52,21 +52,22 @@ export const LandingContent = () => {
 
   return (
     <div className="mt-6 mb-20 px-6 lg:px-20 xl:px-44">
-      <div className="mt-6">
-        <LandingSwiper 
-          onScrollToPlans={scrollToPlans}
-          onScrollToInfo={scrollToInfo}
-          onScrollToFAQ={scrollToFAQ}
-        />
-      </div>
-      <div className="mt-6" ref={infoRef}>
+      <div className="mt-10" ref={infoRef}>
         <LandingInfo 
           onScrollToPlans={scrollToPlans}
           onScrollToInfo={scrollToInfo}
           onScrollToFAQ={scrollToFAQ}
         />
       </div>
-      <div className="mt-[240px] lg:mt-10" ref={planesRef}>
+      <div className="mt-[290px] lg:mt-10">
+        <LandingSwiper 
+          onScrollToPlans={scrollToPlans}
+          onScrollToInfo={scrollToInfo}
+          onScrollToFAQ={scrollToFAQ}
+        />
+      </div>
+      
+      <div className="mt-6" ref={planesRef}>
         <LandingTestimonials />
       </div>
       <div className="" ref={planesRef}>

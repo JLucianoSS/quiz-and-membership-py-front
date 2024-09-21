@@ -11,6 +11,7 @@ export * from "./CustomSwiper/CustomSwiper";
 export * from "./Cards/CategoryCard";
 export * from "./Cards/ActionCard";
 export * from "./Cards/HeroCard";
+export * from "./Cards/HeroCard2";
 export * from "./Cards/SubEspecialidadCard";
 export * from "./Cards/TemaCard";
 

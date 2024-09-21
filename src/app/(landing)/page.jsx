@@ -8,7 +8,6 @@ export default function LandingHomePage() {
       <LandingHeader/>
       <LandingHero/>
       <LandingContent/>
-     
       <Footer/>
     </div>
   );
