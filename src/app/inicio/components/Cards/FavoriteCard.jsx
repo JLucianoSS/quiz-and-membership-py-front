@@ -11,7 +11,7 @@ export const FavoriteCard = ({ pregunta, descripcion, fechaRespuesta, esCorresta
   };
 
   return (
-    <div className="max-w-sm p-4 bg-white rounded-lg border border-gray-100 shadow-md flex gap-4 items-center">
+    <div className="w-full p-4 bg-white rounded-lg border border-gray-100 shadow-md flex gap-4 items-center">
 
       {/* Botón de favoritos */}
       <button 

@@ -10,14 +10,14 @@ export const ButtonsBackAndNext = ({ preguntas, slugTema, isQuestionCompleted, p
   };
 
   return (
-    <div className="fixed bg-white bottom-0 w-full h-12  flex justify-between items-center px-5 lg:px-20 xl:px-44 border-t border-gray-100">
-      <button className="py-1 px-7 rounded-md text-sm text-gray-600 bg-gray-100 hover:bg-gray-200">
+    <div className="fixed bg-white bottom-0 w-full h-[55px]  flex justify-between items-center px-5 lg:px-20 xl:px-44 border-t ">
+      <button className="py-1 sm:py-2 sm:text-base px-7 rounded-md text-sm text-gray-600 bg-gray-100 hover:bg-gray-200">
         Saltar
       </button>
 
       {parseInt(page) === preguntas.length ? (
         <button
-          className="py-1 px-7 rounded-md text-sm text-white bg-primary"
+          className="py-1 sm:py-2 sm:text-base px-7 rounded-md text-sm text-white bg-primary"
           onClick={handleFinalizar}
         >
           Finalizar
@@ -25,7 +25,7 @@ export const ButtonsBackAndNext = ({ preguntas, slugTema, isQuestionCompleted, p
       ) : (
         <Link
           href={`/preguntas/tema/${slugTema}/p/${parseInt(page) + 1}`}
-          className={`py-1 px-7 rounded-md text-sm text-white bg-primary ${
+          className={`py-1 sm:py-2 sm:text-base px-7 rounded-md text-sm text-white bg-primary ${
             !isQuestionCompleted && "pointer-events-none opacity-50"
           }`}
         >

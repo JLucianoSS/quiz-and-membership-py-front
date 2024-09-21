@@ -2,7 +2,7 @@ import { IoCloseCircleOutline, IoCheckmarkCircleOutline } from 'react-icons/io5'
 
 export const HistorialCard = ({ pregunta, respuestaDada, fechaRespuesta, esCorresta }) => {
   return (
-    <div className="max-w-sm p-4 bg-white  rounded-lg border border-gray-100 shadow-md">
+    <div className="w-full p-4 bg-white  rounded-lg border border-gray-100 shadow-md">
       <div className="text-gray-500 text-sm font-semibold">
         { pregunta }
       </div>

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ApplyButton, FilterBy, FilterByYear } from "..";
-import { Offcanvas } from "@/components";
+import { Headerpage, Offcanvas } from "@/components";
 import { IoAddCircleOutline } from "react-icons/io5"; // Importamos solo el ícono de agregar
 
 export const ViewFilters = ({ especialidades, subespecialidades, temas, preguntas }) => {
@@ -53,10 +53,11 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
 
   return (
     <>
-      <div className="px-4 lg:px-20 xl:px-44 ">
+      <div className="bg-white max-w-[600px] mx-auto px-6 h-full pb-[7rem]">
+        <Headerpage titulo="Encuentra tus preguntas" />
         {/* Especialidades */}
         <FilterBy
-          titulo="Especialidades"
+          titulo="Selecciona módulos"
           filterBy={especialidades}
           selectedItems={selectedEspecialidades}
           toggleItem={toggleEspecialidad}
@@ -64,7 +65,7 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
         
         {/* Subespecialidades */}
         <div className="mt-4">
-          <h2 className="text-lg font-semibold">Subespecialidades</h2>
+          <h2 className="text-lg font-semibold">Añadir temas</h2>
           <div className="flex flex-wrap items-center gap-2">
             {selectedSubespecialidades.map((sub) => (
               <button
@@ -92,7 +93,7 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
 
         {/* Temas */}
         <div className="mt-4">
-          <h2 className="text-lg font-semibold">Temas</h2>
+          <h2 className="text-lg font-semibold">Añadir subtemas</h2>
           <div className="flex flex-wrap items-center gap-2">
             {selectedTemas.map((tema) => (
               <button
@@ -108,7 +109,16 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
             </button>
           </div>
         </div>
-        {/* Offcanvas para Temas */}
+        
+        
+        {/* Año */}
+        <FilterByYear preguntas={preguntas} onYearSelect={setSelectedYear} />
+      </div>
+
+      {/* Botón Aplicar */}
+      <ApplyButton onApply={aplicarFiltros} preguntas={preguntas.length} />
+
+      {/* Offcanvas para Temas */}
         <Offcanvas
           isOpen={isTemasOpen}
           onClose={() => setIsTemasOpen(false)}
@@ -117,13 +127,6 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
           selectedItems={selectedTemas}
           onSelect={setSelectedTemas}
         />
-        
-        {/* Año */}
-        <FilterByYear preguntas={preguntas} onYearSelect={setSelectedYear} />
-      </div>
-
-      {/* Botón Aplicar */}
-      <ApplyButton onApply={aplicarFiltros} preguntas={preguntas.length} />
     </>
   );
 };

@@ -18,3 +18,6 @@ export * from "./Filters/ApplyButton"
 export * from "./Contenedor/ViewFilters"
 
 export * from "./Forms/FormEditUser"
+
+export * from "./Hero/HeroTitle"
+

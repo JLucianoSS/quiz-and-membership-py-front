@@ -40,14 +40,14 @@ export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
     <>
       {/* CUERPO DE LA PREGUNTA */}
       <div className="flex flex-col gap-0">
-        <h2 className="text-lg text-gray-700 font-semibold">
+        <h2 className="text-lg sm:text-xl text-gray-700 font-semibold">
           Pregunta {page} / {preguntas.length}
         </h2>
-        <h3 className="text-[12px] text-gray-300">
+        <h3 className="text-[12px] text-gray-400 sm:text-[15px]">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam nam perspiciatis quis ad delectus.
         </h3>
       </div>
-      <p className="text-sm text-gray-500 mt-2">
+      <p className="text-sm text-gray-700 mt-2 sm:text-lg">
         {preguntas[parseInt(page - 1)].pregunta}
       </p>
 

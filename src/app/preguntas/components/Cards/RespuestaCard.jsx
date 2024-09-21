@@ -24,7 +24,7 @@ export const RespuestaCard = ({ letter, answer, isCorrect, onClick, isSelected, 
         </div>
 
         <div className="w-[90%]">
-          <p className={`text-[13px] text-gray-500 w-full ${isStriked ? 'line-through' : ''}`}>
+          <p className={`text-[13px] sm:text-[15px] text-gray-500 w-full ${isStriked ? 'line-through' : ''}`}>
             {answer}
           </p>
         </div>
@@ -32,7 +32,7 @@ export const RespuestaCard = ({ letter, answer, isCorrect, onClick, isSelected, 
 
       <div className="flex items-center justify-center w-[10%] cursor-pointer">
         <div
-          className={`bg-gray-100 p-2 rounded-full h-6 w-6 flex justify-center items-center ${isStriked && "bg-gray-400 "}`}
+          className={`bg-gray-100 p-2 rounded-full h-8 w-8 flex justify-center items-center ${isStriked && "bg-gray-400 "}`}
           onClick={(e) => {
             e.stopPropagation(); // Evitar que al hacer clic en tachar también se seleccione la respuesta
             if (!disableStrike && !disableClicks) { // Solo permitir tachar si no está deshabilitado
@@ -40,7 +40,7 @@ export const RespuestaCard = ({ letter, answer, isCorrect, onClick, isSelected, 
             }
           }}
         >
-          <span className={`text-[12px] text-gray-500 ${isStriked && "text-white line-through"}`}>T</span>
+          <span className={` text-[12px] text-gray-500 ${isStriked && "text-white line-through"}`}>T</span>
         </div>
       </div>
     </div>

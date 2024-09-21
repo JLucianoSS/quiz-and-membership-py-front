@@ -1,7 +1,7 @@
 export const FilterBy = ({ titulo, filterBy, selectedItems, toggleItem }) => {
     return (
       <>
-        <h2 className="text-lg font-semibold">{titulo}</h2>
+        <h2 className="text-lg font-semibold mb-1">{titulo}</h2>
         <div className="flex flex-wrap gap-2">
           {filterBy.map((item) => (
             <button

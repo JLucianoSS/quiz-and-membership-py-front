@@ -11,7 +11,7 @@ export default function SubEspecialidadPage({ params }) {
 
   return (
     <div className="px-6 lg:px-20 xl:px-44">
-      <Headerpage titulo={name}/>
+      <Headerpage titulo={name + ` - Escoge un subtema`}/>
       <TemasGrid temas={filteredTemas}/>
     </div>
   );

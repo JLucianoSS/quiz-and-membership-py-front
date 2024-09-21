@@ -1,5 +1,5 @@
 import { Headerpage } from "@/components";
-import { ViewFilters } from "../components";
+import { HeroTitle, ViewFilters } from "../components";
 import { especialidades } from "../../../data/especialidades";
 import { subespecialidades } from "../../../data/subespecialidades";
 import { preguntas } from "../../../data/preguntas";
@@ -12,18 +12,16 @@ export default async function FiltrosPage() {
   return (
     <>
       {/* Header */}
-      <div className="px-4 lg:px-20 xl:px-44 ">
-        <Headerpage titulo="Filtros" />
+      <HeroTitle title="Filtrar" imgSrc="/imgs/heroimg1.jpg" imgPositionY="30%"/>
+
+      <div className="bg-gray-200 ">
+        <ViewFilters
+          especialidades={especialidades}
+          subespecialidades={subespecialidades}
+          temas={temas}
+          preguntas={preguntas}
+        />
       </div>
-
-      <ViewFilters
-        especialidades={especialidades}
-        subespecialidades={subespecialidades}
-        temas={temas}
-        preguntas={preguntas}
-      />
-
-      <div className="mb-16"></div>
     </>
   );
 }
