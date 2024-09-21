@@ -8,15 +8,15 @@ export const SwiperCategories = ({ especialidades }) => {
 
   const categoryConfig = {
     slidesPerView: 2.4,
-    spaceBetween: 15,
+    spaceBetween: 10,
     breakpoints: {
       640: {
         slidesPerView: 3.4,
-        spaceBetween: 20,
+        spaceBetween: 15,
       },
       1024: {
         slidesPerView: 4,
-        spaceBetween: 30,
+        spaceBetween: 15,
       },
     },
   };

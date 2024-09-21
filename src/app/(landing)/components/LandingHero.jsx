@@ -20,8 +20,20 @@ export const LandingHero = () => {
           {/* Capa de superposición oscura para que el texto sea más legible */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
       
-          {/* px-6 lg:px-20 xl:px-44 */}
+          {/* CENTRADO CONFIG */}
           <div className="relative z-10 h-full px-6 lg:px-20 xl:px-44">
+            <div className="flex flex-col justify-center items-center gap-5 h-full">
+              <h1 className="w-full text-gray-50 text-3xl font-bold text-center lg:text-4xl">
+                Supera tus límites en cada pregunta
+              </h1>
+              <p className="text-gray-50 text-center text-sm lg:text-base px-[8%] lg:px-[15%]">Explora una amplia variedad de temas y pon a prueba tus conocimientos en cada respuesta. Cada pregunta es una nueva oportunidad para crecer y descubrir hasta dónde puedes llegar.</p>
+              <Link href="#" className="mt-4">
+                <span className="text-gray-50 border border-gray-50 text-center rounded-lg py-[8px] px-[18px]">Saber más</span>
+              </Link>
+            </div>
+          </div>
+          {/* AL COSTADO CONFIG */}
+          {/* <div className="relative z-10 h-full px-6 lg:px-20 xl:px-44">
             <div className="flex flex-col justify-center items-center gap-5 h-full lg:items-start lg:w-[40%]">
               <h1 className="w-full text-gray-50 text-3xl font-bold text-center lg:text-start lg:text-4xl">
                 Supera tus límites en cada pregunta
@@ -31,7 +43,7 @@ export const LandingHero = () => {
                 <span className="text-gray-50 border border-gray-50 text-center rounded-lg py-[8px] px-[18px]">Saber más</span>
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     );
