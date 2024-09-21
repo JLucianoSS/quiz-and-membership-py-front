@@ -79,6 +79,7 @@ export const Footer = () => {
           reservados. Diseñada por{" "}
           <Link
             referrerPolicy="no-referrer"
+            target="_blank"
             href="https://www.instagram.com/auradigital.peru"
             className="text-primary"
           >
