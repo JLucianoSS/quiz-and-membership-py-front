@@ -12,10 +12,11 @@ export const HeroCard2 = ({
   handleAction
 }) => {
   return (
-    <div className="py-8 px-10 flex items-center mb-10 justify-center shadow-sm rounded-xl bg-white">
-      <div className="items-center flex flex-col-reverse lg:flex-row">
-        <div className="w-full lg:w-1/2">
-          <div className="lg:max-w-lg flex flex-col items-start">
+    <div className="py-8 px-10 flex items-center mb-10 justify-center shadow-sm rounded-xl bg-white h-full">
+      <div className="items-center flex flex-col-reverse lg:flex-row lg:h-full">
+        {/* Columna de texto */}
+        <div className="w-full lg:w-1/2 flex flex-col justify-between h-full">
+          <div className="lg:max-w-lg flex flex-col items-start h-full">
             <h1 className="text-2xl font-semibold text-gray-800 lg:text-3xl">
               {title}{" "}<span className="text-primary">{highlightText}</span>
             </h1>
@@ -34,15 +35,17 @@ export const HeroCard2 = ({
                 </Link>}
           </div>
         </div>
-        <div className="lg:flex items-center justify-center  lg:w-1/2">
-          <div className='max-w-sm'>
-              <Image
-                className="max-w-[150px] lg:w-full h-full lg:max-w-3xl object-cover"
-                width={500}
-                height={500}
-                src={imageSrc}
-                alt={imageAlt}
-              />
+
+        {/* Columna de imagen */}
+        <div className="lg:flex items-center justify-center lg:w-1/2 lg:h-full">
+          <div className="max-w-sm">
+            <Image
+              className="max-w-[150px] lg:w-full h-full lg:max-w-3xl object-cover"
+              width={500}
+              height={500}
+              src={imageSrc}
+              alt={imageAlt}
+            />
           </div>
         </div>
       </div>

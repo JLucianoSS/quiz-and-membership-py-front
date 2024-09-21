@@ -42,7 +42,9 @@ export const FormSignIn = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md">
+    <form 
+      onSubmit={handleSubmit(onSubmit)} 
+      className="w-full max-w-md bg-white px-3 sm:px-8 py-14 rounded-md border sm:shadow-md">
       <div className="flex flex-col items-center">
         <Link href="/">
           <Image
