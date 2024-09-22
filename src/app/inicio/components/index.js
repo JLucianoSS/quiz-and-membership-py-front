@@ -7,9 +7,9 @@ export * from "./Swipers/SwiperHeros"
 export * from "./Cards/HistorialCard"
 export * from "./Cards/FavoriteCard"
 
-export * from "./Grids/EspecialidadesGrid"
-export * from "./Grids/SubEspecialidadesGrid"
+export * from "./Grids/ModulosGrid"
 export * from "./Grids/TemasGrid"
+export * from "./Grids/SubTemasGrid"
 
 export * from "./Filters/FilterBy"
 export * from "./Filters/FilterByYear"

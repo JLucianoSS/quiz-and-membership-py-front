@@ -14,7 +14,7 @@ export default async function HomePage() {
     <div className="relative bg-gray-100">
       <SwiperHeros userRole={user.role}/>
       <div className="px-6 lg:px-20 xl:px-44">
-        <SwiperCategories especialidades={Modulos}/>
+        <SwiperCategories modulos={Modulos}/>
         <div className="pb-32"></div>
       </div>
       <SwiperActions/>

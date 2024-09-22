@@ -1,9 +1,10 @@
 import { CategoryCard, CustomSwiper } from "@/components";
 
 
-export const SwiperCategories = ({ especialidades }) => {
-  const categorySlides = especialidades.map((especialidad, index) => (
-    <CategoryCard key={index} id={especialidad.id_Modulo} name={especialidad.nombre_modulo} image={especialidad.imagen} />
+export const SwiperCategories = ({ modulos }) => {
+  
+  const categorySlides = modulos.map((modulo, index) => (
+    <CategoryCard key={index} id={modulo.id_Modulo} name={modulo.nombre_modulo} image={modulo.imagen} />
   ));
 
   const categoryConfig = {

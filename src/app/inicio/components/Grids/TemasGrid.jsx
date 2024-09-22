@@ -1,16 +1,20 @@
-import { TemaCard } from "@/components"
+import { TemaCard } from "@/components";
 
 
 export const TemasGrid = ({ temas }) => {
   return (
-    <div><div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 py-2">
-    {temas.map((tema, index) => (
-      <TemaCard
-        key={index} 
-        id={tema.id_Subtema}
-        name={tema.Subtema} 
-      />
-    ))}
-  </div></div>
-  )
-}
+    <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 py-2">
+        {temas.map((tema, index) => (
+          <TemaCard
+            key={index} 
+            id={tema.id_Tema}
+            name={tema.Nombre_Tema} 
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
