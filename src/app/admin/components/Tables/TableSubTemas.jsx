@@ -22,9 +22,7 @@ export const TableSubTemas = ({ subtemas, temas }) => {
         </thead>
         <tbody>
           {subtemas.map((subtema) => {
-            const tema = temas.find(
-              (sub) => sub.id === subtema.id_Tema
-            );
+            const tema = temas.find((tem) => tem.id_Tema === subtema.id_Tema);
             return (
               <tr
                 key={subtema.id_Subtema}
@@ -34,7 +32,7 @@ export const TableSubTemas = ({ subtemas, temas }) => {
                 <td className="border border-gray-300 px-4 py-2">{subtema.id_Subtema}</td>
                 <td className="border border-gray-300 px-4 py-2">{subtema.Subtema}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {tema ? tema.nombre : "N/A"}
+                  {tema ? tema.Nombre_Tema : "N/A"}
                 </td>
               </tr>
             );
