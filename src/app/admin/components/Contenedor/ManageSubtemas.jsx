@@ -1,22 +1,23 @@
+
 "use client";
 import { useState } from "react";
-import { IoAddCircle, IoChevronDown, IoChevronUp } from "react-icons/io5";
+import { IoAddCircle, IoChevronUp, IoChevronDown } from "react-icons/io5";
 import { Offcanvas2 } from "@/components";
-import { FormAddSubespecialidad, PaginationAdmin, TableSubespecialidades } from "..";
+import { FormAddSubTema, FormAddTema, PaginationAdmin, TableSubTemas } from "..";
 
-export const ManageSubEspecialidades = ({ especialidades, subespecialidades }) => {
-  const itemsPerPage = 5; // Definir cuántas subespecialidades mostrar por página
+
+export const ManageSubtemas = ({ subtemas, temas }) => {
+  const itemsPerPage = 5; // Definir cuántos subtemas mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
-  
 
   // Calcular los elementos que se mostrarán según la página actual
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = subespecialidades.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = subtemas.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(subespecialidades.length / itemsPerPage);
+  const totalPages = Math.ceil(subtemas.length / itemsPerPage);
 
   // Función para abrir el Offcanvas
   const handleOpenOffcanvas = () => {
@@ -34,13 +35,13 @@ export const ManageSubEspecialidades = ({ especialidades, subespecialidades }) =
   };
 
   return (
-    <div>
+    <div >
       {/* Título clickeable para mostrar/ocultar el contenido */}
       <h1
         className="text-[16px] cursor-pointer font-bold flex items-center gap-2"
         onClick={toggleContentVisibility}
       >
-        Temas ({subespecialidades.length}){" "}
+        Subtemas ({subtemas.length})
         {isContentVisible ? <IoChevronUp size={20} /> : <IoChevronDown size={20} />}
       </h1>
 
@@ -56,16 +57,13 @@ export const ManageSubEspecialidades = ({ especialidades, subespecialidades }) =
             className="flex items-center text-sm gap-1 text-white bg-primary px-2 py-1 rounded-md"
             onClick={handleOpenOffcanvas}
           >
-            <IoAddCircle size={24} /> {/* Ícono de agregar */}
-            <span>Agregar Tema</span>
+            <IoAddCircle size={24} />
+            <span>Agregar Subtema</span>
           </button>
         </div>
 
-        {/* Tabla de Subespecialidades */}
-        <TableSubespecialidades
-          subespecialidades={currentItems}
-          especialidades={especialidades}
-        />
+        {/* Tabla de Temas */}
+        <TableSubTemas subtemas={currentItems} temas={temas} />
 
         {/* Paginación */}
         <PaginationAdmin
@@ -75,12 +73,13 @@ export const ManageSubEspecialidades = ({ especialidades, subespecialidades }) =
         />
       </div>
 
-      {/* Offcanvas para añadir subespecialidades */}
-      <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nuevo Tema">
-        <FormAddSubespecialidad
-          especialidades={especialidades}
-          onClose={handleCloseOffcanvas}
-        />
+      {/* Offcanvas para añadir temas */}
+      <Offcanvas2
+        isOpen={isOffcanvasOpen}
+        onClose={handleCloseOffcanvas}
+        title="Añadir Nuevo Subtema"
+      >
+        <FormAddSubTema temas={temas} onClose={handleCloseOffcanvas}/>
       </Offcanvas2>
     </div>
   );

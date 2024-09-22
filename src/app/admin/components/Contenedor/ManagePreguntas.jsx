@@ -5,7 +5,7 @@ import { Offcanvas2 } from "@/components";
 import { FormAddPregunta, PaginationAdmin, TablePreguntas } from "..";
 
 
-export const ManagePreguntas = ({ temas, preguntas, opciones }) => {
+export const ManagePreguntas = ({ subtemas, preguntas, opciones }) => {
   const itemsPerPage = 5; // Definir cuántas preguntas mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
@@ -62,7 +62,7 @@ export const ManagePreguntas = ({ temas, preguntas, opciones }) => {
         </div>
 
         {/* Tabla de Preguntas */}
-        <TablePreguntas preguntas={currentItems} temas={temas} />
+        <TablePreguntas preguntas={currentItems} temas={subtemas} />
 
         {/* Paginación */}
         <PaginationAdmin
@@ -78,7 +78,7 @@ export const ManagePreguntas = ({ temas, preguntas, opciones }) => {
         onClose={handleCloseOffcanvas}
         title="Añadir Nueva Pregunta"
       >
-        <FormAddPregunta temas={temas} onClose={handleCloseOffcanvas} />
+        <FormAddPregunta temas={subtemas} onClose={handleCloseOffcanvas} />
       </Offcanvas2>
     </div>
   );

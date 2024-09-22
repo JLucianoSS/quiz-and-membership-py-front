@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { IoAddCircle, IoChevronUp, IoChevronDown } from "react-icons/io5";
 import { Offcanvas2 } from "@/components";
-import { FormAddEspecialidad, PaginationAdmin, TableEspecialidades } from "..";
+import { FormAddModulo, PaginationAdmin, TableModulos } from "..";
 
-export const ManageEspecialidades = ({ especialidades }) => {
-  const itemsPerPage = 5; // Definir cuántas especialidades mostrar por página
+export const ManageModulos = ({ modulos }) => {
+  const itemsPerPage = 5; // Definir cuántas modulos mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
@@ -13,9 +13,9 @@ export const ManageEspecialidades = ({ especialidades }) => {
   // Calcular los elementos que se mostrarán según la página actual
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = especialidades.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = modulos.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(especialidades.length / itemsPerPage);
+  const totalPages = Math.ceil(modulos.length / itemsPerPage);
 
   // Función para abrir el Offcanvas
   const handleOpenOffcanvas = () => {
@@ -39,7 +39,7 @@ export const ManageEspecialidades = ({ especialidades }) => {
         className="text-[16px] cursor-pointer font-bold flex items-center gap-2" 
         onClick={toggleContentVisibility}
       >
-        Módulos ({especialidades.length}) 
+        Módulos ({modulos.length}) 
         {isContentVisible ? <IoChevronUp size={20} /> : <IoChevronDown size={20} />}
       </h1>
 
@@ -57,8 +57,8 @@ export const ManageEspecialidades = ({ especialidades }) => {
           </button>
         </div>
 
-        {/* Tabla de Especialidades */}
-        <TableEspecialidades especialidades={currentItems} />
+        {/* Tabla de modulos */}
+        <TableModulos modulos={currentItems} />
 
         {/* Paginación */}
         <PaginationAdmin
@@ -68,9 +68,9 @@ export const ManageEspecialidades = ({ especialidades }) => {
         />
       </div>
 
-      {/* Offcanvas para añadir especialidades */}
+      {/* Offcanvas para añadir modulos */}
       <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nuevo Módulo">
-        <FormAddEspecialidad />
+        <FormAddModulo />
       </Offcanvas2>
     </div>
   );

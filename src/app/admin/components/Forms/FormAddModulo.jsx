@@ -2,7 +2,7 @@
 import { useForm } from "react-hook-form";
 import { uploadFile } from "../../../../firebase/config";
 
-export const FormAddEspecialidad = () => {
+export const FormAddModulo = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   
   const onSubmit = async(data) => {

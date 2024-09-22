@@ -2,12 +2,12 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export const TableEspecialidades = ({ especialidades }) => {
+export const TableModulos = ({ modulos }) => {
   const router = useRouter();
 
   // Función para navegar cuando se clickea una fila
   const handleRowClick = (id) => {
-    router.push(`/especialidades/${id}`); // Navegar a la ruta deseada, puedes personalizar la URL
+    router.push(`/modulos/${id}`); // Navegar a la ruta deseada, puedes personalizar la URL
   };
 
   return (
@@ -21,20 +21,20 @@ export const TableEspecialidades = ({ especialidades }) => {
           </tr>
         </thead>
         <tbody>
-          {especialidades.map((especialidad) => (
+          {modulos.map((modulo) => (
             <tr
-              key={especialidad.id}
+              key={modulo.id_Modulo}
               className="hover:bg-gray-50 cursor-pointer"
-              onClick={() => handleRowClick(especialidad.id)}
+              onClick={() => handleRowClick(modulo.id_Modulo)}
             >
-              <td className="border border-gray-300 px-4 py-2">{especialidad.id}</td>
-              <td className="border border-gray-300 px-4 py-2">{especialidad.nombre}</td>
+              <td className="border border-gray-300 px-4 py-2">{modulo.id_Modulo}</td>
+              <td className="border border-gray-300 px-4 py-2">{modulo.nombre_modulo}</td>
               <td className="border border-gray-300 px-4 py-2">
                 <div className="h-16 w-16">
                   <Image
                     className="h-full w-full object-cover"
-                    src={especialidad.imagen}
-                    alt={especialidad.nombre}
+                    src={modulo.imagen}
+                    alt={modulo.nombre_modulo}
                     width={300}
                     height={300}
                   />

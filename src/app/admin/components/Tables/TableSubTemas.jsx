@@ -1,12 +1,13 @@
+
 "use client";
 import { useRouter } from "next/navigation";
 
-export const TableSubespecialidades = ({ subespecialidades, especialidades }) => {
+export const TableSubTemas = ({ subtemas, temas }) => {
   const router = useRouter();
 
   // Función para navegar cuando se clickea una fila
   const handleRowClick = (id) => {
-    router.push(`/subespecialidades/${id}`);
+    router.push(`/subtema/${id}`);
   };
 
   return (
@@ -16,23 +17,25 @@ export const TableSubespecialidades = ({ subespecialidades, especialidades }) =>
           <tr>
             <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Módulo</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Tema</th>
           </tr>
         </thead>
         <tbody>
-          {subespecialidades.map((subespecialidad) => {
-            const especialidad = especialidades.find(
-              (esp) => esp.id === subespecialidad.especialidadId
+          {subtemas.map((subtema) => {
+            const tema = temas.find(
+              (sub) => sub.id === subtema.id_Tema
             );
             return (
               <tr
-                key={subespecialidad.id}
+                key={subtema.id_Subtema}
                 className="hover:bg-gray-50 cursor-pointer"
-                onClick={() => handleRowClick(subespecialidad.id)}
+                onClick={() => handleRowClick(subtema.id_Subtema)}
               >
-                <td className="border border-gray-300 px-4 py-2">{subespecialidad.id}</td>
-                <td className="border border-gray-300 px-4 py-2">{subespecialidad.nombre}</td>
-                <td className="border border-gray-300 px-4 py-2">{especialidad ? especialidad.nombre : "N/A"}</td>
+                <td className="border border-gray-300 px-4 py-2">{subtema.id_Subtema}</td>
+                <td className="border border-gray-300 px-4 py-2">{subtema.Subtema}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {tema ? tema.nombre : "N/A"}
+                </td>
               </tr>
             );
           })}

@@ -1,10 +1,10 @@
 import { Headerpage } from "@/components";
 import { ViewManageQuiz } from "../components";
 
-import { especialidades } from "@/data/especialidades";
-import { subespecialidades } from "@/data/subespecialidades";
-import { temas } from "@/data/temas";
-import { preguntas } from "@/data/preguntas";
+import { Modulos } from "@/data/modulos";
+import { Temas } from "@/data/temas";
+import { Subtemas } from "@/data/subtemas";
+import { Preguntas } from "@/data/preguntas";
 import { opciones } from "@/data/opciones";
 
 export default async function PreguntasAdminPage() {
@@ -14,10 +14,10 @@ export default async function PreguntasAdminPage() {
     <div className="px-4 lg:px-10">
       <Headerpage titulo="Gestión de preguntas" />
       <ViewManageQuiz
-        especialidades={especialidades}
-        subespecialidades={subespecialidades}
-        temas={temas}
-        preguntas={preguntas}
+        modulos={Modulos}
+        temas={Temas}
+        subtemas={Subtemas}
+        preguntas={Preguntas}
         opciones={opciones}
       />
       <div className="mb-10"></div>

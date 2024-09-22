@@ -1,16 +1,15 @@
-
 "use client";
 import { useState } from "react";
-import { IoAddCircle, IoChevronUp, IoChevronDown } from "react-icons/io5";
+import { IoAddCircle, IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { Offcanvas2 } from "@/components";
 import { FormAddTema, PaginationAdmin, TableTemas } from "..";
 
-
-export const ManageTemas = ({ subespecialidades, temas }) => {
+export const ManageTemas = ({ modulos, temas }) => {
   const itemsPerPage = 5; // Definir cuántos temas mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
+  
 
   // Calcular los elementos que se mostrarán según la página actual
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -35,13 +34,13 @@ export const ManageTemas = ({ subespecialidades, temas }) => {
   };
 
   return (
-    <div >
+    <div>
       {/* Título clickeable para mostrar/ocultar el contenido */}
       <h1
         className="text-[16px] cursor-pointer font-bold flex items-center gap-2"
         onClick={toggleContentVisibility}
       >
-        Subtemas ({temas.length})
+        Temas ({temas.length}){" "}
         {isContentVisible ? <IoChevronUp size={20} /> : <IoChevronDown size={20} />}
       </h1>
 
@@ -57,13 +56,16 @@ export const ManageTemas = ({ subespecialidades, temas }) => {
             className="flex items-center text-sm gap-1 text-white bg-primary px-2 py-1 rounded-md"
             onClick={handleOpenOffcanvas}
           >
-            <IoAddCircle size={24} />
-            <span>Agregar Subtema</span>
+            <IoAddCircle size={24} /> {/* Ícono de agregar */}
+            <span>Agregar Tema</span>
           </button>
         </div>
 
-        {/* Tabla de Temas */}
-        <TableTemas temas={currentItems} subespecialidades={subespecialidades} />
+        {/* Tabla de temas */}
+        <TableTemas
+          temas={currentItems}
+          modulos={modulos}
+        />
 
         {/* Paginación */}
         <PaginationAdmin
@@ -74,12 +76,11 @@ export const ManageTemas = ({ subespecialidades, temas }) => {
       </div>
 
       {/* Offcanvas para añadir temas */}
-      <Offcanvas2
-        isOpen={isOffcanvasOpen}
-        onClose={handleCloseOffcanvas}
-        title="Añadir Nuevo Subtema"
-      >
-        <FormAddTema subespecialidades={subespecialidades} onClose={handleCloseOffcanvas}/>
+      <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nuevo Tema">
+        <FormAddTema
+          modulos={modulos}
+          onClose={handleCloseOffcanvas}
+        />
       </Offcanvas2>
     </div>
   );
