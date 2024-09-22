@@ -1,6 +1,5 @@
 
-import { FaUserCircle } from "react-icons/fa";
-import { FormEditUser } from "../components";
+import { FormEditUser, ProfileAvatar, UploadAvatar } from "../components";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/auth.config";
 import { getUser } from "@/data/usuarios";
@@ -21,10 +20,7 @@ export default async function PerfilPage() {
       </div>
 
       {/*avatar y nombre */}
-      <div className="relative w-full h-[30%] flex flex-col justify-center items-center">
-        <FaUserCircle className="text-primary text-8xl" />
-        <h2 className="text-gray-800 text-2xl font-bold mt-2">{user?.nombre} {user?.apellido}</h2>
-      </div>
+      <ProfileAvatar user={user}/>
 
       <div className="flex flex-col items-center h-[70%] p-4">
         {/* Información del perfil */}

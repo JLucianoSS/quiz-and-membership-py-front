@@ -21,3 +21,6 @@ export * from "./Forms/FormEditUser"
 
 export * from "./Hero/HeroTitle"
 
+export * from "./UploadAvatar/UploadAvatar"
+export * from "./UploadAvatar/ProfileAvatar"
+

@@ -18,14 +18,14 @@ export const FormAddSubespecialidad = ({ especialidades, onClose }) => {
   // Función para manejar el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Nueva subespecialidad:", newSubEspecialidad);
+    console.log("Nuevo tema:", newSubEspecialidad);
     onClose(); // Cerrar el Offcanvas tras enviar el formulario
   };
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div>
-        <label className="block text-gray-700">Especialidad</label>
+        <label className="block text-gray-700">Módulo</label>
         <select
           name="especialidadId"
           className="w-full px-4 py-2 border rounded-md"
@@ -33,7 +33,7 @@ export const FormAddSubespecialidad = ({ especialidades, onClose }) => {
           onChange={handleInputChange}
           required
         >
-          <option value="">Selecciona una especialidad</option>
+          <option value="">Selecciona un módulo</option>
           {especialidades.map((especialidad) => (
             <option key={especialidad.id} value={especialidad.id}>
               {especialidad.nombre}
@@ -43,7 +43,7 @@ export const FormAddSubespecialidad = ({ especialidades, onClose }) => {
       </div>
       <div>
         <label className="block text-gray-700">
-          Nombre de la Subespecialidad
+          Nombre del tema
         </label>
         <input
           type="text"

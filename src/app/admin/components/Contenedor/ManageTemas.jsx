@@ -41,7 +41,7 @@ export const ManageTemas = ({ subespecialidades, temas }) => {
         className="text-[16px] cursor-pointer font-bold flex items-center gap-2"
         onClick={toggleContentVisibility}
       >
-        Temas ({temas.length})
+        Subtemas ({temas.length})
         {isContentVisible ? <IoChevronUp size={20} /> : <IoChevronDown size={20} />}
       </h1>
 
@@ -58,7 +58,7 @@ export const ManageTemas = ({ subespecialidades, temas }) => {
             onClick={handleOpenOffcanvas}
           >
             <IoAddCircle size={24} />
-            <span>Agregar Tema</span>
+            <span>Agregar Subtema</span>
           </button>
         </div>
 
@@ -77,7 +77,7 @@ export const ManageTemas = ({ subespecialidades, temas }) => {
       <Offcanvas2
         isOpen={isOffcanvasOpen}
         onClose={handleCloseOffcanvas}
-        title="Añadir Nuevo Tema"
+        title="Añadir Nuevo Subtema"
       >
         <FormAddTema subespecialidades={subespecialidades} onClose={handleCloseOffcanvas}/>
       </Offcanvas2>

@@ -40,7 +40,7 @@ export const ManageSubEspecialidades = ({ especialidades, subespecialidades }) =
         className="text-[16px] cursor-pointer font-bold flex items-center gap-2"
         onClick={toggleContentVisibility}
       >
-        Subespecialidades ({subespecialidades.length}){" "}
+        Temas ({subespecialidades.length}){" "}
         {isContentVisible ? <IoChevronUp size={20} /> : <IoChevronDown size={20} />}
       </h1>
 
@@ -57,7 +57,7 @@ export const ManageSubEspecialidades = ({ especialidades, subespecialidades }) =
             onClick={handleOpenOffcanvas}
           >
             <IoAddCircle size={24} /> {/* Ícono de agregar */}
-            <span>Agregar Subespecialidad</span>
+            <span>Agregar Tema</span>
           </button>
         </div>
 
@@ -76,7 +76,7 @@ export const ManageSubEspecialidades = ({ especialidades, subespecialidades }) =
       </div>
 
       {/* Offcanvas para añadir subespecialidades */}
-      <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nueva Subespecialidad">
+      <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nuevo Tema">
         <FormAddSubespecialidad
           especialidades={especialidades}
           onClose={handleCloseOffcanvas}

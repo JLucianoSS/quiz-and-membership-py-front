@@ -39,7 +39,7 @@ export const ManageEspecialidades = ({ especialidades }) => {
         className="text-[16px] cursor-pointer font-bold flex items-center gap-2" 
         onClick={toggleContentVisibility}
       >
-        Especialidades ({especialidades.length}) 
+        Módulos ({especialidades.length}) 
         {isContentVisible ? <IoChevronUp size={20} /> : <IoChevronDown size={20} />}
       </h1>
 
@@ -53,7 +53,7 @@ export const ManageEspecialidades = ({ especialidades }) => {
             onClick={handleOpenOffcanvas}
           >
             <IoAddCircle size={24} /> {/* Ícono de agregar */}
-            <span>Agregar Especialidad</span>
+            <span>Agregar Módulo</span>
           </button>
         </div>
 
@@ -69,7 +69,7 @@ export const ManageEspecialidades = ({ especialidades }) => {
       </div>
 
       {/* Offcanvas para añadir especialidades */}
-      <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nueva Especialidad">
+      <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nuevo Módulo">
         <FormAddEspecialidad />
       </Offcanvas2>
     </div>

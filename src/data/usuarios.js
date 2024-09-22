@@ -9,6 +9,7 @@ const usuarios = [
     password: "admin123",
     role: "Administrador",
     fechaRegistro: "",
+    avatarImg: "",
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ const usuarios = [
     password: "test123",
     role: "Suscriptor",
     fechaRegistro: "",
+    avatarImg: "",
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const usuarios = [
     password: "test123",
     role: "Visitante",
     fechaRegistro: "",
+    avatarImg: "",
   },
 ];
 

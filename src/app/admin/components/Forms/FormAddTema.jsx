@@ -26,7 +26,7 @@ export const FormAddTema = ({ subespecialidades, onclose }) => {
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div>
-        <label className="block text-gray-700">Subespecialidad</label>
+        <label className="block text-gray-700">Tema</label>
         <select
           name="subespecialidadId"
           className="w-full px-4 py-2 border rounded-md"
@@ -34,7 +34,7 @@ export const FormAddTema = ({ subespecialidades, onclose }) => {
           onChange={handleInputChange}
           required
         >
-          <option value="">Selecciona una subespecialidad</option>
+          <option value="">Selecciona un tema</option>
           {subespecialidades.map((subespecialidad) => (
             <option key={subespecialidad.id} value={subespecialidad.id}>
               {subespecialidad.nombre}
@@ -43,7 +43,7 @@ export const FormAddTema = ({ subespecialidades, onclose }) => {
         </select>
       </div>
       <div>
-        <label className="block text-gray-700">Nombre del Tema</label>
+        <label className="block text-gray-700">Nombre del Subtema</label>
         <input
           type="text"
           name="nombre"

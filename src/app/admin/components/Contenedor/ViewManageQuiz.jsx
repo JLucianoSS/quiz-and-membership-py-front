@@ -18,19 +18,22 @@ export const ViewManageQuiz = ({ especialidades, subespecialidades, temas, pregu
           className={`py-1 px-2 text-sm rounded ${activeSection === "especialidades" ? "bg-primary text-white" : "bg-gray-200"}`}
           onClick={() => handleSectionChange("especialidades")}
         >
-          Especialidades
+          {/* Especialidades */}
+          Módulos
         </button>
         <button
           className={`py-1 px-2 text-sm rounded ${activeSection === "subespecialidades" ? "bg-primary text-white" : "bg-gray-200"}`}
           onClick={() => handleSectionChange("subespecialidades")}
         >
-          Subespecialidades
+          {/* Subespecialidades */}
+          Temas
         </button>
         <button
           className={`py-1 px-2 text-sm rounded ${activeSection === "temas" ? "bg-primary text-white" : "bg-gray-200"}`}
           onClick={() => handleSectionChange("temas")}
         >
-          Temas
+          {/* Temas */}
+          Subtemas
         </button>
         <button
           className={`py-1 px-2 text-sm rounded ${activeSection === "preguntas" ? "bg-primary text-white" : "bg-gray-200"}`}

@@ -6,8 +6,8 @@ export const EspecialidadesGrid = ({ especialidades }) => {
       {especialidades.map((especialidad, index) => (
         <CategoryCard
           key={index} 
-          id={especialidad.id}
-          name={especialidad.nombre} 
+          id={especialidad.id_Modulo}
+          name={especialidad.nombre_modulo} 
           image={especialidad.imagen} 
         />
       ))}

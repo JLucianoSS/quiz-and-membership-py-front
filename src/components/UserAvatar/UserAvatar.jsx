@@ -8,9 +8,10 @@ export const UserAvatar = ({
   classWidth = "w-[39px]",
   classHeight = "h-[39px]",
   classText = "text-base",
+  classBorder = ""
 }) => {
   return (
-    <div className={`flex items-center space-x-4 ${classWidth} ${classHeight}`}>
+    <div className={`flex items-center space-x-4 ${classWidth} ${classHeight} `}>
       {avatarUrl ? (
         <Image
           src={avatarUrl}
@@ -21,7 +22,7 @@ export const UserAvatar = ({
         />
       ) : (
         <div
-          className={`mx-auto  rounded-full w-full h-full flex justify-center items-center`}
+          className={`mx-auto  rounded-full w-full h-full flex justify-center items-center ${classBorder}`}
         >
           <span
             className={`bg-white w-full h-full ${classText} rounded-full flex justify-center items-center`}

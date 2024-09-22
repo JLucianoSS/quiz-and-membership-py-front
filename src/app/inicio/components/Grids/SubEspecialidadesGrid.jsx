@@ -8,8 +8,8 @@ export const SubEspecialidadesGrid = ({ subespecialidades }) => {
         {subespecialidades.map((subespecialidad, index) => (
           <SubEspecialidadCard
             key={index} 
-            id={subespecialidad.id}
-            name={subespecialidad.nombre} 
+            id={subespecialidad.id_Tema}
+            name={subespecialidad.Nombre_Tema} 
           />
         ))}
       </div>

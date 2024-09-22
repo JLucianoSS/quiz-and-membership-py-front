@@ -16,7 +16,7 @@ export const TableSubespecialidades = ({ subespecialidades, especialidades }) =>
           <tr>
             <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Especialidad</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Módulo</th>
           </tr>
         </thead>
         <tbody>

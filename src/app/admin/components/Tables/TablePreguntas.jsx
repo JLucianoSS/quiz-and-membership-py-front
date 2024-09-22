@@ -16,7 +16,7 @@ export const TablePreguntas = ({ preguntas, temas }) => {
           <tr>
             <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Pregunta</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Tema</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Subtema</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Año</th>
           </tr>
         </thead>
