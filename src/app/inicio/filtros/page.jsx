@@ -1,9 +1,9 @@
-import { Headerpage } from "@/components";
+
 import { HeroTitle, ViewFilters } from "../components";
-import { especialidades } from "../../../data/especialidades";
-import { subespecialidades } from "../../../data/subespecialidades";
-import { preguntas } from "../../../data/preguntas";
-import { temas } from "../../../data/temas";
+import { Modulos } from "../../../data/modulos";
+import { Temas } from "../../../data/temas";
+import { Subtemas } from "../../../data/subtemas";
+import { Preguntas } from "../../../data/preguntas";
 
 export default async function FiltrosPage() {
   // const especialidades = await getEspecialidades();
@@ -16,10 +16,10 @@ export default async function FiltrosPage() {
 
       <div className="bg-gray-200 ">
         <ViewFilters
-          especialidades={especialidades}
-          subespecialidades={subespecialidades}
-          temas={temas}
-          preguntas={preguntas}
+          modulos={Modulos}
+          temas={Temas}
+          subtemas={Subtemas}
+          preguntas={Preguntas}
         />
       </div>
     </>

@@ -4,34 +4,26 @@ import { ApplyButton, FilterBy, FilterByYear } from "..";
 import { Headerpage, Offcanvas } from "@/components";
 import { IoAddCircleOutline } from "react-icons/io5"; // Importamos solo el ícono de agregar
 
-export const ViewFilters = ({ especialidades, subespecialidades, temas, preguntas }) => {
-  const [selectedEspecialidades, setSelectedEspecialidades] = useState([]);
-  const [selectedSubespecialidades, setSelectedSubespecialidades] = useState([]);
+export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
+  const [selectedModulos, setSelectedModulos] = useState([]);
   const [selectedTemas, setSelectedTemas] = useState([]);
+  const [selectedSubtemas, setSelectedSubtemas] = useState([]);
   const [selectedYear, setSelectedYear] = useState([]);
 
   // Estados para controlar el Offcanvas
-  const [isSubespecialidadesOpen, setIsSubespecialidadesOpen] = useState(false);
   const [isTemasOpen, setIsTemasOpen] = useState(false);
+  const [isSubtemasOpen, setIsSubtemasOpen] = useState(false);
 
-  // Manejar selección de especialidades
-  const toggleEspecialidad = (especialidad) => {
-    if (selectedEspecialidades.includes(especialidad)) {
-      setSelectedEspecialidades(selectedEspecialidades.filter((e) => e !== especialidad));
+  // Manejar selección de módulos
+  const toggleModulo = (modulo) => {
+    if (selectedModulos.includes(modulo)) {
+      setSelectedModulos(selectedModulos.filter((m) => m !== modulo));
     } else {
-      setSelectedEspecialidades([...selectedEspecialidades, especialidad]);
+      setSelectedModulos([...selectedModulos, modulo]);
     }
   };
 
-  // Función para remover subespecialidad o tema al hacer clic
-  const toggleSubespecialidad = (subespecialidad) => {
-    if (selectedSubespecialidades.includes(subespecialidad)) {
-      setSelectedSubespecialidades(selectedSubespecialidades.filter((sub) => sub !== subespecialidad));
-    } else {
-      setSelectedSubespecialidades([...selectedSubespecialidades, subespecialidad]);
-    }
-  };
-
+  // Función para remover tema o subtema al hacer clic
   const toggleTema = (tema) => {
     if (selectedTemas.includes(tema)) {
       setSelectedTemas(selectedTemas.filter((t) => t !== tema));
@@ -40,12 +32,20 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
     }
   };
 
+  const toggleSubtema = (subtema) => {
+    if (selectedSubtemas.includes(subtema)) {
+      setSelectedSubtemas(selectedSubtemas.filter((s) => s !== subtema));
+    } else {
+      setSelectedSubtemas([...selectedSubtemas, subtema]);
+    }
+  };
+
   // Función para aplicar filtros y consolear los resultados
   const aplicarFiltros = () => {
     const filtros = {
-      especialidades: selectedEspecialidades,
-      subespecialidades: selectedSubespecialidades,
+      modulos: selectedModulos,
       temas: selectedTemas,
+      subtemas: selectedSubtemas,
       year: selectedYear,
     };
     console.log(filtros);
@@ -55,45 +55,17 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
     <>
       <div className="bg-white max-w-[600px] mx-auto px-6 h-full pb-[7rem]">
         <Headerpage titulo="Encuentra tus preguntas" />
-        {/* Especialidades */}
+        {/* Módulos */}
         <FilterBy
           titulo="Selecciona módulos"
-          filterBy={especialidades}
-          selectedItems={selectedEspecialidades}
-          toggleItem={toggleEspecialidad}
+          filterBy={formatModulos(modulos)}
+          selectedItems={selectedModulos}
+          toggleItem={toggleModulo}
         />
         
-        {/* Subespecialidades */}
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold">Añadir temas</h2>
-          <div className="flex flex-wrap items-center gap-2">
-            {selectedSubespecialidades.map((sub) => (
-              <button
-                key={sub}
-                onClick={() => toggleSubespecialidad(sub)} // Al hacer clic se remueve
-                className="bg-gray-200 px-3 py-1 rounded-lg"
-              >
-                {sub}
-              </button>
-            ))}
-            <button onClick={() => setIsSubespecialidadesOpen(true)}>
-              <IoAddCircleOutline size={32} className="text-primary" />
-            </button>
-          </div>
-        </div>
-        {/* Offcanvas para Subespecialidades */}
-        <Offcanvas
-          isOpen={isSubespecialidadesOpen}
-          onClose={() => setIsSubespecialidadesOpen(false)}
-          title="Subespecialidades"
-          items={subespecialidades}
-          selectedItems={selectedSubespecialidades}
-          onSelect={setSelectedSubespecialidades}
-        />
-
         {/* Temas */}
         <div className="mt-4">
-          <h2 className="text-lg font-semibold">Añadir subtemas</h2>
+          <h2 className="text-lg font-semibold">Añadir temas</h2>
           <div className="flex flex-wrap items-center gap-2">
             {selectedTemas.map((tema) => (
               <button
@@ -109,7 +81,44 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
             </button>
           </div>
         </div>
-        
+        {/* Offcanvas para Temas (Formateamos antes de enviar) */}
+        <Offcanvas
+          isOpen={isTemasOpen}
+          onClose={() => setIsTemasOpen(false)}
+          title="Temas"
+          items={formatTemas(temas)} // Formateamos los temas antes de enviarlos
+          selectedItems={selectedTemas}
+          onSelect={setSelectedTemas}
+        />
+
+        {/* Subtemas */}
+        <div className="mt-4">
+          <h2 className="text-lg font-semibold">Añadir subtemas</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            {selectedSubtemas.map((subtema) => (
+              <button
+                key={subtema}
+                onClick={() => toggleSubtema(subtema)} // Al hacer clic se remueve
+                className="bg-gray-200 px-3 py-1 rounded-lg"
+              >
+                {subtema}
+              </button>
+            ))}
+            <button onClick={() => setIsSubtemasOpen(true)}>
+              <IoAddCircleOutline size={32} className="text-primary" />
+            </button>
+          </div>
+        </div>
+
+        {/* Offcanvas para Subtemas (Formateamos antes de enviar) */}
+        <Offcanvas
+          isOpen={isSubtemasOpen}
+          onClose={() => setIsSubtemasOpen(false)}
+          title="Subtemas"
+          items={formatSubtemas(subtemas)} // Formateamos los subtemas antes de enviarlos
+          selectedItems={selectedSubtemas}
+          onSelect={setSelectedSubtemas}
+        />
         
         {/* Año */}
         <FilterByYear preguntas={preguntas} onYearSelect={setSelectedYear} />
@@ -117,16 +126,29 @@ export const ViewFilters = ({ especialidades, subespecialidades, temas, pregunta
 
       {/* Botón Aplicar */}
       <ApplyButton onApply={aplicarFiltros} preguntas={preguntas.length} />
-
-      {/* Offcanvas para Temas */}
-        <Offcanvas
-          isOpen={isTemasOpen}
-          onClose={() => setIsTemasOpen(false)}
-          title="Temas"
-          items={temas}
-          selectedItems={selectedTemas}
-          onSelect={setSelectedTemas}
-        />
     </>
   );
+};
+
+
+const formatModulos = (modulos) => {
+  return modulos.map((modulo) => ({
+    id: modulo.id_Modulo,
+    nombre: modulo.nombre_modulo, // Aseguramos que 'nombre' esté en el formato esperado
+  }));
+};
+
+
+const formatTemas = (temas) => {
+  return temas.map((tema) => ({
+    id: tema.id_Tema,
+    nombre: tema.Nombre_Tema,
+  }));
+};
+
+const formatSubtemas = (subtemas) => {
+  return subtemas.map((subtema) => ({
+    id: subtema.id_Subtema,
+    nombre: subtema.Subtema,
+  }));
 };

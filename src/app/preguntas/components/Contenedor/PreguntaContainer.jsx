@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { getOpcionesPorPregunta } from "@/data/preguntas";
 import { ExplicationSection, RespuestaCard } from "..";
@@ -8,21 +8,23 @@ export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
   const [showExplanation, setShowExplanation] = useState(false); // Mostrar explicación
   const [disableClicks, setDisableClicks] = useState(false); // Desactivar clics después de la selección
   const [tachedOptions, setTachedOptions] = useState([]); // Opciones tachadas
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState(null); // Estado para capturar si es correcta
 
-  const options = getOpcionesPorPregunta(preguntas[parseInt(page - 1)].id);
+  const currentPregunta = preguntas[parseInt(page - 1)];
+  const { opciones, explicacionCorrecta, explicacionIncorrecta,videoURL } = getOpcionesPorPregunta(currentPregunta.id);
 
   const handleSelectOption = (index, isCorrect) => {
     if (disableClicks) return; // No permitir más clics si ya se ha seleccionado una opción
     setSelectedOption(index); // Guardar la opción seleccionada
+    setIsCorrectAnswer(isCorrect); // Guardar si la opción seleccionada es correcta
     setShowExplanation(true); // Mostrar la explicación después de seleccionar
-    onComplete()
+    onComplete();
     setDisableClicks(true); // Desactivar los clics después de la selección
 
-     // Consologuear la opción seleccionada y su estado de corrección
-     console.log(`Opción seleccionada: ${options[index].textOpcion}`);
-     console.log(`¿Es correcta?: ${isCorrect ? 'Sí' : 'No'}`);
-     console.log(`Explicación: ${options[index].explicacion}`);
- 
+    // Consologuear la opción seleccionada y su estado de corrección
+    console.log(`Opción seleccionada: ${opciones[index].textOpcion}`);
+    console.log(`¿Es correcta?: ${isCorrect ? 'Sí' : 'No'}`);
+    console.log(`Explicación: ${opciones[index].explicacionCorrecta}`);
   };
 
   // Manejar el tachado o destachado de una opción
@@ -30,11 +32,16 @@ export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
     // Si la opción ya está tachada, destacharla
     if (tachedOptions.includes(index)) {
       setTachedOptions(tachedOptions.filter((i) => i !== index));
-    } else if (tachedOptions.length < options.length - 1) {
+    } else if (tachedOptions.length < opciones.length - 1) {
       // Solo permitir tachar si hay más de una opción sin tachar
       setTachedOptions([...tachedOptions, index]);
     }
   };
+
+  const selectedExplanation = selectedOption !== null && opciones[selectedOption].esCorrecta
+    ? explicacionCorrecta
+    : explicacionIncorrecta;
+
 
   return (
     <>
@@ -48,12 +55,12 @@ export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
         </h3>
       </div>
       <p className="text-sm text-gray-700 mt-2 sm:text-lg">
-        {preguntas[parseInt(page - 1)].pregunta}
+        {currentPregunta.pregunta}
       </p>
 
       {/* OPCIONES, RESPUESTAS O ALTERNATIVAS */}
       <div className="flex flex-col gap-2 mt-6">
-        {options.length > 0 ? options.map((option, index) => (
+        {opciones.length > 0 ? opciones.map((option, index) => (
           <RespuestaCard
             key={index}
             letter={String.fromCharCode(65 + index)} // Convertir index en letras A, B, C, D
@@ -65,8 +72,8 @@ export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
             disableClicks={disableClicks} // Desactivar los clics después de la selección
             isStriked={tachedOptions.includes(index)} // Ver si la opción está tachada
             onToggleStrike={() => handleToggleStrike(index)} // Manejar el tachado
-            disableStrike={tachedOptions.length === options.length - 1 && !tachedOptions.includes(index)} // Deshabilitar el tachado si ya solo queda una opción sin tachar
-          /> 
+            disableStrike={tachedOptions.length === opciones.length - 1 && !tachedOptions.includes(index)} // Deshabilitar el tachado si ya solo queda una opción sin tachar
+          />
         )) : <div className="w-full flex items-center justify-center h-[150px]"><span className="text-[13px] text-red-400">No hay opciones o alternativas establecidas</span></div>}
       </div>
 
@@ -74,7 +81,9 @@ export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
       {showExplanation && (
         <div className="mt-6">
           <ExplicationSection
-            explication="Tempor reprehenderit eu fugiat consequat deserunt aute veniam magna adipisicing anim nulla adipisicing proident. Aute labore do consequat aliquip esse cupidatat reprehenderit ipsum laboris. Ad sunt qui labore nulla voluptate proident esse Lorem."
+            explication={selectedExplanation} // Mostrar explicación correcta o incorrecta
+            videoURL={videoURL} // Pasar el video URL
+            isCorrect={isCorrectAnswer} // Pasar si la respuesta fue correcta o incorrecta
           />
         </div>
       )}

@@ -1,11 +1,13 @@
 import { opciones } from "./opciones";
 
+
 export function getOpcionesPorPregunta(idPregunta) {
   const preguntaOpciones = opciones.find(
     (item) => item.idPregunta === idPregunta
   );
-  return preguntaOpciones ? preguntaOpciones.opciones : [];
+  return preguntaOpciones || null; // Retornar todo el objeto si existe o null si no se encuentra
 }
+
 
 // preguntas.js
 

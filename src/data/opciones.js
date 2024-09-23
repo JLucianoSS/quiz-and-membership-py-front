@@ -25,7 +25,8 @@ export const opciones = [
       }
     ],
     explicacionCorrecta: "Los músculos intercostales juegan un papel crucial en la respiración, ayudando a la expansión y contracción de la caja torácica.",
-    explicacionIncorrecta: "Los músculos intercostales no están relacionados con el movimiento de las extremidades, la circulación sanguínea o la digestión."
+    explicacionIncorrecta: "Los músculos intercostales no están relacionados con el movimiento de las extremidades, la circulación sanguínea o la digestión.",
+    videoURL:"https://firebasestorage.googleapis.com/v0/b/anato-plus-c8829.appspot.com/o/videos%2Fdemo-video-intro-first.mp4?alt=media&token=44e5fba9-858b-4eeb-a2bc-fe6d21919f7a"
   },
   
   // Opciones para la pregunta 2
@@ -54,7 +55,8 @@ export const opciones = [
       }
     ],
     explicacionCorrecta: "Los músculos intercostales modifican la presión intratorácica, permitiendo la expansión de los pulmones.",
-    explicacionIncorrecta: "Los músculos intercostales no producen oxígeno, ni mejoran la circulación o relajan el diafragma."
+    explicacionIncorrecta: "Los músculos intercostales no producen oxígeno, ni mejoran la circulación o relajan el diafragma.",
+    videoURL:""
   },
 
   // Opciones para la pregunta 3
@@ -83,6 +85,7 @@ export const opciones = [
       }
     ],
     explicacionCorrecta: "El diafragma es el músculo más importante en la inhalación, responsable de expandir la cavidad torácica.",
-    explicacionIncorrecta: "El diafragma no contrae los pulmones, ni produce dióxido de carbono, ni soporta órganos durante la inhalación."
+    explicacionIncorrecta: "El diafragma no contrae los pulmones, ni produce dióxido de carbono, ni soporta órganos durante la inhalación.",
+    videoURL:""
   }
 ];
