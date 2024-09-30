@@ -29,10 +29,10 @@ export const LandingHeader = () => {
 
         {/* Logo alineado a la izquierda */}
         <Link href="/" className="focus:outline-none">
-          <Image
+          <img
             src={LOGO}
-            width={500}
-            height={500}
+            // width={500}
+            // height={500}
             alt="logo"
             className="w-[100px] h-full object-cover"
           />

@@ -14,7 +14,7 @@ export default async function FiltrosPage() {
       {/* Header */}
       <HeroTitle title="Filtrar" imgSrc="/imgs/heroimg1.jpg" imgPositionY="30%"/>
 
-      <div className="bg-gray-200 ">
+      <div className="bg-white sm:bg-gray-200 sm:pt-6 sm:pb-[85px]">
         <ViewFilters
           modulos={Modulos}
           temas={Temas}

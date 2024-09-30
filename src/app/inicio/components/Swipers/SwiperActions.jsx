@@ -26,7 +26,7 @@ export const SwiperActions = () => {
   };
 
   return (
-    <div className="fixed bottom-0 z-10 h-[50px] w-full bg-[#212121] py-1 flex justify-center items-center">
+    <div className="fixed bottom-0 z-10 h-[50px] w-full bg-[#212121] py-1 flex justify-center items-center lg:hidden">
       <div className="w-full px-6 sm:px-0 sm:w-[500px] md:w-[600px] lg:w-[700px] ">
         <CustomSwiper slides={actionSlides} config={actionConfig} className="h-full" />
       </div>

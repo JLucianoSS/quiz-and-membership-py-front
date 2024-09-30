@@ -5,7 +5,7 @@ export function getOpcionesPorPregunta(idPregunta) {
   const preguntaOpciones = opciones.find(
     (item) => item.idPregunta === idPregunta
   );
-  return preguntaOpciones || null; // Retornar todo el objeto si existe o null si no se encuentra
+  return preguntaOpciones || []; // Retornar todo el objeto si existe o null si no se encuentra
 }
 
 

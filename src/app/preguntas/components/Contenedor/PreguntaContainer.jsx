@@ -60,7 +60,7 @@ export const PreguntaContainer = ({ preguntas, page, onComplete }) => {
 
       {/* OPCIONES, RESPUESTAS O ALTERNATIVAS */}
       <div className="flex flex-col gap-2 mt-6">
-        {opciones.length > 0 ? opciones.map((option, index) => (
+        {opciones && opciones.length > 0 ? opciones.map((option, index) => (
           <RespuestaCard
             key={index}
             letter={String.fromCharCode(65 + index)} // Convertir index en letras A, B, C, D

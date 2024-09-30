@@ -1,14 +1,20 @@
+
+"use client"
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export const ActionCard = ({ action, icon, link = "" }) => {
+
+  const pathname = usePathname();
+
   return (
-    <Link href={link} className="flex flex-col w-[60px] items-center justify-center rounded-lg p-1">
+    <Link href={link} className={`${pathname === link ? "text-primary" : "text-white"} hover:text-[#d9b16b] w-[60px] flex flex-col lg:flex-row lg:w-[100px] lg:gap-1 items-center justify-center rounded-lg p-1`}>
       {/* Contenedor del icono con tamaño responsivo */}
-      <div className="">
+      <div >
         {icon}
       </div>
       {/* Título con tamaño y separación responsivos */}
-      <p className="text-white text-[10px]">
+      <p className="text-[10px] lg:text-[12px]">
         {action}
       </p>
     </Link>

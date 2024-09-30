@@ -20,14 +20,22 @@ export const LandingTestimonials = () => {
         "Recomiendo 100% esta plataforma, es de las mejores que he probado.",
       imageSrc: "/imgs/david.jpeg",
     },
+    {
+      nombre: "Jhon Doe",
+      comentario:
+        "Super recomendada esta plataforma, es muy entendible.",
+      imageSrc: "/imgs/jhon.jpg",
+    },
   ];
 
   // Configuración del swiper
   const swiperConfig = {
     spaceBetween: 30,
-    slidesPerView: 1,
-    autoplay: { delay: 5000 },
-    pagination: { clickable: true },
+    slidesPerView: 3, // Muestra 3 slides a la vez en escritorio
+    loop: true, // Activa el loop para que las slides se repitan infinitamente
+    loopedSlides: 3, // Garantiza que el loop funcione con 3 slides
+    autoplay: { delay: 5000 }, // Activa el autoplay
+    pagination: { clickable: true }, // Muestra los puntos de paginación
     breakpoints: {
       640: {
         slidesPerView: 1, // 1 slide en pantallas móviles
