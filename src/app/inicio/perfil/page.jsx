@@ -12,7 +12,7 @@ export default async function PerfilPage() {
   const user = await getUser(session?.user?.id);
   
   return (
-    <div className="h-[90vh] bg-gray-50">
+    <div className="h-screen bg-gray-50">
 
       {/* Head */}
       <div className="px-4 lg:px-20 xl:px-44">
@@ -22,7 +22,7 @@ export default async function PerfilPage() {
       {/*avatar y nombre */}
       <ProfileAvatar user={user}/>
 
-      <div className="flex flex-col items-center h-[70%] p-4">
+      <div className="flex flex-col items-center p-4">
         {/* Información del perfil */}
         <FormEditUser user={user}/>
       </div>
