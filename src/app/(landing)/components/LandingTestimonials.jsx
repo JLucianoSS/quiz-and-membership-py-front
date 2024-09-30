@@ -33,7 +33,6 @@ export const LandingTestimonials = () => {
     spaceBetween: 30,
     slidesPerView: 3, // Muestra 3 slides a la vez en escritorio
     loop: true, // Activa el loop para que las slides se repitan infinitamente
-    loopedSlides: 3, // Garantiza que el loop funcione con 3 slides
     autoplay: { delay: 5000 }, // Activa el autoplay
     pagination: { clickable: true }, // Muestra los puntos de paginación
     breakpoints: {

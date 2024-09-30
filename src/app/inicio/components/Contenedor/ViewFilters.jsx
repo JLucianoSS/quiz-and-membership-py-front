@@ -53,7 +53,7 @@ export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
 
   return (
     <>
-      <div className="bg-white max-w-[600px] mx-auto px-6 h-full pb-[7rem]">
+      <div className="bg-white max-w-[600px] mx-auto px-6 h-full pb-[4rem]">
         <Headerpage titulo="Encuentra tus preguntas" />
         {/* Módulos */}
         <FilterBy
