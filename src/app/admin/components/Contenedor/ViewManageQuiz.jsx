@@ -40,6 +40,7 @@ export const ViewManageQuiz = ({ modulos, temas, subtemas, preguntas, opciones }
         </button>
       </div>
 
+      {/* NOTA: YA NO HACE FALTA PASAR LAS PROPS A LOS MANAGE YA QUE HAY QUE HACER LAS CONSULTAS AHI DENTRO DE ELLOS */}
       {/* Renderizar la sección activa */}
       <div>
         {activeSection === "modulos" && <ManageModulos modulos={modulos} />}

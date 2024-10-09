@@ -1,13 +1,49 @@
 "use client";
+import { deleteModulo, getModulos } from "@/actions"; // Suponiendo que tienes una acción para obtener los módulos
+import { IoTrash } from "react-icons/io5";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export const TableModulos = ({ modulos }) => {
-  const router = useRouter();
+  const { toggleRefreshTable } = useRedrawStore();
 
-  // Función para navegar cuando se clickea una fila
-  const handleRowClick = (id) => {
-    router.push(`/modulos/${id}`); // Navegar a la ruta deseada, puedes personalizar la URL
+  const handleDeleteModulo = (idModulo) => {
+    toast((t) => (
+      <div className="flex flex-col items-center">
+        <span>¿Estás seguro de eliminar el módulo?</span>
+        <div className="flex gap-2 mt-2">
+          <button
+            className="bg-red-500 text-white px-3 py-2 rounded"
+            onClick={async () => {
+              try {
+                const result = await deleteModulo(idModulo);
+                if (result.success) {
+                  toast.success(result.message, { id: t.id });
+                  toggleRefreshTable()
+                } else {
+                  toast.error(result.message, { id: t.id });
+                }
+              } catch (error) {
+                toast.error("Error al eliminar el módulo: " + error.message, { id: t.id });
+              }
+              toast.dismiss(t.id); // Cierra el toast de confirmación
+            }}
+          >
+            Confirmar
+          </button>
+          <button
+            className="bg-gray-500 text-white px-3 py-1 rounded"
+            onClick={() => toast.dismiss(t.id)} // Cierra el toast sin eliminar
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 5000, // Duración del toast de confirmación
+      position: "top-center", // Posición del toast
+    });
   };
 
   return (
@@ -18,30 +54,51 @@ export const TableModulos = ({ modulos }) => {
             <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Imagen</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Acción</th>
           </tr>
         </thead>
         <tbody>
-          {modulos.map((modulo) => (
-            <tr
-              key={modulo.id_Modulo}
-              className="hover:bg-gray-50 cursor-pointer"
-              onClick={() => handleRowClick(modulo.id_Modulo)}
-            >
-              <td className="border border-gray-300 px-4 py-2">{modulo.id_Modulo}</td>
-              <td className="border border-gray-300 px-4 py-2">{modulo.nombre_modulo}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <div className="h-16 w-16">
-                  <Image
-                    className="h-full w-full object-cover"
-                    src={modulo.imagen}
-                    alt={modulo.nombre_modulo}
-                    width={300}
-                    height={300}
-                  />
-                </div>
+          {modulos.length > 0 ? (
+            modulos.map((modulo) => (
+              <tr key={modulo.id_modulo} className="hover:bg-gray-50">
+                <td className="border border-gray-300 px-4 py-2">{modulo.id_modulo}</td>
+                <td className="border border-gray-300 px-4 py-2">{modulo.nombre_modulo}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <div className="h-16 w-16">
+                    {modulo.imagen ? (
+                      <Image
+                        className="h-full w-full object-cover"
+                        src={modulo.imagen}
+                        alt={modulo.nombre_modulo}
+                        width={300}
+                        height={300}
+                      />
+                    ) : (
+                      <span className="text-xs flex items-center h-full text-gray-400">
+                        Sin imagen
+                      </span>
+                    )}
+                  </div>
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <div className="flex justify-center gap-2">
+                    <span
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => handleDeleteModulo(modulo.id_modulo)}
+                    >
+                      <IoTrash size={22} />
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" className="text-center text-gray-500 py-4">
+                No hay módulos disponibles
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

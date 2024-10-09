@@ -1,22 +1,52 @@
 "use client"
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { uploadFile } from "../../../../firebase/config";
+import { createModulo } from "@/actions";
+import { FaBroom } from "react-icons/fa";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
+import toast from "react-hot-toast";
 
 export const FormAddModulo = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { toggleRefreshTable } = useRedrawStore();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const [loading, setLoading] = useState(false);
   
-  const onSubmit = async(data) => {
-    if (data.file[0]) {
-      try {
-        const resultUploadFile = await uploadFile(data.file[0], "/categories-modulos/"); // guarda en esa carpeta de firestorage
-        console.log(resultUploadFile);
-      } catch (error) {
-        console.log(error);
-      }
-      
+  const onSubmit = async (data) => {
+    setLoading(true);
+    const file = data.file[0];
+
+    // Validar si el archivo es una imagen
+    if (file && !file.type.startsWith("image/")) {
+      toast.error("Imagen inválida");
+      setLoading(false);
+      return; // Detener la ejecución si el archivo no es una imagen
     }
-    // Add any other logic to handle form data here
-    console.log("Form Data:", data);
+
+    try {
+      const resultUploadFile = file ? await uploadFile(file, "/categories-modulos/") : ""; // guarda en esa carpeta de firestorage
+      const result = await createModulo({
+        nombre_modulo: data.nombre,
+        imagen: resultUploadFile || ""
+      });
+      if (result.success) {
+        toast.success(result.message);
+        reset(); // Limpiar el formulario después de una operación exitosa
+        toggleRefreshTable(); // Disparar el cambio para redibujar la tabla
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Ocurrió un error al ingresar el módulo");
+    } finally {
+      setLoading(false);
+    }
+ 
+  };
+
+  const handleReset = () => {
+    reset(); // Limpia los campos del formulario cuando el botón de reset es presionado
   };
 
   return (
@@ -36,18 +66,29 @@ export const FormAddModulo = () => {
         <label className="block text-gray-700">Imagen</label>
         <input
           type="file"
+          accept="image/*"  // Solo acepta archivos de imagen
           className="w-full px-4 py-2 border rounded-md"
-          {...register("file", { required: "Por favor, sube una imagen" })}
+          {...register("file")}
         />
         {errors.file && <span className="text-sm text-red-500">{errors.file.message}</span>}
       </div>
 
-      <button
-        type="submit"
-        className="max-w-[400px] px-4 py-2 bg-primary text-white rounded-md"
-      >
-        Guardar
-      </button>
+      <div className="flex gap-2 items-center w-full">
+        <button
+          type="submit"
+          className="max-w-[600px] w-full px-4 py-2 bg-primary text-white rounded-md"
+          disabled={loading}
+        >
+          {loading ? "Guardando..." : "Guardar"}
+        </button>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="flex items-center justify-center p-2 bg-gray-500 text-white rounded-md"
+        >
+          <FaBroom className="w-6 h-6" /> {/* Icono de escoba para limpiar */}
+        </button>
+      </div>
     </form>
   );
 };

@@ -27,14 +27,16 @@ export const authOptions = {
       async authorize(credentials) {
         // Usamos la función login para verificar las credenciales
         const result = login(credentials.email, credentials.password); // esto debe ser asincrono
+        console.log("Id user loged");
+        console.log(result.user.id);
+        
 
         // Si el login es exitoso, devolvemos el usuario
         if (result.success) {
           return {
             id: result.user.id,
-            name: `${result.user.nombre} ${result.user.apellido}`,
+            name: `${result.user.nombre}`,
             email: result.user.email,
-            role: result.user.role,
           };
         }
 

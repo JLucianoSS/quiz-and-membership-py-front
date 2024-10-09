@@ -1,20 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoAddCircle, IoChevronUp, IoChevronDown } from "react-icons/io5";
 import { Offcanvas2 } from "@/components";
 import { FormAddModulo, PaginationAdmin, TableModulos } from "..";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
+import { getModulos } from "@/actions";
 
-export const ManageModulos = ({ modulos }) => {
-  const itemsPerPage = 5; // Definir cuántas modulos mostrar por página
+export const ManageModulos = () => {
+  const itemsPerPage = 5; // Definir cuántos modulos mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
+  const [loading, setLoading] = useState(true);
+  const [modulos, setModulos] = useState([])
+  const { refreshTable } = useRedrawStore();
 
   // Calcular los elementos que se mostrarán según la página actual
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = modulos.slice(indexOfFirstItem, indexOfLastItem);
-
   const totalPages = Math.ceil(modulos.length / itemsPerPage);
 
   // Función para abrir el Offcanvas
@@ -31,6 +35,16 @@ export const ManageModulos = ({ modulos }) => {
   const toggleContentVisibility = () => {
     setIsContentVisible(!isContentVisible);
   };
+
+  useEffect(() => {
+    const fetchModulos = async () => {
+      setLoading(true);
+      const response = await getModulos(); // Hacer una petición HTTP para obtener los módulos actualizados
+      setModulos(response.data); // Actualizar los módulos en la tabla si la respuesta es un arreglo
+      setLoading(false);
+    };
+    fetchModulos();
+  }, [refreshTable]);
 
   return (
     <div>
@@ -58,8 +72,8 @@ export const ManageModulos = ({ modulos }) => {
         </div>
 
         {/* Tabla de modulos */}
-        <TableModulos modulos={currentItems} />
-
+        {loading ? "Cargando..." : <TableModulos modulos={currentItems} /> }
+          
         {/* Paginación */}
         <PaginationAdmin
           currentPage={currentPage}
@@ -70,7 +84,7 @@ export const ManageModulos = ({ modulos }) => {
 
       {/* Offcanvas para añadir modulos */}
       <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nuevo Módulo">
-        <FormAddModulo />
+        <FormAddModulo /> {/* Pasar función para refrescar la tabla */}
       </Offcanvas2>
     </div>
   );
