@@ -6,7 +6,9 @@ import { IoMailOutline, IoLockClosedOutline, IoEyeOff, IoEye, IoPersonOutline } 
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { createUser } from "@/actions";
 import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 
 export const FormSignUp = () => {
   const searchParams = useSearchParams()
@@ -22,17 +24,46 @@ export const FormSignUp = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      // Simulación de registro (puedes hacer una llamada API aquí)
       if (plan === "free") {
         // Crear el usuario con rol de visitante
-        // await registerUser({ ...data, role: "visitante" });
-        toast.success("Registro exitoso como visitante");
-        router.push("/inicio"); // Redirige al home o a otra vista
+        const resultCreate = await createUser({
+          username: data.firstName,
+          nombre:data.firstName,
+          apellido:data.lastName,
+          email:data.email,
+          password:data.password,
+          role: "Visitante"
+        });
+        if (resultCreate.success) {
+          toast.success(resultCreate.message); // Muestra el mensaje de éxito
+          /* INICIA SESIÓN */
+          const resultLogin = await signIn('credentials', {
+            redirect: false,
+            email:resultCreate.data.email,
+            password:resultCreate.data.password
+          });
+          if (resultLogin.ok) {
+            window.location.replace("/inicio");
+          } else {
+            toast.error("Error al iniciar sesión");
+            setLoading(false);
+          }
+        } else {
+          toast.error(resultCreate.message); // Muestra el mensaje de error
+        }
       } else if (plan === "premium") {
         // Crear el usuario con rol premium
+        console.log({
+          username: data.firstName,
+          npmbre:data.firstName,
+          apellido:data.lastName,
+          email:data.email,
+          password:data.password,
+          role: "Suscriptor"
+        });
         // await registerUser({ ...data, role: "premium" });
-        toast.success("Registro exitoso, redirigiendo al pago");
-        router.push("/inicio/comprar"); // Redirige a la vista de pago
+        // toast.success("Registro exitoso, redirigiendo al pago");
+        // router.push("/inicio/comprar"); // Redirige a la vista de pago
       }
     } catch (error) {
       toast.error("Error durante el registro");
@@ -110,9 +141,9 @@ export const FormSignUp = () => {
           {...register("lastName", {
             required: "Los apellidos son obligatorios",
             pattern: {
-              value: /^[A-Za-z\s]+$/,
+              value: /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/,
               message: "Solo se permiten letras en los apellidos",
-            },
+            }
           })}
         />
       </div>
