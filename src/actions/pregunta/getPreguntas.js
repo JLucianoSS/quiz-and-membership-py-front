@@ -1,9 +1,9 @@
 "use server"
 
-export const getModulos = async () => {
+export const getPreguntas = async () => {
     try {
       // Realizamos la petición al backend externo
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/modulo`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pregunta`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

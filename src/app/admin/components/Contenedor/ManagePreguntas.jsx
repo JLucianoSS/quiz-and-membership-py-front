@@ -1,15 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoAddCircle, IoChevronUp, IoChevronDown } from "react-icons/io5";
-import { Offcanvas2 } from "@/components";
+import { CustomLoading, Offcanvas2 } from "@/components";
 import { FormAddPregunta, PaginationAdmin, TablePreguntas } from "..";
+import { getOpciones, getPreguntas, getSubtemas } from "@/actions";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 
 
-export const ManagePreguntas = ({ subtemas, preguntas, opciones }) => {
-  const itemsPerPage = 5; // Definir cuántas preguntas mostrar por página
+export const ManagePreguntas = () => {
+  const itemsPerPage = 15; // Definir cuántas preguntas mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
+  const [loading, setLoading] = useState(true);
+  const [subtemas, setSubtemas] = useState([])
+  const [preguntas, setPreguntas] = useState([])
+  const [opciones, setOpciones] = useState([])
+  const { refreshTable } = useRedrawStore();
 
   // Calcular los elementos que se mostrarán según la página actual
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -32,6 +39,21 @@ export const ManagePreguntas = ({ subtemas, preguntas, opciones }) => {
   const toggleContentVisibility = () => {
     setIsContentVisible(!isContentVisible);
   };
+
+  /* TRAER LOS SUBTEMAS Y/0 PREGUNTAS Y OPCIONES */
+  useEffect(() => {
+    const fetchSubAndQuesAndOpt = async () => {
+      setLoading(true);
+      const responseSub = await getSubtemas();
+      setSubtemas(responseSub.data);
+      const responsePregun = await getPreguntas();
+      setPreguntas(responsePregun.data);
+      const responseOpcio = await getOpciones();
+      setOpciones(responseOpcio.data);
+      setLoading(false);
+    };
+    fetchSubAndQuesAndOpt();
+  }, [refreshTable]);
 
   return (
     <div>
@@ -62,7 +84,8 @@ export const ManagePreguntas = ({ subtemas, preguntas, opciones }) => {
         </div>
 
         {/* Tabla de Preguntas */}
-        <TablePreguntas preguntas={currentItems} temas={subtemas} />
+        {loading ? <CustomLoading className="h-[200px]" height={28} width={28}/> : 
+        <TablePreguntas preguntas={currentItems} subtemas={subtemas} opciones={opciones}/>}
 
         {/* Paginación */}
         <PaginationAdmin
@@ -78,7 +101,7 @@ export const ManagePreguntas = ({ subtemas, preguntas, opciones }) => {
         onClose={handleCloseOffcanvas}
         title="Añadir Nueva Pregunta"
       >
-        <FormAddPregunta temas={subtemas} onClose={handleCloseOffcanvas} />
+        <FormAddPregunta subtemas={subtemas} onClose={handleCloseOffcanvas} />
       </Offcanvas2>
     </div>
   );

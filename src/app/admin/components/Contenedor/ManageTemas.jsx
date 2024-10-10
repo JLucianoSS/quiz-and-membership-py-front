@@ -1,14 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoAddCircle, IoChevronDown, IoChevronUp } from "react-icons/io5";
-import { Offcanvas2 } from "@/components";
+import { CustomLoading, Offcanvas2 } from "@/components";
 import { FormAddTema, PaginationAdmin, TableTemas } from "..";
+import { getModulos, getTemas } from "@/actions";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 
-export const ManageTemas = ({ modulos, temas }) => {
-  const itemsPerPage = 5; // Definir cuántos temas mostrar por página
+export const ManageTemas = () => {
+  const itemsPerPage = 10; // Definir cuántos temas mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
+  const [loading, setLoading] = useState(true);
+  const [modulos, setModulos] = useState([])
+  const [temas, setTemas] = useState([])
+  const { refreshTable } = useRedrawStore();
   
 
   // Calcular los elementos que se mostrarán según la página actual
@@ -32,6 +38,19 @@ export const ManageTemas = ({ modulos, temas }) => {
   const toggleContentVisibility = () => {
     setIsContentVisible(!isContentVisible);
   };
+
+  /* TRAER LOS MODULOS Y TEMAS */
+  useEffect(() => {
+    const fetchModAndThemes = async () => {
+      setLoading(true);
+      const responseMod = await getModulos();
+      setModulos(responseMod.data);
+      const responseTem = await getTemas();
+      setTemas(responseTem.data);
+      setLoading(false);
+    };
+    fetchModAndThemes();
+  }, [refreshTable]);
 
   return (
     <div>
@@ -62,10 +81,11 @@ export const ManageTemas = ({ modulos, temas }) => {
         </div>
 
         {/* Tabla de temas */}
-        <TableTemas
+         {loading ? <CustomLoading className="h-[200px]" height={28} width={28}/> : 
+         <TableTemas
           temas={currentItems}
           modulos={modulos}
-        />
+        />}
 
         {/* Paginación */}
         <PaginationAdmin

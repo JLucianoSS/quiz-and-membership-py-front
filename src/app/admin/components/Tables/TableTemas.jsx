@@ -1,12 +1,49 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { deleteTema } from "@/actions"; // Suponiendo que tienes una acción para eliminar temas
+import { IoTrash } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 
 export const TableTemas = ({ temas, modulos }) => {
-  const router = useRouter();
+  const { toggleRefreshTable } = useRedrawStore();
 
-  // Función para navegar cuando se clickea una fila
-  const handleRowClick = (id) => {
-    router.push(`/temas/${id}`);
+  const handleDeleteTema = (idTema) => {
+    toast((t) => (
+      <div className="flex flex-col items-center">
+        <span>¿Estás seguro de eliminar el tema?</span>
+        <p className="text-sm text-center text-gray-500">Es posible que tenga preguntas o subtemas asignados, entonces estos también se eliminarán</p>
+        <div className="flex gap-2 mt-2">
+          <button
+            className="bg-red-500 text-white px-3 py-2 rounded"
+            onClick={async () => {
+              try {
+                const result = await deleteTema(idTema);
+                if (result.success) {
+                  toast.success(result.message, { id: t.id });
+                  toggleRefreshTable(); // Refrescar la tabla
+                } else {
+                  toast.error(result.message, { id: t.id });
+                }
+              } catch (error) {
+                toast.error("Error al eliminar el tema: " + error.message, { id: t.id });
+              }
+              toast.dismiss(t.id); // Cierra el toast de confirmación
+            }}
+          >
+            Confirmar
+          </button>
+          <button
+            className="bg-gray-500 text-white px-3 py-1 rounded"
+            onClick={() => toast.dismiss(t.id)} // Cierra el toast sin eliminar
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 5000, // Duración del toast de confirmación
+      position: "top-center", // Posición del toast
+    });
   };
 
   return (
@@ -15,25 +52,40 @@ export const TableTemas = ({ temas, modulos }) => {
         <thead className="bg-gray-100">
           <tr>
             <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Módulo</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Tema</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Del Módulo</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Acción</th>
           </tr>
         </thead>
         <tbody>
-          {temas.map((tema) => {
-            const modulo = modulos.find((mod) => mod.id_Modulo === tema.id_Modulo);
-            return (
-              <tr
-                key={tema.id}
-                className="hover:bg-gray-50 cursor-pointer"
-                onClick={() => handleRowClick(tema.id)}
-              >
-                <td className="border border-gray-300 px-4 py-2">{tema.id_Tema}</td>
-                <td className="border border-gray-300 px-4 py-2">{tema.Nombre_Tema}</td>
-                <td className="border border-gray-300 px-4 py-2">{modulo ? modulo.nombre_modulo : "N/A"}</td>
-              </tr>
-            );
-          })}
+          {temas.length > 0 ? (
+            temas.map((tema) => {
+              const modulo = modulos.find((mod) => mod.id_modulo === tema.id_modulo);
+              return (
+                <tr key={tema.id_tema} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2">{tema.id_tema}</td>
+                  <td className="border border-gray-300 px-4 py-2">{tema.nombre_tema}</td>
+                  <td className="border border-gray-300 px-4 py-2">{modulo ? modulo.nombre_modulo : "N/A"}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <div className="flex justify-center gap-2">
+                      <span
+                        className="text-red-500 cursor-pointer"
+                        onClick={() => handleDeleteTema(tema.id_tema)}
+                      >
+                        <IoTrash size={22} />
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan="4" className="text-center text-gray-500 py-4">
+                No hay temas disponibles
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

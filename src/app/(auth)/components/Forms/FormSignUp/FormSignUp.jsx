@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { createUser } from "@/actions";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
+import { CustomLoading } from "@/components";
 
 export const FormSignUp = () => {
   const searchParams = useSearchParams()
@@ -236,7 +237,7 @@ export const FormSignUp = () => {
           type="submit"
           className={`w-full px-6 py-3 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-primary rounded-lg hover:bg-secondary focus:outline-none`}
         >
-          {loading ? "Registrando..." : "Registrarse"}
+          {loading ? <CustomLoading color="#ffffff" height={24} width={24}/> : "Registrarse"}
         </button>
 
         <div className="mt-6 text-center">

@@ -1,16 +1,21 @@
 
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IoAddCircle, IoChevronUp, IoChevronDown } from "react-icons/io5";
-import { Offcanvas2 } from "@/components";
-import { FormAddSubTema, FormAddTema, PaginationAdmin, TableSubTemas } from "..";
+import { CustomLoading, Offcanvas2 } from "@/components";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
+import { FormAddSubTema, PaginationAdmin, TableSubTemas } from "..";
+import { getSubtemas, getTemas } from "@/actions";
 
-
-export const ManageSubtemas = ({ subtemas, temas }) => {
-  const itemsPerPage = 5; // Definir cuántos subtemas mostrar por página
+export const ManageSubtemas = () => {
+  const itemsPerPage = 10; // Definir cuántos subtemas mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
+  const [loading, setLoading] = useState(true);
+  const [temas, setTemas] = useState([])
+  const [subtemas, setSubtemas] = useState([])
+  const { refreshTable } = useRedrawStore();
 
   // Calcular los elementos que se mostrarán según la página actual
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -33,6 +38,19 @@ export const ManageSubtemas = ({ subtemas, temas }) => {
   const toggleContentVisibility = () => {
     setIsContentVisible(!isContentVisible);
   };
+
+  /* TRAER LOS TEMAS Y SUBTEMAS */
+  useEffect(() => {
+    const fetchThemesAndSub = async () => {
+      setLoading(true);
+      const responseTem = await getTemas();
+      setTemas(responseTem.data);
+      const responseSub = await getSubtemas();
+      setSubtemas(responseSub.data);
+      setLoading(false);
+    };
+    fetchThemesAndSub();
+  }, [refreshTable]);
 
   return (
     <div >
@@ -62,8 +80,9 @@ export const ManageSubtemas = ({ subtemas, temas }) => {
           </button>
         </div>
 
-        {/* Tabla de Temas */}
-        <TableSubTemas subtemas={currentItems} temas={temas} />
+        {/* Tabla de Subtemas */}
+        { loading ? <CustomLoading className="h-[200px]" height={28} width={28}/> :  
+        <TableSubTemas subtemas={currentItems} temas={temas} /> }
 
         {/* Paginación */}
         <PaginationAdmin

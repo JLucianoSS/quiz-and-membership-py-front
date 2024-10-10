@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
+import { CustomLoading } from "@/components";
 
 export const FormSignIn = () => {
   const {
@@ -126,7 +127,7 @@ export const FormSignIn = () => {
           type="submit"
           className={`w-full px-6 py-3 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-primary rounded-lg hover:bg-secondary  focus:outline-none`}
         >
-         {loading ? "Cargando..." : "Acceder"}
+         {loading ? <CustomLoading color="#ffffff" height={24} width={24}/> : "Acceder"}
         </button>
 
         {/* <p className="mt-4 text-center text-gray-600">o inicia con</p>

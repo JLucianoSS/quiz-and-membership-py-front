@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
 import { IoAddCircle, IoChevronUp, IoChevronDown } from "react-icons/io5";
-import { Offcanvas2 } from "@/components";
+import { CustomLoading, Offcanvas2 } from "@/components";
 import { FormAddModulo, PaginationAdmin, TableModulos } from "..";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import { getModulos } from "@/actions";
 
 export const ManageModulos = () => {
-  const itemsPerPage = 5; // Definir cuántos modulos mostrar por página
+  const itemsPerPage = 10; // Definir cuántos modulos mostrar por página
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false); // Estado para abrir/cerrar el Offcanvas
   const [isContentVisible, setIsContentVisible] = useState(true); // Estado para mostrar/ocultar contenido
@@ -36,11 +36,12 @@ export const ManageModulos = () => {
     setIsContentVisible(!isContentVisible);
   };
 
+  /* TRAER TODOS LOS MODULOS */
   useEffect(() => {
     const fetchModulos = async () => {
       setLoading(true);
-      const response = await getModulos(); // Hacer una petición HTTP para obtener los módulos actualizados
-      setModulos(response.data); // Actualizar los módulos en la tabla si la respuesta es un arreglo
+      const response = await getModulos();
+      setModulos(response.data);
       setLoading(false);
     };
     fetchModulos();
@@ -72,7 +73,8 @@ export const ManageModulos = () => {
         </div>
 
         {/* Tabla de modulos */}
-        {loading ? "Cargando..." : <TableModulos modulos={currentItems} /> }
+        {loading ? <CustomLoading className="h-[200px]" height={28} width={28}/> : 
+        <TableModulos modulos={currentItems} /> }
           
         {/* Paginación */}
         <PaginationAdmin

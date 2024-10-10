@@ -25,3 +25,4 @@ export * from "./Forms/FormAddTema";
 export * from "./Forms/FormAddModulo";
 export * from "./Forms/FormAddSubTema";
 export * from "./Forms/FormAddPregunta";
+export * from "./Forms/FormEditPregunta";

@@ -1,107 +1,124 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { uploadFile } from "@/firebase/config";
 import { CustomLoading } from "@/components";
-import { FaBroom } from "react-icons/fa";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import toast from "react-hot-toast";
-import { createOpcion, createPregunta } from "@/actions";
+import { createOpcion, createPregunta, getPreguntaById } from "@/actions";
+import { IoCloseCircle } from "react-icons/io5";
+import Image from "next/image";
+import Link from "next/link";
 
 const currentYear = new Date().getFullYear();
 const años = Array.from({length: currentYear - 2005}, (_, i) => (currentYear - i).toString());
 
-export const FormAddPregunta = ({ subtemas, onClose }) => {
+export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
   const { toggleRefreshTable } = useRedrawStore();
-  const { register, control, handleSubmit, reset, formState: { errors } } = useForm({
-    defaultValues: {
-      pregunta: "",
-      subtemaId: "",
-      año: currentYear.toString(),
-      opciones: [{ textOpcion: "", esCorrecta: false }],
-      explicacionCorrecta: "",
-      explicacionIncorrecta: "",
-    }
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const { register, control, handleSubmit, reset, formState: { errors } } = useForm();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "opciones"
   });
 
   const [file, setFile] = useState(null);
+  const [existingFile, setExistingFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const MAX_OPCIONES = 5;
 
+  useEffect(() => {
+    const fetchPreguntaData = async () => {
+      setIsLoading(true);
+      try {
+        // Simular la obtención de datos
+        // const data = await getPreguntaById(preguntaId);
+        const data = {
+          id_subtema: 1,
+          texto_pregunta: "¿cual es el wey?",
+          year: 2008,
+          opciones: [
+            {texto_opcion:"opcion1",es_correcta:false},
+            {texto_opcion:"opcion2",es_correcta:true},
+            {texto_opcion:"opcion3",es_correcta:false},
+            {texto_opcion:"opcion4",es_correcta:false},
+            {texto_opcion:"opcion5",es_correcta:false},
+          ],
+          explicacion_correcta: "esta es una explicaion para respuesta correcta",
+          explicacion_incorrecta: "esta es una explicaion para respuesta incorrecta",
+          imagen_video: "https://firebasestorage.googleapis.com/v0/b/anato-plus-c8829.appspot.com/o/multimedia%2F09fafb16-3a33-4a1c-aa88-4980ef768bcb?alt=media&token=ad4f59d8-c591-4f93-9656-7f2b7083a0c8"
+        };
+
+        reset({
+          pregunta: data.texto_pregunta,
+          subtemaId: data.id_subtema,
+          año: data.year.toString(),
+          opciones: data.opciones,
+          explicacionCorrecta: data.explicacion_correcta,
+          explicacionIncorrecta: data.explicacion_incorrecta,
+        });
+
+        if (data.imagen_video) {
+          setExistingFile(data.imagen_video);
+        }
+      } catch (error) {
+        console.error("Error al cargar los datos de la pregunta:", error);
+        toast.error("No se pudieron cargar los datos de la pregunta");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (preguntaId) {
+      fetchPreguntaData();
+    }
+  }, [preguntaId, reset]);
+
   const onSubmit = async (data) => {
     setUploading(true);
 
-    // Validación del tipo de archivo
-    const validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/avi', 'video/mkv'];
-    if (file && !validFileTypes.includes(file.type)) {
-      toast.error("Solo se permiten archivos de imagen o video (JPEG, PNG, GIF, MP4, AVI, MKV)");
-      setUploading(false);
-      return;
-    }
     try {
-      const multimediaUrl = file ? await uploadFile(file, "multimedia/") : "";
-      console.log("Datos del formulario:", { ...data, multimediaUrl });
-  
-      const resultcreatePregunta = await createPregunta({
-        id_subtema: data.subtemaId,
-        year: parseInt(data.año),
-        texto_pregunta: data.pregunta,
-      });
-  
-      if (resultcreatePregunta.success) {
-        // Recorremos las opciones que vienen del formulario
-        for (const opcion of data.opciones) {
-          const resultcreateOpcion = await createOpcion({
-            id_pregunta: resultcreatePregunta.data.id_pregunta, // Aquí usamos el id de la pregunta creada
-            texto_opcion: opcion.textOpcion,
-            es_correcta: opcion.esCorrecta,
-            explicacion_correcta: data.explicacionCorrecta,
-            explicacion_incorrecta: data.explicacionIncorrecta,
-            imagen_video: multimediaUrl,
-          });
-  
-          if (!resultcreateOpcion.success) {
-            toast.error(`Error al agregar la opción: ${resultcreateOpcion.message}`);
-            break; // Si falla una opción, salimos del bucle
-          }
+      let multimediaUrl = existingFile;
+
+      if (file) {
+        const validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/avi', 'video/mkv'];
+        if (!validFileTypes.includes(file.type)) {
+          toast.error("Tipo de archivo no válido");
+          setUploading(false);
+          return;
         }
-        toast.success(resultcreatePregunta.message);
-        reset(); // Reiniciamos el formulario
-        setFile(null); // Limpiamos el archivo subido
-        toggleRefreshTable(); // Actualizamos la tabla
-        onClose(); // Cerramos el modal o formulario
-      } else {
-        toast.error(resultcreatePregunta.message);
+        multimediaUrl = await uploadFile(file, "multimedia/");
       }
+
+      // Aquí iría la lógica para actualizar la pregunta
+      console.log("Datos actualizados:", { ...data, multimediaUrl });
+      toast.success("Pregunta actualizada exitosamente (simulado)");
+      toggleRefreshTable();
+      onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Error al agregar la pregunta");
+      toast.error("Error al actualizar la pregunta");
     } finally {
       setUploading(false);
     }
   };
-  
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    const validTypes = ["image/jpeg", "image/png", "video/mp4", "video/quicktime"];
-
-    if (selectedFile && validTypes.includes(selectedFile.type)) {
+    if (selectedFile) {
       setFile(selectedFile);
-    } else {
-      toast.error("Solo se permiten archivos de tipo imagen (.jpeg, .png) o video (.mp4, .mov)");
+      setExistingFile(null);
     }
   };
 
-  const handleReset = () => {
-    reset();
-    setFile(null);
+  const handleRemoveExistingFile = () => {
+    setExistingFile(null);
   };
+
+  if (isLoading) {
+    return <CustomLoading />;
+  }
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
@@ -156,17 +173,17 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
           {fields.map((field, index) => (
             <div key={field.id} className="flex flex-col gap-2 mb-2">
               <input
-                {...register(`opciones.${index}.textOpcion`, { required: "Este campo es obligatorio" })}
+                {...register(`opciones.${index}.texto_opcion`, { required: "Este campo es obligatorio" })}
                 placeholder="Texto de la opción"
                 className="px-4 py-2 border rounded-md"
               />
-              {errors.opciones?.[index]?.textOpcion && (
-                <span className="text-red-500 text-sm">{errors.opciones[index].textOpcion.message}</span>
+              {errors.opciones?.[index]?.texto_opcion && (
+                <span className="text-red-500 text-sm">{errors.opciones[index].texto_opcion.message}</span>
               )}
               <label className="flex gap-1">
                 <input
                   type="checkbox"
-                  {...register(`opciones.${index}.esCorrecta`)}
+                  {...register(`opciones.${index}.es_correcta`)}
                 />
                 Correcta
               </label>
@@ -174,7 +191,7 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
           ))}
         </div>
         {fields.length < MAX_OPCIONES && (
-          <button type="button" onClick={() => append({ textOpcion: "", esCorrecta: false })} className="text-blue-500 mt-2">
+          <button type="button" onClick={() => append({ texto_opcion: "", es_correcta: false })} className="text-blue-500 mt-2">
             + Añadir opción
           </button>
         )}
@@ -203,12 +220,34 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
       </div>
 
       <div>
-      <label className="block text-gray-700">Video/imagen Explicativa (Opcional)</label>
-        <input
-          type="file"
-          accept="image/jpeg, image/png, image/gif, video/mp4, video/quicktime, video/avi, video/mkv"
-          onChange={handleFileChange}
-        />
+        <label className="block text-gray-700">Video/imagen Explicativa</label>
+        {existingFile ? (
+          <div className="flex items-center mt-2 p-2 border rounded">
+            <span className="mr-2">Multimedia:</span>
+            <Link
+              href={existingFile}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline mr-2"
+            >
+              VER
+            </Link>
+            <button
+              type="button"
+              onClick={handleRemoveExistingFile}
+              className="text-red-500"
+            >
+              <IoCloseCircle size={24} />
+            </button>
+          </div>
+        ) : (
+          <input
+            type="file"
+            accept="image/jpeg, image/png, image/gif, video/mp4, video/quicktime, video/avi, video/mkv"
+            onChange={handleFileChange}
+            className="mt-1"
+          />
+        )}
         {file && <p className="mt-2 text-gray-600">{file.name}</p>}
       </div>
 
@@ -219,13 +258,6 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
           disabled={uploading}
         >
           {uploading ? <CustomLoading color="#ffffff" height={24} width={24}/> : "Guardar"}
-        </button>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="flex items-center justify-center p-2 bg-gray-500 text-white rounded-md"
-        >
-          <FaBroom className="w-6 h-6" />
         </button>
       </div>
     </form>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { uploadFile } from "../../../../firebase/config";
 import { createModulo } from "@/actions";
+import { CustomLoading } from "@/components";
 import { FaBroom } from "react-icons/fa";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import toast from "react-hot-toast";
@@ -79,7 +80,7 @@ export const FormAddModulo = () => {
           className="max-w-[600px] w-full px-4 py-2 bg-primary text-white rounded-md"
           disabled={loading}
         >
-          {loading ? "Guardando..." : "Guardar"}
+          {loading ? <CustomLoading color="#ffffff" height={24} width={24}/> : "Guardar"}
         </button>
         <button
           type="button"
