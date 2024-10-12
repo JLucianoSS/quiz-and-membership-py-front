@@ -19,11 +19,11 @@ export default async function PerfilPage() {
       </div>
 
       {/*avatar y nombre */}
-      <ProfileAvatar user={resp.data}/>
+      <ProfileAvatar user={resp?.data}/>
 
       <div className="flex flex-col items-center p-4">
         {/* Información del perfil */}
-        <FormEditUser user={resp.data}/>
+        <FormEditUser user={resp?.data}/>
       </div>
       
     </div>

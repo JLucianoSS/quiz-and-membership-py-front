@@ -41,7 +41,7 @@ export const Sidebar = ({ user }) => {
 
   const logout = async () => {
     await signOut();
-    window.location.replace("/login");
+    window.location.href("/login");
   };
 
   const handleItemClick = () => {

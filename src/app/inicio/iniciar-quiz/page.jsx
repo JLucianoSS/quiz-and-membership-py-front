@@ -10,7 +10,7 @@ export default async function IniciarQuizPage() {
   return (
     <div className="px-4 lg:px-20 xl:px-44 ">
       <Headerpage titulo="Escoge un módulo"/>
-      <ModulosGrid modulos={modulos.data}/>
+      <ModulosGrid modulos={modulos?.data}/>
     </div>
   );
 }

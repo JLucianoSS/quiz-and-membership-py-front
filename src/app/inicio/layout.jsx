@@ -15,11 +15,11 @@ export default async function HomeLayout({ children }) {
 
   return (
     <>
-      <Navbar user={resp.data}/>
+      <Navbar user={resp?.data}/>
       <div className="pt-[52px]">
         { children }
       </div>
-      <Sidebar user={resp.data}/>
+      <Sidebar user={resp?.data}/>
       {/* <Footer/> */}
     </>
   );
