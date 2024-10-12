@@ -17,8 +17,11 @@ export { deleteSubTema } from "./subtema/deleteSubtema";
 
 export { createPregunta } from "./pregunta/createPregunta";
 export { getPreguntas } from "./pregunta/getPreguntas";
+export { getPreguntaById } from "./pregunta/getPreguntaById";
+export { updatePregunta } from "./pregunta/updatePregunta";
 export { deletePregunta } from "./pregunta/deletePregunta";
 
 export { createOpcion } from "./opcion/createOpcion";
 export { getOpciones } from "./opcion/getOpciones";
+export { updateOpcion } from "./opcion/updateOpcion";
 export { deleteOpcion } from "./opcion/deleteOpcion";

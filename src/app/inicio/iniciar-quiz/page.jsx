@@ -1,13 +1,16 @@
 
 import { Headerpage } from "@/components";
 import { ModulosGrid } from "../components";
-import { Modulos } from "@/data/modulos";
+import { getModulos } from "@/actions";
 
-export default function IniciarQuizPage() {
+export default async function IniciarQuizPage() {
+
+  const modulos = await getModulos(); 
+
   return (
     <div className="px-4 lg:px-20 xl:px-44 ">
       <Headerpage titulo="Escoge un módulo"/>
-      <ModulosGrid modulos={Modulos}/>
+      <ModulosGrid modulos={modulos.data}/>
     </div>
   );
 }

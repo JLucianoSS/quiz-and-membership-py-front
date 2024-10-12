@@ -6,7 +6,7 @@ export const ModulosGrid = ({ modulos }) => {
       {modulos.map((modulo, index) => (
         <CategoryCard
           key={index} 
-          id={modulo.id_Modulo}
+          id={modulo.id_modulo}
           name={modulo.nombre_modulo} 
           image={modulo.imagen} 
         />

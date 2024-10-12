@@ -8,7 +8,7 @@ export const getPreguntas = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        // cache: "no-store",
+        cache: "no-store",
       });
   
       // Convertimos la respuesta en JSON

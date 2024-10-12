@@ -1,8 +1,13 @@
 "use client";
 import { useState } from "react";
-import "./VideoSecction.css"
+import "./VideoSecction.css";
 
-export const ExplicationSection = ({ title = "Anato Plus", explication = "Aqui debe ir una expliacion bien elaborada acerca de la respuesta", videoURL = "", isCorrect = true }) => {
+export const ExplicationSection = ({ 
+  title = "Anato Plus", 
+  explication = "Aqui debe ir una expliacion bien elaborada acerca de la respuesta", 
+  videoOrImage = "", 
+  isCorrect = true 
+}) => {
   const [showMore, setShowMore] = useState(false);
 
   const toggleShowMore = () => {
@@ -11,6 +16,13 @@ export const ExplicationSection = ({ title = "Anato Plus", explication = "Aqui d
 
   // Determina el color de fondo en base a si es correcta o incorrecta
   const backgroundColorClass = isCorrect ? "bg-green-100" : "bg-red-100"; 
+
+  // Función para verificar si el archivo es un video o una imagen basándose en su extensión
+  const isVideo = (url) => {
+    const videoExtensions = ['mp4', 'webm', 'ogg']; // Extensiones de video comunes
+    const extension = url.split('.').pop().toLowerCase(); // Extrae la extensión del archivo
+    return videoExtensions.includes(extension);
+  };
 
   return (
     <div className={`flex flex-col md:flex-row items-start gap-4 p-4 border border-gray-300 rounded-md max-w-full ${backgroundColorClass}`}>
@@ -31,17 +43,25 @@ export const ExplicationSection = ({ title = "Anato Plus", explication = "Aqui d
           {explication}
         </p>
 
-        {showMore && videoURL && (
+        {/* Condicional para mostrar video o imagen */}
+        {showMore && videoOrImage && (
           <div className="mt-10">
-            <div className="video-container">
-              <iframe
-                src={videoURL}
-                title="Explicación en video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
+            {isVideo(videoOrImage) ? (
+              <div className="video-container">
+                <video controls className="w-full max-h-96">
+                  <source src={videoOrImage} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            ) : (
+              <div className="image-container">
+                <img
+                  src={videoOrImage}
+                  alt="Explicación visual"
+                  className="w-full h-auto max-w-full object-contain rounded-md"
+                />
+              </div>
+            )}
           </div>
         )}
         

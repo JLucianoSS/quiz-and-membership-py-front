@@ -17,7 +17,7 @@ export default async function HomeLayout({ children }) {
   return (
     <>
       <Navbar user={user}/>
-      <div className="pt-[52px] ">
+      <div className="pt-[52px]">
         { children }
       </div>
       <Sidebar user={user}/>

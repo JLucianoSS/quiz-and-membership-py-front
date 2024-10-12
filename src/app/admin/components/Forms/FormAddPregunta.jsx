@@ -51,6 +51,9 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
         id_subtema: data.subtemaId,
         year: parseInt(data.año),
         texto_pregunta: data.pregunta,
+        explicacion_correcta: data.explicacionCorrecta,
+        explicacion_incorrecta: data.explicacionIncorrecta,
+        imagen_video: multimediaUrl,
       });
   
       if (resultcreatePregunta.success) {
@@ -60,9 +63,6 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
             id_pregunta: resultcreatePregunta.data.id_pregunta, // Aquí usamos el id de la pregunta creada
             texto_opcion: opcion.textOpcion,
             es_correcta: opcion.esCorrecta,
-            explicacion_correcta: data.explicacionCorrecta,
-            explicacion_incorrecta: data.explicacionIncorrecta,
-            imagen_video: multimediaUrl,
           });
   
           if (!resultcreateOpcion.success) {

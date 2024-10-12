@@ -9,6 +9,7 @@ export const getUsers = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        cache: "no-store",
       });
   
       // Convertimos la respuesta en JSON

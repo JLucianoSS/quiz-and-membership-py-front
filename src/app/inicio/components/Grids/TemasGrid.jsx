@@ -8,8 +8,8 @@ export const TemasGrid = ({ temas }) => {
         {temas.map((tema, index) => (
           <TemaCard
             key={index} 
-            id={tema.id_Tema}
-            name={tema.Nombre_Tema} 
+            id={tema.id_tema}
+            name={tema.nombre_tema} 
           />
         ))}
       </div>

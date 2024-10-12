@@ -7,8 +7,8 @@ export const SubTemasGrid = ({ subtemas }) => {
     {subtemas.map((subtema, index) => (
       <SubTemaCard
         key={index} 
-        id={subtema.id_Subtema}
-        name={subtema.Subtema} 
+        id={subtema.id_subtema}
+        name={subtema.nombre_subtema} 
       />
     ))}
   </div></div>

@@ -1,18 +1,22 @@
 import { Headerpage } from "@/components";
 import { extractInfoFromSlug } from "@/utils/strings";
 import { SubTemasGrid } from "../../components";
-import { Subtemas } from "@/data/subtemas";
+import { getSubtemas } from "@/actions";
 
 
-export default function TemaPage({ params }) {
+export default async function TemaPage({ params }) {
 
   const { id, name } = extractInfoFromSlug(params.slugTema);
-  const filteredSubTemas = Subtemas.filter(subtema => subtema.id_Tema === id);
+  const { data } = await getSubtemas()
+  const filteredSubTemas = data.filter(subtema => subtema.id_tema === id);
 
   return (
     <div className="px-6 lg:px-20 xl:px-44">
       <Headerpage titulo={name + ` - Escoge un subtema`}/>
-      <SubTemasGrid subtemas={filteredSubTemas}/>
+      { !filteredSubTemas || filteredSubTemas.length !== 0 ? 
+        <SubTemasGrid subtemas={filteredSubTemas}/> :
+        <span className="text-gray-700">No hay temas establecidos</span>
+      }
     </div>
   );
 }

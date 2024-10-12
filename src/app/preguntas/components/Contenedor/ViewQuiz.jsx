@@ -3,10 +3,16 @@ import { useState } from "react";
 import { ButtonsBackAndNext, PreguntaContainer } from "..";
 
 export const ViewQuiz = ({ preguntas, page, slugTema }) => {
-  const [isQuestionCompleted, setIsQuestionCompleted] = useState(false); // Estado para bloquear el botón "Siguiente"
+  const [isQuestionCompleted, setIsQuestionCompleted] = useState(false);
+  const [isAnswered, setIsAnswered] = useState(false);
 
   const handleQuestionCompletion = () => {
-    setIsQuestionCompleted(true); // Marcar la pregunta como completada
+    setIsQuestionCompleted(true);
+  };
+
+  const handleAnswer = (isCorrect) => {
+    setIsAnswered(true);
+    // Aquí puedes agregar lógica adicional si es necesario
   };
 
   return (
@@ -16,7 +22,8 @@ export const ViewQuiz = ({ preguntas, page, slugTema }) => {
           <PreguntaContainer
             preguntas={preguntas}
             page={page}
-            onComplete={handleQuestionCompletion} // Pasar la función de finalización
+            onComplete={handleQuestionCompletion}
+            onAnswer={handleAnswer}
           />
         ) : (
           <p className="flex justify-center text-sm items-center w-full h-[70vh]  text-gray-700">
@@ -25,12 +32,12 @@ export const ViewQuiz = ({ preguntas, page, slugTema }) => {
         )}
       </div>
 
-      {/* BOTONES SALTAR Y SIGUIENTE */}
       <ButtonsBackAndNext
         preguntas={preguntas}
         page={page}
         slugTema={slugTema}
         isQuestionCompleted={isQuestionCompleted}
+        isAnswered={isAnswered}
       />
     </>
   );
