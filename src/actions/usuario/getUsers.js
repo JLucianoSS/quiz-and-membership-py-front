@@ -20,21 +20,17 @@ export const getUsers = async () => {
         throw new Error(result.message || 'Error desconocido');
       }
   
-      // Retornamos la lista de usuarios
-      return new Response(JSON.stringify(result.data), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      return {
+        success: true,
+        message: result.message,
+        data: result.data,
+      };
     } catch (error) {
       // Manejo de errores y retorno del mensaje proporcionado por el backend
-      return new Response(JSON.stringify({ message: error.message }), {
+      return {
         status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+        message: error.message,
+      };
     }
   }
   

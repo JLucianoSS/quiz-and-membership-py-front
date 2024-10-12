@@ -10,7 +10,9 @@ export default async function IniciarQuizPage() {
   return (
     <div className="px-4 lg:px-20 xl:px-44 ">
       <Headerpage titulo="Escoge un módulo"/>
-      <ModulosGrid modulos={modulos?.data}/>
+      { !modulos || modulos.length !== 0 ? 
+      <ModulosGrid modulos={modulos?.data}/> : 
+      <span className="text-gray-700">No hay módulos establecidos</span> }
     </div>
   );
 }
