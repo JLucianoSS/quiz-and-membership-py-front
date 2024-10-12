@@ -2,6 +2,7 @@
 
 export { getUsers } from "./usuario/getUsers";
 export { createUser } from "./usuario/createUser";
+export { getUserById } from "./usuario/getUserById";
 
 export { createModulo } from "./modulo/createModulo";
 export { getModulos } from "./modulo/getModulos";
@@ -25,3 +26,5 @@ export { createOpcion } from "./opcion/createOpcion";
 export { getOpciones } from "./opcion/getOpciones";
 export { updateOpcion } from "./opcion/updateOpcion";
 export { deleteOpcion } from "./opcion/deleteOpcion";
+
+export { loginUser } from "./auth/login";

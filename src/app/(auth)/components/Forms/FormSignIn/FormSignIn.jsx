@@ -30,6 +30,8 @@ export const FormSignIn = () => {
       password
     });
     // console.log(result);
+    console.log(result);
+    
     if (result.ok) {
       window.location.replace("/inicio");
     } else {

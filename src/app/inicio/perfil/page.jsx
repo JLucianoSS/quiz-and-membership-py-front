@@ -2,14 +2,13 @@
 import { FormEditUser, ProfileAvatar, UploadAvatar } from "../components";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/auth.config";
-import { getUser } from "@/data/usuarios";
 import { Headerpage } from "@/components";
+import { getUserById } from "@/actions";
 
 export default async function PerfilPage() {
 
   const session = await getServerSession(authOptions);
-  //TODO: Traer al usuario mediante una consulta, lo siguiente es simulado
-  const user = await getUser(session?.user?.id);
+  const resp = await getUserById(session?.user?.id);
   
   return (
     <div className="h-screen bg-gray-50">
@@ -20,11 +19,11 @@ export default async function PerfilPage() {
       </div>
 
       {/*avatar y nombre */}
-      <ProfileAvatar user={user}/>
+      <ProfileAvatar user={resp.data}/>
 
       <div className="flex flex-col items-center p-4">
         {/* Información del perfil */}
-        <FormEditUser user={user}/>
+        <FormEditUser user={resp.data}/>
       </div>
       
     </div>

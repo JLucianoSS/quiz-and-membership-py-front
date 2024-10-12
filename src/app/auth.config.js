@@ -1,6 +1,6 @@
 
 
-import { login } from "../data/usuarios";
+import { loginUser } from "@/actions";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -26,15 +26,12 @@ export const authOptions = {
       },
       async authorize(credentials) {
         // Usamos la función login para verificar las credenciales
-        const result = login(credentials.email, credentials.password); // esto debe ser asincrono
-        console.log("Id user loged");
-        console.log(result.user.id);
-        
+        const result = await loginUser(credentials);
 
         // Si el login es exitoso, devolvemos el usuario
         if (result.success) {
           return {
-            id: result.user.id,
+            id: result.user.id_user,
             name: `${result.user.nombre}`,
             email: result.user.email,
           };
