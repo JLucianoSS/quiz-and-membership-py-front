@@ -25,15 +25,6 @@ export const ManagePreguntas = () => {
 
   const totalPages = Math.ceil(preguntas.length / itemsPerPage);
 
-  // Función para abrir el Offcanvas
-  const handleOpenOffcanvas = () => {
-    setIsOffcanvasOpen(true);
-  };
-
-  // Función para cerrar el Offcanvas
-  const handleCloseOffcanvas = () => {
-    setIsOffcanvasOpen(false);
-  };
 
   // Función para alternar visibilidad del contenido
   const toggleContentVisibility = () => {
@@ -72,16 +63,6 @@ export const ManagePreguntas = () => {
           isContentVisible ? "max-h-[1000px]" : "max-h-0"
         }`}
       >
-        {/* Botón de Agregar */}
-        <div className="flex justify-start items-center my-2">
-          <button
-            className="flex items-center text-sm gap-1 text-white bg-primary px-2 py-1 rounded-md"
-            onClick={handleOpenOffcanvas}
-          >
-            <IoAddCircle size={24} />
-            <span>Agregar Pregunta</span>
-          </button>
-        </div>
 
         {/* Tabla de Preguntas */}
         {loading ? <CustomLoading className="h-[200px]" height={28} width={28}/> : 
@@ -95,14 +76,7 @@ export const ManagePreguntas = () => {
         />
       </div>
 
-      {/* Offcanvas para añadir preguntas */}
-      <Offcanvas2
-        isOpen={isOffcanvasOpen}
-        onClose={handleCloseOffcanvas}
-        title="Añadir Nueva Pregunta"
-      >
-        <FormAddPregunta subtemas={subtemas} onClose={handleCloseOffcanvas} />
-      </Offcanvas2>
+      
     </div>
   );
 };

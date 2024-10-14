@@ -21,16 +21,6 @@ export const ManageModulos = () => {
   const currentItems = modulos.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(modulos.length / itemsPerPage);
 
-  // Función para abrir el Offcanvas
-  const handleOpenOffcanvas = () => {
-    setIsOffcanvasOpen(true);
-  };
-
-  // Función para cerrar el Offcanvas
-  const handleCloseOffcanvas = () => {
-    setIsOffcanvasOpen(false);
-  };
-
   // Función para alternar visibilidad del contenido
   const toggleContentVisibility = () => {
     setIsContentVisible(!isContentVisible);
@@ -61,17 +51,6 @@ export const ManageModulos = () => {
       {/* Contenido con animación */}
       <div className={`transition-max-height duration-500 ease-in-out overflow-hidden ${isContentVisible ? 'max-h-[1000px]' : 'max-h-0'}`}>
         
-        {/* Botón de Agregar */}
-        <div className="flex justify-start items-center my-2">
-          <button
-            className="flex items-center text-sm gap-1 text-white bg-primary px-2 py-1 rounded-md"
-            onClick={handleOpenOffcanvas}
-          >
-            <IoAddCircle size={24} /> {/* Ícono de agregar */}
-            <span>Agregar Módulo</span>
-          </button>
-        </div>
-
         {/* Tabla de modulos */}
         {loading ? <CustomLoading className="h-[200px]" height={28} width={28}/> : 
         <TableModulos modulos={currentItems} /> }
@@ -84,10 +63,6 @@ export const ManageModulos = () => {
         />
       </div>
 
-      {/* Offcanvas para añadir modulos */}
-      <Offcanvas2 isOpen={isOffcanvasOpen} onClose={handleCloseOffcanvas} title="Añadir Nuevo Módulo">
-        <FormAddModulo /> {/* Pasar función para refrescar la tabla */}
-      </Offcanvas2>
     </div>
   );
 };
