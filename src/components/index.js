@@ -5,6 +5,8 @@ export * from "./ui/Footer";
 export * from "./ui/Headerpage";
 export * from "./ui/Sidebar";
 export * from "./ui/HeaderQuiz";
+export * from "./ui/HeaderNoAccess";
+export * from "./ui/CustomToggle";
 
 export * from "./CustomSwiper/CustomSwiper";
 
@@ -21,6 +23,6 @@ export * from "./OffCanvas/OffCanvas2";
 export * from "./Planes/PlansGrid";
 export * from "./Planes/PlanCard";
 
-
 export * from "./ux/CustomLoading";
+export * from "./ux/AccessRestriction";
 

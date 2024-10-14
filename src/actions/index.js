@@ -3,6 +3,7 @@
 export { getUsers } from "./usuario/getUsers";
 export { createUser } from "./usuario/createUser";
 export { getUserById } from "./usuario/getUserById";
+export { updateUsuario } from "./usuario/updateUser";
 
 export { createModulo } from "./modulo/createModulo";
 export { getModulos } from "./modulo/getModulos";
