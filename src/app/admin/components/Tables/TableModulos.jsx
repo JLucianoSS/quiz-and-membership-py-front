@@ -1,11 +1,16 @@
 "use client";
+import { useState } from "react";
 import { deleteModulo, getModulos } from "@/actions"; // Suponiendo que tienes una acción para obtener los módulos
-import { IoTrash } from "react-icons/io5";
+import { IoCreate, IoTrash } from "react-icons/io5";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { Offcanvas2 } from "@/components";
+import { FormEditModulo } from "..";
 
 export const TableModulos = ({ modulos }) => {
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+  const [selectedPreguntaId, setSelectedPreguntaId] = useState(null);
   const { toggleRefreshTable } = useRedrawStore();
 
   const handleDeleteModulo = (idModulo) => {
@@ -47,6 +52,16 @@ export const TableModulos = ({ modulos }) => {
     });
   };
 
+  const handleOpenOffcanvas = (idPregunta) => {
+    setSelectedPreguntaId(idPregunta);
+    setIsOffcanvasOpen(true);
+  };
+
+  const handleCloseOffcanvas = () => {
+    setIsOffcanvasOpen(false);
+    setSelectedPreguntaId(null);
+  };
+
   return (
     <div className="overflow-x-auto mt-4">
       <table className="min-w-full border-collapse border border-gray-200">
@@ -83,6 +98,12 @@ export const TableModulos = ({ modulos }) => {
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   <div className="flex justify-center gap-2">
+                      <span
+                        className="text-blue-500 cursor-pointer"
+                        onClick={() => handleOpenOffcanvas(modulo.id_modulo)}
+                      >
+                        <IoCreate size={22} />
+                      </span>
                     <span
                       className="text-red-500 cursor-pointer"
                       onClick={() => handleDeleteModulo(modulo.id_modulo)}
@@ -102,6 +123,19 @@ export const TableModulos = ({ modulos }) => {
           )}
         </tbody>
       </table>
+
+      <Offcanvas2
+        isOpen={isOffcanvasOpen}
+        onClose={handleCloseOffcanvas}
+        title="Editar Pregunta"
+      >
+        <FormEditModulo 
+          key={selectedPreguntaId} 
+          onclose={handleCloseOffcanvas}
+          moduleId={selectedPreguntaId}
+        />
+      </Offcanvas2>
+
     </div>
   );
 };

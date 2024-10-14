@@ -26,3 +26,6 @@ export * from "./Forms/FormAddModulo";
 export * from "./Forms/FormAddSubTema";
 export * from "./Forms/FormAddPregunta";
 export * from "./Forms/FormEditPregunta";
+export * from "./Forms/FormEditModulo";
+export * from "./Forms/FormEditTema";
+export * from "./Forms/FormEditSubTema";

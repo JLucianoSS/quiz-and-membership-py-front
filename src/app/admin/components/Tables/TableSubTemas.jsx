@@ -1,11 +1,16 @@
 "use client";
-import { deleteSubTema } from "@/actions"; // Asume que tienes una acción para eliminar subtemas
-import { IoTrash } from "react-icons/io5";
+import { useState } from "react";
+import { deleteSubTema } from "@/actions";
+import { IoCreate, IoTrash } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
+import { Offcanvas2 } from "@/components";
+import { FormEditSubTema } from "..";
 
 export const TableSubTemas = ({ subtemas, temas }) => {
   const { toggleRefreshTable } = useRedrawStore();
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+  const [selectedSubTemaId, setSelectedSubTemaId] = useState(null);
 
   const handleDeleteSubTema = (idSubTema) => {
     toast((t) => (
@@ -20,7 +25,7 @@ export const TableSubTemas = ({ subtemas, temas }) => {
                 const result = await deleteSubTema(idSubTema);
                 if (result.success) {
                   toast.success(result.message, { id: t.id });
-                  toggleRefreshTable(); // Refrescar la tabla
+                  toggleRefreshTable();
                 } else {
                   toast.error(result.message, { id: t.id });
                 }
@@ -44,6 +49,16 @@ export const TableSubTemas = ({ subtemas, temas }) => {
       duration: 5000,
       position: "top-center",
     });
+  };
+
+  const handleOpenOffcanvas = (idSubTema) => {
+    setSelectedSubTemaId(idSubTema);
+    setIsOffcanvasOpen(true);
+  };
+
+  const handleCloseOffcanvas = () => {
+    setIsOffcanvasOpen(false);
+    setSelectedSubTemaId(null);
   };
 
   return (
@@ -71,6 +86,12 @@ export const TableSubTemas = ({ subtemas, temas }) => {
                   <td className="border border-gray-300 px-4 py-2">
                     <div className="flex justify-center gap-2">
                       <span
+                        className="text-blue-500 cursor-pointer"
+                        onClick={() => handleOpenOffcanvas(subtema.id_subtema)}
+                      >
+                        <IoCreate size={22} />
+                      </span>
+                      <span
                         className="text-red-500 cursor-pointer"
                         onClick={() => handleDeleteSubTema(subtema.id_subtema)}
                       >
@@ -90,6 +111,19 @@ export const TableSubTemas = ({ subtemas, temas }) => {
           )}
         </tbody>
       </table>
+
+      <Offcanvas2
+        isOpen={isOffcanvasOpen}
+        onClose={handleCloseOffcanvas}
+        title="Editar Subtema"
+      >
+        <FormEditSubTema
+          key={selectedSubTemaId}
+          subTemaId={selectedSubTemaId}
+          temas={temas}
+          onClose={handleCloseOffcanvas}
+        />
+      </Offcanvas2>
     </div>
   );
 };

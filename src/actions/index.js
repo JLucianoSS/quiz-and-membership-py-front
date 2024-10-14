@@ -6,14 +6,20 @@ export { getUserById } from "./usuario/getUserById";
 
 export { createModulo } from "./modulo/createModulo";
 export { getModulos } from "./modulo/getModulos";
+export { getModuloById } from "./modulo/getModuloById";
+export { updateModulo } from "./modulo/updateModule";
 export { deleteModulo } from "./modulo/deleteModulo";
 
 export { createTema } from "./tema/createTema";
 export { getTemas } from "./tema/getTemas";
+export { getTemaById } from "./tema/getTemaById";
+export { updateTema } from "./tema/updateTema";
 export { deleteTema } from "./tema/deleteTema";
 
 export { createSubtema } from "./subtema/createSubtema";
 export { getSubtemas } from "./subtema/getSubtemas";
+export { updateSubtema } from "./subtema/updateSubtema";
+export { getSubtemaById } from "./subtema/getSubtemaById";
 export { deleteSubTema } from "./subtema/deleteSubtema";
 
 export { createPregunta } from "./pregunta/createPregunta";

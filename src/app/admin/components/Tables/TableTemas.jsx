@@ -1,11 +1,16 @@
 "use client";
-import { deleteTema } from "@/actions"; // Suponiendo que tienes una acción para eliminar temas
-import { IoTrash } from "react-icons/io5";
+import { useState } from "react";
+import { deleteTema } from "@/actions";
+import { IoCreate, IoTrash } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
+import { Offcanvas2 } from "@/components";
+import { FormEditTema } from "..";
 
 export const TableTemas = ({ temas, modulos }) => {
   const { toggleRefreshTable } = useRedrawStore();
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+  const [selectedTemaId, setSelectedTemaId] = useState(null);
 
   const handleDeleteTema = (idTema) => {
     toast((t) => (
@@ -20,30 +25,40 @@ export const TableTemas = ({ temas, modulos }) => {
                 const result = await deleteTema(idTema);
                 if (result.success) {
                   toast.success(result.message, { id: t.id });
-                  toggleRefreshTable(); // Refrescar la tabla
+                  toggleRefreshTable();
                 } else {
                   toast.error(result.message, { id: t.id });
                 }
               } catch (error) {
                 toast.error("Error al eliminar el tema: " + error.message, { id: t.id });
               }
-              toast.dismiss(t.id); // Cierra el toast de confirmación
+              toast.dismiss(t.id);
             }}
           >
             Confirmar
           </button>
           <button
             className="bg-gray-500 text-white px-3 py-1 rounded"
-            onClick={() => toast.dismiss(t.id)} // Cierra el toast sin eliminar
+            onClick={() => toast.dismiss(t.id)}
           >
             Cancelar
           </button>
         </div>
       </div>
     ), {
-      duration: 5000, // Duración del toast de confirmación
-      position: "top-center", // Posición del toast
+      duration: 5000,
+      position: "top-center",
     });
+  };
+
+  const handleOpenOffcanvas = (idTema) => {
+    setSelectedTemaId(idTema);
+    setIsOffcanvasOpen(true);
+  };
+
+  const handleCloseOffcanvas = () => {
+    setIsOffcanvasOpen(false);
+    setSelectedTemaId(null);
   };
 
   return (
@@ -69,6 +84,12 @@ export const TableTemas = ({ temas, modulos }) => {
                   <td className="border border-gray-300 px-4 py-2">
                     <div className="flex justify-center gap-2">
                       <span
+                        className="text-blue-500 cursor-pointer"
+                        onClick={() => handleOpenOffcanvas(tema.id_tema)}
+                      >
+                        <IoCreate size={22} />
+                      </span>
+                      <span
                         className="text-red-500 cursor-pointer"
                         onClick={() => handleDeleteTema(tema.id_tema)}
                       >
@@ -88,6 +109,19 @@ export const TableTemas = ({ temas, modulos }) => {
           )}
         </tbody>
       </table>
+
+      <Offcanvas2
+        isOpen={isOffcanvasOpen}
+        onClose={handleCloseOffcanvas}
+        title="Editar Tema"
+      >
+        <FormEditTema
+          key={selectedTemaId}
+          temaId={selectedTemaId}
+          modulos={modulos}
+          onClose={handleCloseOffcanvas}
+        />
+      </Offcanvas2>
     </div>
   );
 };

@@ -36,14 +36,17 @@ export const FormSignUp = () => {
           role: "Visitante"
         });
         if (resultCreate.success) {
-          toast.success(resultCreate.message); // Muestra el mensaje de éxito
+          // toast.success(resultCreate.message); // Muestra el mensaje de éxito del back
+          toast.success("Te has registrado correctamente");
           /* INICIA SESIÓN */
           const resultLogin = await signIn('credentials', {
             redirect: false,
-            email:resultCreate.data.email,
-            password:resultCreate.data.password
+            email:data.email,
+            password:data.password
           });
+          
           if (resultLogin.ok) {
+            toast.success("Iniciando sesión...");
             window.location.replace("/inicio");
           } else {
             toast.error("Error al iniciar sesión");

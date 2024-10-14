@@ -33,6 +33,7 @@ export const FormSignIn = () => {
     console.log(result);
     
     if (result.ok) {
+      toast.success("Accediendo...");
       window.location.replace("/inicio");
     } else {
       toast.error("Credenciales incorrectas");
