@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CustomLoading } from "@/components";
-import { getSubtemaById, updateSubTema } from "@/actions";
+import { getSubtemaById, updateSubtema } from "@/actions";
 import { FaBroom } from "react-icons/fa";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import toast from "react-hot-toast";
@@ -28,7 +28,6 @@ export const FormEditSubTema = ({ subTemaId, temas, onClose }) => {
         setLoading(false);
       }
     };
-
     if (subTemaId) {
       fetchSubTemaData();
     }
@@ -37,7 +36,7 @@ export const FormEditSubTema = ({ subTemaId, temas, onClose }) => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const result = await updateSubTema(subTemaId, {
+      const result = await updateSubtema(subTemaId, {
         nombre_subtema: data.nombre,
         id_tema: parseInt(data.temaId),
       });

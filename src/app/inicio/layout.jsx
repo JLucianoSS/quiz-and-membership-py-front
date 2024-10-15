@@ -14,7 +14,7 @@ export default async function HomeLayout({ children }) {
 
   // Asumimos que resp.data contiene una propiedad isApproved
   // const isUserApproved = resp?.data?.isApproved;
-  const isUserApproved = false;
+  const isUserApproved = resp.data.is_approved;
 
   return (
     <>

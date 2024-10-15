@@ -23,12 +23,9 @@ export const FormEditModulo = ({ onclose, moduleId }) => {
   const [uploading, setUploading] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
 
-  const watchFile = watch("file");
-
   const onSubmit = async (data) => {
     setUploading(true);
     const file = data.file[0];
-
     try {
       let imageUrl = currentImage;
       if (file) {
@@ -39,12 +36,10 @@ export const FormEditModulo = ({ onclose, moduleId }) => {
         }
         imageUrl = await uploadFile(file, "/categories-modulos/");
       }
-
       const result = await updateModulo(moduleId, {
         nombre_modulo: data.nombre,
         imagen: imageUrl,
       });
-
       if (result.success) {
         toast.success(result.message);
         reset();

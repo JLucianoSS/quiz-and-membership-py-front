@@ -160,8 +160,24 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
     }
   };
 
-  const handleRemoveExistingFile = () => {
-    setExistingFile(null);
+  const handleRemoveExistingFile = async () => {
+    try {
+      setIsLoading(true);
+      const result = await updatePregunta(preguntaId, {
+        imagen_video: "", // Establecemos la propiedad imagen_video como una cadena vacía
+      });
+      if (result.success) {
+        setExistingFile(null);
+        toast.success("Imagen eliminada exitosamente");
+      } else {
+        toast.error("Error al eliminar la imagen");
+      }
+    } catch (error) {
+      console.error("Error al eliminar la imagen:", error);
+      toast.error("Error al eliminar la imagen");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isLoading) {
@@ -284,8 +300,9 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
               type="button"
               onClick={handleRemoveExistingFile}
               className="text-red-500"
+              disabled={isLoading}
             >
-              <IoCloseCircle size={24} />
+              {isLoading ? <CustomLoading color="#ff0000" height={24} width={24}/> : <IoCloseCircle size={24} />}
             </button>
           </div>
         ) : (

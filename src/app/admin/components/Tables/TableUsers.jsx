@@ -51,14 +51,15 @@ export const TableUsers = ({ users: initialUsers }) => {
 
   const handleApprovalToggle = async (userId, currentApprovalState) => {
     try {
-      const result = await updateUsuario(userId, { isUserApproved: !currentApprovalState });
+      const result = await updateUsuario(userId, { is_approved: !currentApprovalState });
       if (result.success) {
         setUsers(users.map(user => 
           user.id_user === userId 
-            ? { ...user, isUserApproved: !currentApprovalState }
+            ? { ...user, is_approved: !currentApprovalState }
             : user
         ));
-        toast.success(result.message);
+        toast.success("Usuario actualizado");
+        // toast.success(result.message);
       } else {
         toast.error(result.message);
       }
@@ -135,8 +136,8 @@ export const TableUsers = ({ users: initialUsers }) => {
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     <CustomToggle
-                      isChecked={user.isUserApproved}
-                      onChange={() => handleApprovalToggle(user.id_user, user.isUserApproved)}
+                      isChecked={user.is_approved}
+                      onChange={() => handleApprovalToggle(user.id_user, user.is_approved)}
                     />
                   </td>
                 </tr>
