@@ -11,7 +11,7 @@ export default async function UsuariosAdminPage() {
   
 
   return (
-    <div className="px-4 lg:px-10">
+    <div className="px-4 lg:px-10 pb-10">
       <Headerpage titulo="Usuarios" />
       <TableUsers users={users.data}/>
     </div>

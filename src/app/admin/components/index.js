@@ -4,6 +4,8 @@
 export * from "./ui/NavbarAdmin";
 export * from "./ui/SidebarAdmin";
 export * from "./ui/PaginationAdmin";
+export * from "./ui/SearchInputAdmin";
+export * from "./ui/TableActionsAdmin";
 
 export * from "./Grids/AdminDashboard";
 

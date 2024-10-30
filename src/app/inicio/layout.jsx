@@ -6,25 +6,29 @@ import { getUserById } from "@/actions";
 
 export default async function HomeLayout({ children }) {
   const session = await getServerSession(authOptions);
-  const resp = await getUserById(session?.user?.id);
-
   if (!session) {
     redirect("/login");
   }
 
-  // Asumimos que resp.data contiene una propiedad isApproved
-  // const isUserApproved = resp?.data?.isApproved;
-  const isUserApproved = resp.data.is_approved;
+  const resp = await getUserById(session?.user?.id);
+  const userData = resp?.data;
+
+  // Verificar si el usuario está aprobado o es administrador
+  const isAdmin = userData?.role === 'Administrador';
+  const isUserApproved = userData?.is_approved;
+  
+  // Permitir acceso si es admin O si está aprobado
+  const hasAccess = isAdmin || isUserApproved;
 
   return (
     <>
-      {isUserApproved ? (
+      {hasAccess ? (
         <>
-          <Navbar user={resp?.data} />
+          <Navbar user={userData} />
           <div className="pt-[52px]">
             {children}
           </div>
-          <Sidebar user={resp?.data} />
+          <Sidebar user={userData} />
         </>
       ) : (
         <AccessRestriction />

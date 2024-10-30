@@ -15,7 +15,7 @@ export default async function PreguntasAdminPage() {
   const modulos = await getModulos();
 
   return (
-    <div className="px-4 lg:px-10">
+    <div className="px-4 lg:px-10 pb-10">
       <Headerpage titulo="Gestión de preguntas" />
       <ViewManageQuiz
         modulos={modulos.data}
@@ -24,7 +24,6 @@ export default async function PreguntasAdminPage() {
         preguntas={Preguntas}
         opciones={opciones}
       />
-      <div className="mb-10"></div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ export const NavbarAdmin = ({ user }) => {
   const { isOpen, toggleSidebar } = useSideBarStore2();
 
   return (
-    <div className="fixed w-full flex items-center justify-between h-14 bg-gray-100 text-gray-700 border-b-2">
+    <div className="fixed z-50 w-full flex items-center justify-between h-14 bg-gray-100 text-gray-700 border-b-2">
       <div className="flex items-center gap-1 w-64 pl-3 md:pl-4">
         <button
           className="hamburger-menu md:hidden transition-transform duration-300 ease-in-out transform"

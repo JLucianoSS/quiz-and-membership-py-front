@@ -1,50 +1,85 @@
 "use client";
 import { useState, useEffect } from "react";
 import { deleteSubTema } from "@/actions";
-import { IoCreate, IoTrash, IoSearch, IoClose, IoAddCircle } from "react-icons/io5";
+import { IoAddCircle } from "react-icons/io5";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import { Offcanvas2 } from "@/components";
-import { FormEditSubTema, FormAddSubTema } from "..";
+import { FormEditSubTema, FormAddSubTema, PaginationAdmin, TableActionsAdmin, SearchInputAdmin } from "..";
 import toast from "react-hot-toast";
 
+const ITEMS_PER_PAGE = 10;
+
+/* Componente de tabla para mostrar y gestionar subtemas*/
 export const TableSubTemas = ({ subtemas, temas }) => {
   const { toggleRefreshTable } = useRedrawStore();
+  
+  // Estados para el modal/offcanvas
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
   const [selectedSubTemaId, setSelectedSubTemaId] = useState(null);
   const [isAddingSubTema, setIsAddingSubTema] = useState(false);
+  
+  // Estados para filtros y búsqueda
   const [filteredSubtemas, setFilteredSubtemas] = useState(subtemas);
   const [searchTerm, setSearchTerm] = useState("");
   const [temaFilter, setTemaFilter] = useState("");
 
+  // Estado para paginación
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Efectos para filtrado y paginación
   useEffect(() => {
     filterAndSearchSubtemas();
   }, [searchTerm, temaFilter, subtemas]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, temaFilter]);
+
+  /**
+   * Filtra subtemas basado en búsqueda y filtro de tema
+   */
   const filterAndSearchSubtemas = () => {
-    let updatedSubtemas = subtemas;
+    let updatedSubtemas = [...subtemas];
 
     if (temaFilter) {
-      updatedSubtemas = updatedSubtemas.filter((subtema) => subtema.id_tema === parseInt(temaFilter));
-    }
-
-    if (searchTerm) {
-      updatedSubtemas = updatedSubtemas.filter(
-        (subtema) => subtema.nombre_subtema.toLowerCase().includes(searchTerm.toLowerCase())
+      updatedSubtemas = updatedSubtemas.filter((subtema) => 
+        subtema.id_tema === parseInt(temaFilter)
       );
     }
 
+    if (searchTerm) {
+      updatedSubtemas = updatedSubtemas.filter((subtema) =>
+        subtema.nombre_subtema.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Ordenar por ID de mayor a menor
+    updatedSubtemas.sort((a, b) => b.id_subtema - a.id_subtema);
     setFilteredSubtemas(updatedSubtemas);
   };
 
+  // Cálculos para paginación
+  const totalItems = filteredSubtemas.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+  const currentSubtemas = filteredSubtemas.slice(startIndex, endIndex);
+
   const clearSearch = () => {
     setSearchTerm("");
+    setCurrentPage(1);
   };
 
+  /**
+   * Maneja la eliminación de un subtema
+   */
   const handleDeleteSubTema = (idSubTema) => {
     toast((t) => (
       <div className="flex flex-col items-center">
         <span>¿Estás seguro de eliminar el subtema?</span>
-        <p className="text-sm text-center text-gray-500">Es posible que tenga preguntas asignadas, entonces estas también se eliminarán</p>
+        <p className="text-sm text-center text-gray-500">
+          Es posible que tenga preguntas asignadas, entonces estas también se eliminarán
+        </p>
         <div className="flex gap-2 mt-2">
           <button
             className="bg-red-500 text-white px-3 py-2 rounded"
@@ -80,13 +115,8 @@ export const TableSubTemas = ({ subtemas, temas }) => {
   };
 
   const handleOpenOffcanvas = (idSubTema = null) => {
-    if (idSubTema) {
-      setSelectedSubTemaId(idSubTema);
-      setIsAddingSubTema(false);
-    } else {
-      setSelectedSubTemaId(null);
-      setIsAddingSubTema(true);
-    }
+    setSelectedSubTemaId(idSubTema);
+    setIsAddingSubTema(!idSubTema);
     setIsOffcanvasOpen(true);
   };
 
@@ -100,26 +130,12 @@ export const TableSubTemas = ({ subtemas, temas }) => {
     <div className="mt-4">
       <div className="mb-4 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
         {/* Buscador */}
-        <div className="relative flex-grow">
-          <span className="absolute left-2 top-2 text-gray-400">
-            <IoSearch size={22} />
-          </span>
-          <input
-            type="text"
-            placeholder="Buscar por nombre del subtema"
-            className="border p-2 rounded-md w-full pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button
-              onClick={clearSearch}
-              className="absolute right-2 top-2 text-gray-500"
-            >
-              <IoClose size={24} />
-            </button>
-          )}
-        </div>
+        <SearchInputAdmin
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          placeholder="Buscar por nombre del subtema"
+          onClear={clearSearch}
+        />
 
         {/* Filtro por tema */}
         <div className="md:w-1/4">
@@ -161,8 +177,8 @@ export const TableSubTemas = ({ subtemas, temas }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredSubtemas.length > 0 ? (
-              filteredSubtemas.map((subtema) => {
+            {currentSubtemas.length > 0 ? (
+              currentSubtemas.map((subtema) => {
                 const tema = temas.find((tem) => tem.id_tema === subtema.id_tema);
                 return (
                   <tr key={subtema.id_subtema} className="hover:bg-gray-50">
@@ -172,20 +188,12 @@ export const TableSubTemas = ({ subtemas, temas }) => {
                       {tema ? tema.nombre_tema : "N/A"}
                     </td>
                     <td className="border border-gray-300 px-4 py-2">
-                      <div className="flex justify-center gap-2">
-                        <span
-                          className="text-blue-500 cursor-pointer"
-                          onClick={() => handleOpenOffcanvas(subtema.id_subtema)}
-                        >
-                          <IoCreate size={22} />
-                        </span>
-                        <span
-                          className="text-red-500 cursor-pointer"
-                          onClick={() => handleDeleteSubTema(subtema.id_subtema)}
-                        >
-                          <IoTrash size={22} />
-                        </span>
-                      </div>
+                      <TableActionsAdmin
+                        id={subtema.id_subtema}
+                        onEdit={handleOpenOffcanvas}
+                        onDelete={handleDeleteSubTema}
+                        itemName="el subtema"
+                      />
                     </td>
                   </tr>
                 );
@@ -201,6 +209,20 @@ export const TableSubTemas = ({ subtemas, temas }) => {
         </table>
       </div>
 
+      {/* Paginación */}
+      {filteredSubtemas.length > 0 && (
+        <PaginationAdmin
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          setCurrentPage={setCurrentPage}
+          itemName="subtemas"
+        />
+      )}
+
+      {/* Modal/Offcanvas */}
       <Offcanvas2
         isOpen={isOffcanvasOpen}
         onClose={handleCloseOffcanvas}

@@ -1,46 +1,81 @@
 "use client";
 import { useState, useEffect } from "react";
 import { deleteModulo } from "@/actions";
-import { IoCreate, IoTrash, IoSearch, IoClose, IoAddCircle } from "react-icons/io5";
+import { IoAddCircle } from "react-icons/io5";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { Offcanvas2 } from "@/components";
-import { FormEditModulo, FormAddModulo } from "..";
+import { FormEditModulo, FormAddModulo, PaginationAdmin, TableActionsAdmin, SearchInputAdmin } from "..";
 
+
+const ITEMS_PER_PAGE = 10;
+
+/* Componente de tabla para mostrar y gestionar módulos*/
 export const TableModulos = ({ modulos }) => {
   const { toggleRefreshTable } = useRedrawStore();
+  
+  // Estados para el modal/offcanvas
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
   const [selectedModuloId, setSelectedModuloId] = useState(null);
   const [isAddingModulo, setIsAddingModulo] = useState(false);
-  const [filteredModulos, setFilteredModulos] = useState(modulos);
+  
+  // Estados para filtros y búsqueda
+  const [filteredModulos, setFilteredModulos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Estado para paginación
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Efecto para filtrado y ordenamiento
   useEffect(() => {
     filterAndSearchModulos();
   }, [searchTerm, modulos]);
 
+  // Efecto para resetear página cuando cambia el filtro
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  /**
+   * Filtra y ordena módulos basado en búsqueda
+   */
   const filterAndSearchModulos = () => {
-    let updatedModulos = modulos;
+    let updatedModulos = [...modulos];
 
     if (searchTerm) {
-      updatedModulos = updatedModulos.filter(
-        (modulo) => modulo.nombre_modulo.toLowerCase().includes(searchTerm.toLowerCase())
+      updatedModulos = updatedModulos.filter((modulo) =>
+        modulo.nombre_modulo.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
+    // Ordenar por ID de mayor a menor
+    updatedModulos.sort((a, b) => b.id_modulo - a.id_modulo);
     setFilteredModulos(updatedModulos);
   };
 
+  // Cálculos para paginación
+  const totalItems = filteredModulos.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+  const currentModulos = filteredModulos.slice(startIndex, endIndex);
+
   const clearSearch = () => {
     setSearchTerm("");
+    setCurrentPage(1);
   };
 
+  /**
+   * Maneja la eliminación de un módulo
+   */
   const handleDeleteModulo = (idModulo) => {
     toast((t) => (
       <div className="flex flex-col items-center">
         <span>¿Estás seguro de eliminar el módulo?</span>
-        <p className="text-sm text-center text-gray-500">Es posible que tenga temas asignados, entonces estos también se eliminarán</p>
+        <p className="text-sm text-center text-gray-500">
+          Es posible que tenga temas asignados, entonces estos también se eliminarán
+        </p>
         <div className="flex gap-2 mt-2">
           <button
             className="bg-red-500 text-white px-3 py-2 rounded"
@@ -76,13 +111,8 @@ export const TableModulos = ({ modulos }) => {
   };
 
   const handleOpenOffcanvas = (idModulo = null) => {
-    if (idModulo) {
-      setSelectedModuloId(idModulo);
-      setIsAddingModulo(false);
-    } else {
-      setSelectedModuloId(null);
-      setIsAddingModulo(true);
-    }
+    setSelectedModuloId(idModulo);
+    setIsAddingModulo(!idModulo);
     setIsOffcanvasOpen(true);
   };
 
@@ -96,28 +126,14 @@ export const TableModulos = ({ modulos }) => {
     <div className="mt-4">
       <div className="mb-4 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
         {/* Buscador */}
-        <div className="relative flex-grow">
-          <span className="absolute left-2 top-2 text-gray-400">
-            <IoSearch size={22} />
-          </span>
-          <input
-            type="text"
-            placeholder="Buscar por nombre del módulo"
-            className="border p-2 rounded-md w-full pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button
-              onClick={clearSearch}
-              className="absolute right-2 top-2 text-gray-500"
-            >
-              <IoClose size={24} />
-            </button>
-          )}
-        </div>
+        <SearchInputAdmin
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          placeholder="Buscar por nombre del módulo"
+          onClear={clearSearch}
+        />
 
-        {/* Botón Agregar Módulo */}
+        {/* Botón Agregar */}
         <div className="flex justify-start items-center my-2">
           <button
             className="flex items-center text-sm gap-1 text-white bg-primary px-2 py-1 rounded-md"
@@ -129,7 +145,7 @@ export const TableModulos = ({ modulos }) => {
         </div>
       </div>
 
-      {/* Tabla de módulos */}
+      {/* Tabla */}
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse border border-gray-200">
           <thead className="bg-gray-100">
@@ -141,8 +157,8 @@ export const TableModulos = ({ modulos }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredModulos.length > 0 ? (
-              filteredModulos.map((modulo) => (
+            {currentModulos.length > 0 ? (
+              currentModulos.map((modulo) => (
                 <tr key={modulo.id_modulo} className="hover:bg-gray-50">
                   <td className="border border-gray-300 px-4 py-2">{modulo.id_modulo}</td>
                   <td className="border border-gray-300 px-4 py-2">{modulo.nombre_modulo}</td>
@@ -164,20 +180,12 @@ export const TableModulos = ({ modulos }) => {
                     </div>
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
-                    <div className="flex justify-center gap-2">
-                      <span
-                        className="text-blue-500 cursor-pointer"
-                        onClick={() => handleOpenOffcanvas(modulo.id_modulo)}
-                      >
-                        <IoCreate size={22} />
-                      </span>
-                      <span
-                        className="text-red-500 cursor-pointer"
-                        onClick={() => handleDeleteModulo(modulo.id_modulo)}
-                      >
-                        <IoTrash size={22} />
-                      </span>
-                    </div>
+                    <TableActionsAdmin
+                      id={modulo.id_modulo}
+                      onEdit={handleOpenOffcanvas}
+                      onDelete={handleDeleteModulo}
+                      itemName="el módulo"
+                    />
                   </td>
                 </tr>
               ))
@@ -192,6 +200,20 @@ export const TableModulos = ({ modulos }) => {
         </table>
       </div>
 
+      {/* Paginación */}
+      {filteredModulos.length > 0 && (
+        <PaginationAdmin
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          setCurrentPage={setCurrentPage}
+          itemName="módulos"
+        />
+      )}
+
+      {/* Modal/Offcanvas */}
       <Offcanvas2
         isOpen={isOffcanvasOpen}
         onClose={handleCloseOffcanvas}

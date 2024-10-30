@@ -1,32 +1,60 @@
 "use client";
 import { useState, useEffect } from "react";
-import { IoClose, IoSearch } from "react-icons/io5";
-import { PaginationAdmin } from "..";
 import { updateUsuario } from '@/actions';
-import { CustomToggle } from "@/components";
+import { CustomLoading, CustomToggle } from "@/components";
+import { PaginationAdmin, SearchInputAdmin } from "..";
 import toast from 'react-hot-toast';
 
+const ITEMS_PER_PAGE = 10;
+
+/** Componente de tabla para mostrar y gestionar usuarios */
 export const TableUsers = ({ users: initialUsers }) => {
+  // Estado para loading
+  const [loading, setLoading] = useState(true);
+  
+  // Estados para datos
   const [users, setUsers] = useState(initialUsers);
-  const [filteredUsers, setFilteredUsers] = useState(users);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  
+  // Estados para filtros y búsqueda
   const [searchTerm, setSearchTerm] = useState("");
   const [planFilter, setPlanFilter] = useState("");
+  
+  // Estado para paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(10);
 
+  // Efecto para inicialización
+  useEffect(() => {
+    if (initialUsers) {
+      setUsers(initialUsers);
+      setLoading(false);
+    }
+  }, [initialUsers]);
+
+  // Efecto para filtrado y búsqueda
   useEffect(() => {
     filterAndSearchUsers();
-  }, [searchTerm, planFilter, currentPage, users]);
+  }, [searchTerm, planFilter, users]);
 
+  // Efecto para resetear página cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, planFilter]);
+
+  /**
+   * Filtra y busca usuarios basado en los criterios seleccionados
+   */
   const filterAndSearchUsers = () => {
-    let updatedUsers = users;
+    let updatedUsers = [...users];
 
+    // Filtro por plan
     if (planFilter === "free") {
       updatedUsers = updatedUsers.filter((user) => user.role === "Visitante");
     } else if (planFilter === "premium") {
       updatedUsers = updatedUsers.filter((user) => user.role === "Suscriptor");
     }
 
+    // Búsqueda por texto
     if (searchTerm) {
       updatedUsers = updatedUsers.filter(
         (user) =>
@@ -36,19 +64,26 @@ export const TableUsers = ({ users: initialUsers }) => {
       );
     }
 
-    const indexOfLastUser = currentPage * usersPerPage;
-    const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = updatedUsers.slice(indexOfFirstUser, indexOfLastUser);
-
-    setFilteredUsers(currentUsers);
+    // Ordenar por ID de mayor a menor
+    updatedUsers.sort((a, b) => b.id_user - a.id_user);
+    setFilteredUsers(updatedUsers);
   };
 
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  // Cálculos para paginación
+  const totalItems = filteredUsers.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+  const currentUsers = filteredUsers.slice(startIndex, endIndex);
 
   const clearSearch = () => {
     setSearchTerm("");
+    setCurrentPage(1);
   };
 
+  /**
+   * Maneja el cambio de estado de aprobación de un usuario
+   */
   const handleApprovalToggle = async (userId, currentApprovalState) => {
     try {
       const result = await updateUsuario(userId, { is_approved: !currentApprovalState });
@@ -59,7 +94,6 @@ export const TableUsers = ({ users: initialUsers }) => {
             : user
         ));
         toast.success("Usuario actualizado");
-        // toast.success(result.message);
       } else {
         toast.error(result.message);
       }
@@ -69,37 +103,25 @@ export const TableUsers = ({ users: initialUsers }) => {
     }
   };
 
+  if (loading) {
+    return <CustomLoading className="h-[200px]" height={28} width={28}/>;
+  }
+
   return (
     <div className="">
-      {/* Buscador */}
-      <div className="relative mb-3">
-        <span className="absolute left-2 top-2 text-gray-400">
-          <IoSearch size={22} />
-        </span>
-
-        <input
-          type="text"
+      <div className="mb-4 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
+        {/* Buscador */}
+        <SearchInputAdmin
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
           placeholder="Buscar por nombre, apellido o correo"
-          className="border p-2 rounded-md w-full pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onClear={clearSearch}
         />
 
-        {searchTerm && (
-          <button
-            onClick={clearSearch}
-            className="absolute right-2 top-2 text-gray-500"
-          >
-            <IoClose size={24} />
-          </button>
-        )}
-      </div>
-
-      {/* Filtro por plan */}
-      <div className="mb-4 flex justify-between">
-        <div>
+        {/* Filtro por plan */}
+        <div className="md:w-1/4">
           <select
-            className="border p-2 rounded-md"
+            className="border p-2 rounded-md w-full"
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
           >
@@ -111,21 +133,21 @@ export const TableUsers = ({ users: initialUsers }) => {
       </div>
 
       {/* Tabla de usuarios */}
-      {filteredUsers.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse border border-gray-200">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Apellido</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Correo</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Plan</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Aprobado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((user) => (
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse border border-gray-200">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Apellido</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Correo</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Plan</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Aprobado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentUsers.length > 0 ? (
+              currentUsers.map((user) => (
                 <tr key={user.id_user} className="hover:bg-gray-50">
                   <td className="border border-gray-300 px-4 py-2">{user.id_user}</td>
                   <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
@@ -141,22 +163,28 @@ export const TableUsers = ({ users: initialUsers }) => {
                     />
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p className="text-center text-gray-500 mt-4">
-          No se encontraron usuarios con los criterios seleccionados.
-        </p>
-      )}
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center text-gray-500 py-4">
+                  No se encontraron usuarios con los criterios seleccionados.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* Paginación */}
       {filteredUsers.length > 0 && (
         <PaginationAdmin
           currentPage={currentPage}
           totalPages={totalPages}
+          totalItems={totalItems}
+          startIndex={startIndex}
+          endIndex={endIndex}
           setCurrentPage={setCurrentPage}
+          itemName="usuarios"
         />
       )}
     </div>

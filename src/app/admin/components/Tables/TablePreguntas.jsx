@@ -1,97 +1,127 @@
+// components/preguntas/TablePreguntas.js
 "use client";
 import { useState, useEffect } from "react";
 import { deletePregunta } from "@/actions";
-import { IoTrash, IoCreate, IoSearch, IoClose, IoAddCircle } from "react-icons/io5";
-import toast from "react-hot-toast";
+import { IoAddCircle } from "react-icons/io5";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import { Offcanvas2 } from "@/components";
-import { FormEditPregunta, FormAddPregunta } from "..";
+import { FormEditPregunta, FormAddPregunta, PaginationAdmin, TableActionsAdmin, SearchInputAdmin } from "..";
+import toast from "react-hot-toast";
+
+// Constante para items por página
+const ITEMS_PER_PAGE = 10;
+/*Componente principal de la tabla de preguntas*/
 
 export const TablePreguntas = ({ preguntas: initialPreguntas, subtemas, opciones }) => {
+  // Estados para el manejo de datos
   const { toggleRefreshTable } = useRedrawStore();
-  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
-  const [selectedPreguntaId, setSelectedPreguntaId] = useState(null);
-  const [isAddingPregunta, setIsAddingPregunta] = useState(false);
-  const [preguntas, setPreguntas] = useState(initialPreguntas);
-  const [filteredPreguntas, setFilteredPreguntas] = useState(preguntas);
+  const [preguntas, setPreguntas] = useState([]);
+  const [filteredPreguntas, setFilteredPreguntas] = useState([]);
+
+  // Estados para filtros y búsqueda
   const [searchTerm, setSearchTerm] = useState("");
   const [subtemaFilter, setSubtemaFilter] = useState("");
 
+  // Estados para paginación
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Estados para el modal/offcanvas
+  const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
+  const [selectedPreguntaId, setSelectedPreguntaId] = useState(null);
+  const [isAddingPregunta, setIsAddingPregunta] = useState(false);
+
+  // Efecto para ordenar preguntas por ID de mayor a menor
+  useEffect(() => {
+    if (initialPreguntas?.length > 0) {
+      const sortedPreguntas = [...initialPreguntas].sort((a, b) => b.id_pregunta - a.id_pregunta);
+      setPreguntas(sortedPreguntas);
+    } else {
+      setPreguntas([]);
+    }
+  }, [initialPreguntas]);
+
+  // Efecto para filtrado de preguntas
   useEffect(() => {
     filterAndSearchPreguntas();
   }, [searchTerm, subtemaFilter, preguntas]);
 
+  // Efecto para resetear página cuando cambian los filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, subtemaFilter]);
+
+  /**
+   * Función para filtrar y buscar preguntas
+   * Aplica filtros de subtema y término de búsqueda
+   */
   const filterAndSearchPreguntas = () => {
-    let updatedPreguntas = preguntas;
+    let updatedPreguntas = [...preguntas];
 
     if (subtemaFilter) {
-      updatedPreguntas = updatedPreguntas.filter((pregunta) => pregunta.id_subtema === parseInt(subtemaFilter));
+      updatedPreguntas = updatedPreguntas.filter((pregunta) => 
+        pregunta.id_subtema === parseInt(subtemaFilter)
+      );
     }
 
     if (searchTerm) {
-      updatedPreguntas = updatedPreguntas.filter(
-        (pregunta) => pregunta.texto_pregunta.toLowerCase().includes(searchTerm.toLowerCase())
+      updatedPreguntas = updatedPreguntas.filter((pregunta) =>
+        pregunta.texto_pregunta.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     setFilteredPreguntas(updatedPreguntas);
   };
 
+  // Cálculos para paginación
+  const totalItems = filteredPreguntas.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+  const startIndex = ((currentPage - 1) * ITEMS_PER_PAGE);
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+  const currentPreguntas = filteredPreguntas.slice(startIndex, endIndex);
+
+  /**
+   * Limpia el término de búsqueda y resetea la página
+   */
   const clearSearch = () => {
     setSearchTerm("");
+    setCurrentPage(1);
   };
 
-  const handleDeletePregunta = (idPregunta, e) => {
-    e.stopPropagation();
-    toast((t) => (
-      <div className="flex flex-col items-center">
-        <span>¿Estás seguro de eliminar la pregunta?</span>
-        <p className="text-sm text-center text-gray-500">Esta acción eliminará la pregunta junto con sus alternativas u opciones.</p>
-        <div className="flex gap-2 mt-2">
-          <button
-            className="bg-red-500 text-white px-3 py-2 rounded"
-            onClick={async () => {
-              try {
-                const result = await deletePregunta(idPregunta);
-                if (result.success) {
-                  toast.success(result.message, { id: t.id });
-                  toggleRefreshTable();
-                } else {
-                  toast.error(result.message, { id: t.id });
-                }
-              } catch (error) {
-                toast.error("Error al eliminar la pregunta: " + error.message, { id: t.id });
-              }
-              toast.dismiss(t.id);
-            }}
-          >
-            Confirmar
-          </button>
-          <button
-            className="bg-gray-500 text-white px-3 py-1 rounded"
-            onClick={() => toast.dismiss(t.id)}
-          >
-            Cancelar
-          </button>
-        </div>
-      </div>
-    ), {
-      duration: 5000,
-      position: "top-center",
-    });
-  };
-
-  const handleOpenOffcanvas = (idPregunta = null) => {
-    if (idPregunta) {
-      setSelectedPreguntaId(idPregunta);
-      setIsAddingPregunta(false);
-    } else {
-      setSelectedPreguntaId(null);
-      setIsAddingPregunta(true);
+  /**
+   * Maneja la eliminación de una pregunta
+   * @param {number} idPregunta - ID de la pregunta a eliminar
+   */
+  const handleDeletePregunta = async (idPregunta) => {
+    try {
+      const result = await deletePregunta(idPregunta);
+      if (result.success) {
+        const updatedPreguntas = preguntas
+          .filter(p => p.id_pregunta !== idPregunta)
+          .sort((a, b) => b.id_pregunta - a.id_pregunta);
+        setPreguntas(updatedPreguntas);
+        toast.success(result.message);
+        toggleRefreshTable();
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error("Error al eliminar la pregunta: " + error.message);
     }
+  };
+
+  /**
+   * Abre el offcanvas para editar o añadir una pregunta
+   * @param {number|null} idPregunta - ID de la pregunta a editar, null si es nueva
+   */
+  const handleOpenOffcanvas = (idPregunta = null) => {
+    setSelectedPreguntaId(idPregunta);
+    setIsAddingPregunta(!idPregunta);
     setIsOffcanvasOpen(true);
   };
 
+  /**
+   * Cierra el offcanvas y resetea sus estados
+   */
   const handleCloseOffcanvas = () => {
     setIsOffcanvasOpen(false);
     setSelectedPreguntaId(null);
@@ -100,28 +130,15 @@ export const TablePreguntas = ({ preguntas: initialPreguntas, subtemas, opciones
 
   return (
     <div className="mt-4">
+      {/* Barra de herramientas */}
       <div className="mb-4 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
-        {/* Buscador */}
-        <div className="relative flex-grow">
-          <span className="absolute left-2 top-2 text-gray-400">
-            <IoSearch size={22} />
-          </span>
-          <input
-            type="text"
-            placeholder="Buscar pregunta"
-            className="border p-2 rounded-md w-full pl-10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          {searchTerm && (
-            <button
-              onClick={clearSearch}
-              className="absolute right-2 top-2 text-gray-500"
-            >
-              <IoClose size={24} />
-            </button>
-          )}
-        </div>
+        {/* Componente de búsqueda */}
+        <SearchInputAdmin
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          placeholder="Buscar pregunta"
+          onClear={clearSearch}
+        />
 
         {/* Filtro por subtema */}
         <div className="md:w-1/4">
@@ -139,7 +156,7 @@ export const TablePreguntas = ({ preguntas: initialPreguntas, subtemas, opciones
           </select>
         </div>
 
-        {/* Botón Agregar Pregunta */}
+        {/* Botón Agregar */}
         <div className="flex justify-start items-center my-2">
           <button
             className="flex items-center text-sm gap-1 text-white bg-primary px-2 py-1 rounded-md"
@@ -151,7 +168,7 @@ export const TablePreguntas = ({ preguntas: initialPreguntas, subtemas, opciones
         </div>
       </div>
 
-      {/* Tabla de preguntas */}
+      {/* Tabla */}
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse border border-gray-200">
           <thead className="bg-gray-100">
@@ -164,8 +181,8 @@ export const TablePreguntas = ({ preguntas: initialPreguntas, subtemas, opciones
             </tr>
           </thead>
           <tbody>
-            {filteredPreguntas.length > 0 ? (
-              filteredPreguntas.map((pregunta) => {
+            {currentPreguntas.length > 0 ? (
+              currentPreguntas.map((pregunta) => {
                 const subtema = subtemas.find((t) => t.id_subtema === pregunta.id_subtema);
                 return (
                   <tr key={pregunta.id_pregunta} className="hover:bg-gray-50">
@@ -176,20 +193,12 @@ export const TablePreguntas = ({ preguntas: initialPreguntas, subtemas, opciones
                     </td>
                     <td className="border border-gray-300 px-4 py-2">{pregunta.year}</td>
                     <td className="border border-gray-300 px-4 py-2">
-                      <div className="flex justify-center gap-2">
-                        <span
-                          className="text-blue-500 cursor-pointer"
-                          onClick={() => handleOpenOffcanvas(pregunta.id_pregunta)}
-                        >
-                          <IoCreate size={22} />
-                        </span>
-                        <span
-                          className="text-red-500 cursor-pointer"
-                          onClick={(e) => handleDeletePregunta(pregunta.id_pregunta, e)}
-                        >
-                          <IoTrash size={22} />
-                        </span>
-                      </div>
+                      <TableActionsAdmin
+                        id={pregunta.id_pregunta}
+                        onEdit={handleOpenOffcanvas}
+                        onDelete={handleDeletePregunta}
+                        itemName="la pregunta"
+                      />
                     </td>
                   </tr>
                 );
@@ -205,6 +214,20 @@ export const TablePreguntas = ({ preguntas: initialPreguntas, subtemas, opciones
         </table>
       </div>
 
+      {/* Paginación */}
+      {filteredPreguntas.length > 0 && (
+        <PaginationAdmin
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          setCurrentPage={setCurrentPage}
+          itemName="preguntas"
+        />
+      )}
+
+      {/* Modal/Offcanvas para editar o añadir */}
       <Offcanvas2
         isOpen={isOffcanvasOpen}
         onClose={handleCloseOffcanvas}
