@@ -20,23 +20,29 @@ export const FormSignIn = () => {
 
 
   const onSubmit = async(data) => {
-    // console.log(data);
-    // Lógica de inicio de sesión
     setLoading(true);
     const { email, password } = data;
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password
-    });
-    // console.log(result);
-    console.log(result);
-    
-    if (result.ok) {
-      toast.success("Accediendo...");
-      window.location.replace("/inicio");
-    } else {
-      toast.error("Credenciales incorrectas");
+    try {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password
+      });
+      
+      if (result.ok) {
+        toast.success("Accediendo...");
+        window.location.replace("/inicio");
+      } else {
+        // Verificar si el error es por sesión activa o credenciales incorrectas
+        if (result.error === 'Ya existe una sesión activa') {
+          toast.error("Esta cuenta tiene una sesión activa en este momento");
+        } else {
+          toast.error("Credenciales incorrectas");
+        }
+        setLoading(false);
+      }
+    } catch (error) {
+      toast.error("Error al intentar iniciar sesión");
       setLoading(false);
     }
   };
@@ -102,11 +108,11 @@ export const FormSignIn = () => {
             placeholder="Contraseña"
             {...register("password", {
               required: "La contraseña es obligatoria",
-              pattern: {
-                value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/,
-                message:
-                  "La contraseña debe tener al menos 8 caracteres, incluyendo letras y números",
-              },
+              // pattern: {
+              //   value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/,
+              //   message:
+              //     "La contraseña debe tener al menos 8 caracteres, incluyendo letras y números",
+              // },
             })}
           />
           <span

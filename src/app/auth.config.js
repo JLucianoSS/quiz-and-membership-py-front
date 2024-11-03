@@ -1,6 +1,4 @@
-
-
-import { loginUser } from "@/actions";
+import { loginUser, updateUsuario, getUserById } from "@/actions";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -25,36 +23,33 @@ export const authOptions = {
         },
       },
       async authorize(credentials) {
-        // Usamos la función login para verificar las credenciales
         const result = await loginUser(credentials);
 
-        // Si el login es exitoso, devolvemos el usuario
         if (result.success) {
-          return {
-            id: result.user.id_user,
-            name: `${result.user.nombre}`,
-            email: result.user.email,
-          };
+          // Verificar si ya hay un usuario con sesión activa
+          const userData = await getUserById(result.user.id_user);
+
+          // Si no hay usuario activo, activar la sesión para este usuario
+          if (!userData.data.is_user_active) {
+            await updateUsuario(result.user.id_user, {
+              is_user_active: true
+            });
+            
+            return {
+              id: result.user.id_user,
+              name: `${result.user.nombre}`,
+              email: result.user.email,
+            };
+          } else {
+            throw new Error('Ya existe una sesión activa');
+          }
         }
 
-        // Si no se encuentra el usuario, devolvemos null
         return null;
       },
     }),
   ],
   callbacks: {
-    async signIn({ account, profile }) {
-      // Aquí puedes agregar lógica para verificar o registrar el usuario
-      // en una base de datos real si es necesario
-      // const result = login(credentials.email, credentials.password);
-      // const { user } = result;
-      // if (!user) {
-      //   await registerUser({ user..});
-      // }
-
-      return true;
-    },
-
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
@@ -68,14 +63,18 @@ export const authOptions = {
       return session;
     },
   },
+  events: {
+    async signOut({ token }) {
+      if (token?.id) {
+        await updateUsuario(token.id, {
+          is_user_active: false
+        });
+      }
+    },
+  },
   session: {
-    // Duración de la sesión en segundos (24 horas)
-    maxAge: 24 * 60 * 60, // 24 horas
-    // Renovar la sesión cada 12 horas
-    updateAge: 12 * 60 * 60, // 12 horas
+    maxAge: 24 * 60 * 60,
+    updateAge: 12 * 60 * 60,
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
-
-
-
