@@ -220,7 +220,7 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
       </div>
 
       <div>
-        <label className="block text-gray-700">Video/imagen Explicativa (Opcional)</label>
+        <label className="block text-gray-700">Imagen Explicativa (Opcional)</label>
         <input
           type="file"
           accept="image/jpeg, image/png, image/gif, video/mp4, video/quicktime, video/avi, video/mkv"

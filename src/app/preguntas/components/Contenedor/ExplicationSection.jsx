@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Estilos de React Quill
 // import "./VideoSection.css";
-import parse from 'html-react-parser';
 
 export const ExplicationSection = ({ 
   title = "Anato Plus", 
-  explication = "Aqui debe ir una expliacion bien elaborada acerca de la respuesta", 
+  explication = "", 
   videoOrImage = "", 
   isCorrect = true 
 }) => {
@@ -20,8 +21,8 @@ export const ExplicationSection = ({
 
   // Función para verificar si el archivo es un video o una imagen basándose en su extensión
   const isVideo = (url) => {
-    const videoExtensions = ['mp4', 'webm', 'ogg']; // Extensiones de video comunes
-    const extension = url.split('.').pop().toLowerCase(); // Extrae la extensión del archivo
+    const videoExtensions = ['mp4', 'webm', 'ogg'];
+    const extension = url.split('.').pop().toLowerCase();
     return videoExtensions.includes(extension);
   };
 
@@ -41,12 +42,17 @@ export const ExplicationSection = ({
       {/* Content */}
       <div className="flex-grow">
         <div className={`text-gray-700 text-sm sm:text-base mt-2 sm:mt-0 ${showMore ? "" : "line-clamp-4"}`}>
-          {parse(explication)}
+          <ReactQuill 
+            value={explication} 
+            readOnly={true} 
+            theme="bubble" // Usa el tema "bubble" para una apariencia de solo lectura
+            modules={{ toolbar: false }} // Desactiva la barra de herramientas
+          />
         </div>
 
         {/* Condicional para mostrar video o imagen */}
         {showMore && videoOrImage && (
-          <div className="mt-10">
+          <div className="mt-6">
             {isVideo(videoOrImage) ? (
               <div className="video-container">
                 <video controls className="w-full max-h-96">
