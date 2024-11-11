@@ -10,12 +10,12 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
 
-  // CON InactivityProvider DESPUÉS DE 5 HORAS DE INACTIVIDAD CIERRA SESIÓN 18000000
+  // CON InactivityProvider DESPUÉS DE 5 HORAS DE INACTIVIDAD CIERRA SESIÓN 2000 = 2 segundos
 
   return (
     <html lang="en">
       <body className={globalFont.className}>
-        <InactivityProvider timeout={2000}> 
+        <InactivityProvider timeout={18000000}> 
           {children}
           <Toaster />
         </InactivityProvider>
