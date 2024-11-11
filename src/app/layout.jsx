@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={globalFont.className}>
-        <InactivityProvider timeout={60000}> 
+        <InactivityProvider timeout={2000}> 
           {children}
           <Toaster />
         </InactivityProvider>
