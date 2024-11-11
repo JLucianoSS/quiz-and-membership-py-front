@@ -1,15 +1,17 @@
 "use client";
 import { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { uploadFile } from "@/firebase/config";
 import { CustomLoading } from "@/components";
 import { FaBroom } from "react-icons/fa";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import toast from "react-hot-toast";
 import { createOpcion, createPregunta } from "@/actions";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Estilos de React Quill
 
 const currentYear = new Date().getFullYear();
-const años = Array.from({length: currentYear - 2005}, (_, i) => (currentYear - i).toString());
+const años = Array.from({ length: currentYear - 2005 }, (_, i) => (currentYear - i).toString());
 
 export const FormAddPregunta = ({ subtemas, onClose }) => {
   const { toggleRefreshTable } = useRedrawStore();
@@ -36,7 +38,6 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
   const onSubmit = async (data) => {
     setUploading(true);
 
-    // Validación del tipo de archivo
     const validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/avi', 'video/mkv'];
     if (file && !validFileTypes.includes(file.type)) {
       toast.error("Solo se permiten archivos de imagen o video (JPEG, PNG, GIF, MP4, AVI, MKV)");
@@ -46,7 +47,7 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
     try {
       const multimediaUrl = file ? await uploadFile(file, "multimedia/") : "";
       console.log("Datos del formulario:", { ...data, multimediaUrl });
-  
+
       const resultcreatePregunta = await createPregunta({
         id_subtema: data.subtemaId,
         year: parseInt(data.año),
@@ -55,26 +56,25 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
         explicacion_incorrecta: data.explicacionIncorrecta,
         imagen_video: multimediaUrl,
       });
-  
+
       if (resultcreatePregunta.success) {
-        // Recorremos las opciones que vienen del formulario
         for (const opcion of data.opciones) {
           const resultcreateOpcion = await createOpcion({
-            id_pregunta: resultcreatePregunta.data.id_pregunta, // Aquí usamos el id de la pregunta creada
+            id_pregunta: resultcreatePregunta.data.id_pregunta,
             texto_opcion: opcion.textOpcion,
             es_correcta: opcion.esCorrecta,
           });
-  
+
           if (!resultcreateOpcion.success) {
             toast.error(`Error al agregar la opción: ${resultcreateOpcion.message}`);
-            break; // Si falla una opción, salimos del bucle
+            break;
           }
         }
         toast.success(resultcreatePregunta.message);
-        reset(); // Reiniciamos el formulario
-        setFile(null); // Limpiamos el archivo subido
-        toggleRefreshTable(); // Actualizamos la tabla
-        onClose(); // Cerramos el modal o formulario
+        reset();
+        setFile(null);
+        toggleRefreshTable();
+        onClose();
       } else {
         toast.error(resultcreatePregunta.message);
       }
@@ -85,7 +85,6 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
       setUploading(false);
     }
   };
-  
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -180,30 +179,48 @@ export const FormAddPregunta = ({ subtemas, onClose }) => {
         )}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-col gap-20 mb-16">
         <div className="flex-1">
           <label className="block text-gray-700">Explicación para opciones correctas</label>
-          <textarea
-            {...register("explicacionCorrecta", { required: "Este campo es obligatorio" })}
-            className="w-full px-4 py-2 border rounded-md"
-            placeholder="Ingresa la explicación para las respuestas correctas"
-          ></textarea>
+          <Controller
+            name="explicacionCorrecta"
+            control={control}
+            defaultValue=""
+            rules={{ required: "Este campo es obligatorio" }}
+            render={({ field }) => (
+              <ReactQuill
+                {...field}
+                onChange={(content) => field.onChange(content)}
+                placeholder="Ingresa la explicación para las respuestas correctas"
+                style={{ height: "300px" }} // Aumenta la altura del editor
+              />
+            )}
+          />
           {errors.explicacionCorrecta && <span className="text-red-500 text-sm">{errors.explicacionCorrecta.message}</span>}
         </div>
 
         <div className="flex-1">
           <label className="block text-gray-700">Explicación para opciones incorrectas</label>
-          <textarea
-            {...register("explicacionIncorrecta", { required: "Este campo es obligatorio" })}
-            className="w-full px-4 py-2 border rounded-md"
-            placeholder="Ingresa la explicación para las respuestas incorrectas"
-          ></textarea>
+          <Controller
+            name="explicacionIncorrecta"
+            control={control}
+            defaultValue=""
+            rules={{ required: "Este campo es obligatorio" }}
+            render={({ field }) => (
+              <ReactQuill
+                {...field}
+                onChange={(content) => field.onChange(content)}
+                placeholder="Ingresa la explicación para las respuestas incorrectas"
+                style={{ height: "300px" }} // Aumenta la altura del editor
+              />
+            )}
+          />
           {errors.explicacionIncorrecta && <span className="text-red-500 text-sm">{errors.explicacionIncorrecta.message}</span>}
         </div>
       </div>
 
       <div>
-      <label className="block text-gray-700">Video/imagen Explicativa (Opcional)</label>
+        <label className="block text-gray-700">Video/imagen Explicativa (Opcional)</label>
         <input
           type="file"
           accept="image/jpeg, image/png, image/gif, video/mp4, video/quicktime, video/avi, video/mkv"

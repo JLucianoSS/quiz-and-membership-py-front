@@ -26,3 +26,6 @@ export * from "./Planes/PlanCard";
 export * from "./ux/CustomLoading";
 export * from "./ux/AccessRestriction";
 
+
+export * from "./HOC/InactivityProvider";
+

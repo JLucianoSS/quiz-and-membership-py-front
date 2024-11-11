@@ -1,5 +1,6 @@
 import { globalFont } from "../config/fonts";
 import { Toaster } from "react-hot-toast";
+import { InactivityProvider } from "@/components";
 import "./globals.css";
 
 export const metadata = {
@@ -8,11 +9,16 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
+  // CON InactivityProvider DESPUÉS DE 5 HORAS DE INACTIVIDAD CIERRA SESIÓN 18000000
+
   return (
     <html lang="en">
       <body className={globalFont.className}>
-        {children}
-        <Toaster />
+        <InactivityProvider timeout={60000}> 
+          {children}
+          <Toaster />
+        </InactivityProvider>
       </body>
     </html>
   );

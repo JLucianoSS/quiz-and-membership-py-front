@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { uploadFile } from "@/firebase/config";
 import { CustomLoading } from "@/components";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
@@ -9,9 +9,11 @@ import { getPreguntaById, updateOpcion, updatePregunta } from "@/actions";
 import { IoCloseCircle } from "react-icons/io5";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Estilos de React Quill
 
 const currentYear = new Date().getFullYear();
-const años = Array.from({length: currentYear - 2005}, (_, i) => (currentYear - i).toString());
+const años = Array.from({ length: currentYear - 2005 }, (_, i) => (currentYear - i).toString());
 
 export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
   const { toggleRefreshTable } = useRedrawStore();
@@ -25,7 +27,7 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
   const [file, setFile] = useState(null);
   const [existingFile, setExistingFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [pregunta, setPregunta] = useState({})
+  const [pregunta, setPregunta] = useState({});
 
   const MAX_OPCIONES = 5;
 
@@ -62,10 +64,9 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
 
   const onSubmit = async (data) => {
     setUploading(true);
-  
     try {
       let multimediaUrl = existingFile;
-  
+
       if (file) {
         const validFileTypes = ['image/jpeg', 'image/png', 'image/gif', 'video/mp4', 'video/avi', 'video/mkv'];
         if (!validFileTypes.includes(file.type)) {
@@ -75,8 +76,7 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
         }
         multimediaUrl = await uploadFile(file, "multimedia/");
       }
-  
-      // Actualizar la pregunta
+
       const resultUpdatePregunta = await updatePregunta(preguntaId, {
         id_subtema: data.subtemaId,
         year: parseInt(data.año),
@@ -85,59 +85,27 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
         explicacion_incorrecta: data.explicacionIncorrecta,
         imagen_video: multimediaUrl,
       });
-  
+
       if (resultUpdatePregunta.success) {
-        // Actualizar las opciones
         const updatedOptions = data.opciones.map((opcion, index) => ({
           ...opcion,
-          id_opcion: pregunta.opciones[index]?.id_opcion // Asociar el ID de la opción existente
+          id_opcion: pregunta.opciones[index]?.id_opcion 
         }));
-  
+
         for (const opcion of updatedOptions) {
           if (opcion.id_opcion) {
-            // Actualizar opción existente
             const resultUpdateOpcion = await updateOpcion(opcion.id_opcion, {
               texto_opcion: opcion.texto_opcion,
               es_correcta: opcion.es_correcta,
             });
-  
+
             if (!resultUpdateOpcion.success) {
               toast.error(`Error al actualizar la opción: ${resultUpdateOpcion.message}`);
-              console.error(`Error al actualizar la opción: ${resultUpdateOpcion.message}`);
               throw new Error("Error al actualizar una opción");
             }
-          } else {
-            // Crear nueva opción si no tiene ID (opción añadida en el formulario)
-            // Asumiendo que tienes una función createOpcion
-            const resultCreateOpcion = await createOpcion({
-              id_pregunta: preguntaId,
-              texto_opcion: opcion.texto_opcion,
-              es_correcta: opcion.es_correcta,
-            });
-  
-            if (!resultCreateOpcion.success) {
-              toast.error(`Error al crear la nueva opción: ${resultCreateOpcion.message}`);
-              console.error(`Error al crear la nueva opción: ${resultCreateOpcion.message}`);
-              throw new Error("Error al crear una nueva opción");
-            }
           }
         }
-  
-        // Eliminar opciones que ya no existen en el formulario
-        const opcionesExistentes = pregunta.opciones.filter(
-          opcion => !updatedOptions.some(updatedOpcion => updatedOpcion.id_opcion === opcion.id_opcion)
-        );
-  
-        for (const opcionAEliminar of opcionesExistentes) {
-          // Asumiendo que tienes una función deleteOpcion
-          const resultDeleteOpcion = await deleteOpcion(opcionAEliminar.id_opcion);
-          if (!resultDeleteOpcion.success) {
-            toast.error(`Error al eliminar la opción: ${resultDeleteOpcion.message}`);
-            console.error(`Error al eliminar la opción: ${resultDeleteOpcion.message}`);
-            throw new Error("Error al eliminar una opción");
-          }
-        }
-  
+
         toast.success("Pregunta actualizada exitosamente");
         toggleRefreshTable();
         onClose();
@@ -157,26 +125,6 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
     if (selectedFile) {
       setFile(selectedFile);
       setExistingFile(null);
-    }
-  };
-
-  const handleRemoveExistingFile = async () => {
-    try {
-      setIsLoading(true);
-      const result = await updatePregunta(preguntaId, {
-        imagen_video: "", // Establecemos la propiedad imagen_video como una cadena vacía
-      });
-      if (result.success) {
-        setExistingFile(null);
-        toast.success("Imagen eliminada exitosamente");
-      } else {
-        toast.error("Error al eliminar la imagen");
-      }
-    } catch (error) {
-      console.error("Error al eliminar la imagen:", error);
-      toast.error("Error al eliminar la imagen");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -231,54 +179,42 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
         {errors.pregunta && <span className="text-red-500 text-sm">{errors.pregunta.message}</span>}
       </div>
 
-      <div>
-        <label className="block text-gray-700">Opciones (Máximo {MAX_OPCIONES})</label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {fields.map((field, index) => (
-            <div key={field.id} className="flex flex-col gap-2 mb-2">
-              <input
-                {...register(`opciones.${index}.texto_opcion`, { required: "Este campo es obligatorio" })}
-                placeholder="Texto de la opción"
-                className="px-4 py-2 border rounded-md"
-              />
-              {errors.opciones?.[index]?.texto_opcion && (
-                <span className="text-red-500 text-sm">{errors.opciones[index].texto_opcion.message}</span>
-              )}
-              <label className="flex gap-1">
-                <input
-                  type="checkbox"
-                  {...register(`opciones.${index}.es_correcta`)}
-                />
-                Correcta
-              </label>
-            </div>
-          ))}
-        </div>
-        {fields.length < MAX_OPCIONES && (
-          <button type="button" onClick={() => append({ texto_opcion: "", es_correcta: false })} className="text-blue-500 mt-2">
-            + Añadir opción
-          </button>
-        )}
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-col gap-20 mb-16">
         <div className="flex-1">
           <label className="block text-gray-700">Explicación para opciones correctas</label>
-          <textarea
-            {...register("explicacionCorrecta", { required: "Este campo es obligatorio" })}
-            className="w-full px-4 py-2 border rounded-md"
-            placeholder="Ingresa la explicación para las respuestas correctas"
-          ></textarea>
+          <Controller
+            name="explicacionCorrecta"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <ReactQuill
+                {...field}
+                value={field.value || ""}
+                onChange={(content) => field.onChange(content)}
+                placeholder="Ingresa la explicación para las respuestas correctas"
+                style={{ height: "150px" }}
+              />
+            )}
+          />
           {errors.explicacionCorrecta && <span className="text-red-500 text-sm">{errors.explicacionCorrecta.message}</span>}
         </div>
 
         <div className="flex-1">
           <label className="block text-gray-700">Explicación para opciones incorrectas</label>
-          <textarea
-            {...register("explicacionIncorrecta", { required: "Este campo es obligatorio" })}
-            className="w-full px-4 py-2 border rounded-md"
-            placeholder="Ingresa la explicación para las respuestas incorrectas"
-          ></textarea>
+          <Controller
+            name="explicacionIncorrecta"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <ReactQuill
+                {...field}
+                value={field.value || ""}
+                onChange={(content) => field.onChange(content)}
+                placeholder="Ingresa la explicación para las respuestas incorrectas"
+                style={{ height: "150px" }}
+              />
+            )}
+          />
           {errors.explicacionIncorrecta && <span className="text-red-500 text-sm">{errors.explicacionIncorrecta.message}</span>}
         </div>
       </div>

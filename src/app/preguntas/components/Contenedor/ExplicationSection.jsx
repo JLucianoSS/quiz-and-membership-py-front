@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import "./VideoSecction.css";
+// import "./VideoSection.css";
+import parse from 'html-react-parser';
 
 export const ExplicationSection = ({ 
   title = "Anato Plus", 
@@ -39,9 +40,9 @@ export const ExplicationSection = ({
 
       {/* Content */}
       <div className="flex-grow">
-        <p className={`text-gray-700 text-sm sm:text-base mt-2 sm:mt-0 ${showMore ? "" : "line-clamp-4"}`}>
-          {explication}
-        </p>
+        <div className={`text-gray-700 text-sm sm:text-base mt-2 sm:mt-0 ${showMore ? "" : "line-clamp-4"}`}>
+          {parse(explication)}
+        </div>
 
         {/* Condicional para mostrar video o imagen */}
         {showMore && videoOrImage && (
