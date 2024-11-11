@@ -29,6 +29,15 @@ export const authOptions = {
           // Verificar si ya hay un usuario con sesión activa
           const userData = await getUserById(result.user.id_user);
 
+          // Permitir múltiples sesiones si el usuario es "Administrador"
+          if (userData.data.role === "Administrador") {
+            return {
+              id: result.user.id_user,
+              name: `${result.user.nombre}`,
+              email: result.user.email,
+            };
+          }
+
           // Si no hay usuario activo, activar la sesión para este usuario
           if (!userData.data.is_user_active) {
             await updateUsuario(result.user.id_user, {
