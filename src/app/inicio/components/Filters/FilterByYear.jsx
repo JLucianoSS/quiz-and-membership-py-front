@@ -1,22 +1,28 @@
-
-"use client"
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css'; // Importa los estilos por defecto
 
-export const FilterByYear = ({ preguntas }) => {
+export const FilterByYear = ({ onYearSelect }) => {
+  const [selectedYear, setSelectedYear] = useState(2015); // Estado para manejar el año seleccionado
+
   const sliderStyle = {
-    trackStyle: { backgroundColor: '#d9b16b', height: 8 }, // Color de la pista
+    trackStyle: { backgroundColor: '#d9b16b', height: 8 },
     handleStyle: {
-      borderColor: '#d9b16b', // Borde del "pulgar"
-      backgroundColor: '#d9b16b', // Color del "pulgar"
+      borderColor: '#d9b16b',
+      backgroundColor: '#d9b16b',
       height: 20,
       width: 20,
-      marginTop: -6, // Ajustar posición vertical del "pulgar"
-      outline: 'none', // Eliminar el focus outline
-      boxShadow: 'none', // Eliminar cualquier sombra en el focus
+      marginTop: -6,
+      outline: 'none',
+      boxShadow: 'none',
     },
-    railStyle: { backgroundColor: '#ddd', height: 8 }, // Color de la pista antes del control
+    railStyle: { backgroundColor: '#ddd', height: 8 },
+  };
+
+  const handleYearChange = (value) => {
+    setSelectedYear(value); // Actualiza el año seleccionado en el estado
+    onYearSelect(value); // Llama a la función pasada por props para actualizar el estado en ViewFilters
   };
 
   return (
@@ -26,14 +32,20 @@ export const FilterByYear = ({ preguntas }) => {
         <span>2009</span>
         <span>2021</span>
       </div>
-      <Slider
-        min={2009}
-        max={2021}
-        defaultValue={2015}
-        trackStyle={sliderStyle.trackStyle}
-        handleStyle={sliderStyle.handleStyle}
-        railStyle={sliderStyle.railStyle}
-      />
+      <div className="relative">
+        <Slider
+          min={2009}
+          max={2021}
+          value={selectedYear} // Usa el valor del estado seleccionado
+          onChange={handleYearChange} // Actualiza el estado cuando el usuario mueve el slider
+          trackStyle={sliderStyle.trackStyle}
+          handleStyle={sliderStyle.handleStyle}
+          railStyle={sliderStyle.railStyle}
+        />
+        <div className="absolute top-[-30px] left-1/2 transform -translate-x-1/2 text-lg font-bold text-gray-800">
+          {selectedYear} {/* Muestra el año seleccionado */}
+        </div>
+      </div>
     </div>
   );
 };

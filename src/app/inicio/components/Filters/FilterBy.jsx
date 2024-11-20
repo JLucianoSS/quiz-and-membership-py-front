@@ -5,7 +5,7 @@ export const FilterBy = ({ titulo, filterBy, selectedItems, toggleItem }) => {
         <div className="flex flex-wrap gap-2">
           {filterBy.map((item) => (
             <button
-              key={item.id} // Usamos item.id como key
+              key={item.id + item.nombre} 
               onClick={() => toggleItem(item.nombre)}
               className={`px-4 py-2 rounded-md ${selectedItems.includes(item.nombre) ? 'bg-primary text-white' : 'bg-gray-200'}`}
             >

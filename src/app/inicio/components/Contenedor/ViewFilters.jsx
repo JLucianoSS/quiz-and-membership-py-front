@@ -8,11 +8,18 @@ export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
   const [selectedModulos, setSelectedModulos] = useState([]);
   const [selectedTemas, setSelectedTemas] = useState([]);
   const [selectedSubtemas, setSelectedSubtemas] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]);
+  const [selectedYear, setSelectedYear] = useState([]); // Estado para controlar el año seleccionado
 
   // Estados para controlar el Offcanvas
   const [isTemasOpen, setIsTemasOpen] = useState(false);
   const [isSubtemasOpen, setIsSubtemasOpen] = useState(false);
+
+  // Determinar si el botón debe estar habilitado
+  const isApplyButtonDisabled = !(
+    selectedModulos.length > 0 &&
+    selectedTemas.length > 0 &&
+    selectedSubtemas.length > 0
+  );
 
   // Manejar selección de módulos
   const toggleModulo = (modulo) => {
@@ -48,22 +55,23 @@ export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
       subtemas: selectedSubtemas,
       year: selectedYear,
     };
-    console.log(filtros);
+    console.log(filtros); // Mostrar en consola los filtros seleccionados
   };
 
   return (
     <>
       <div className="bg-white max-w-[600px] mx-auto px-6 h-full pb-[4rem]">
         <Headerpage titulo="Encuentra tus preguntas" />
-        {/* Módulos */}
+        
+        {/* Filtro por Módulos */}
         <FilterBy
           titulo="Selecciona módulos"
-          filterBy={formatModulos(modulos)}
+          filterBy={formatModulos(modulos)} // Formateamos los módulos antes de enviarlos
           selectedItems={selectedModulos}
           toggleItem={toggleModulo}
         />
         
-        {/* Temas */}
+        {/* Filtro por Temas */}
         <div className="mt-4">
           <h2 className="text-lg font-semibold">Añadir temas</h2>
           <div className="flex flex-wrap items-center gap-2">
@@ -81,7 +89,8 @@ export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
             </button>
           </div>
         </div>
-        {/* Offcanvas para Temas (Formateamos antes de enviar) */}
+
+        {/* Offcanvas para Temas */}
         <Offcanvas
           isOpen={isTemasOpen}
           onClose={() => setIsTemasOpen(false)}
@@ -91,7 +100,7 @@ export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
           onSelect={setSelectedTemas}
         />
 
-        {/* Subtemas */}
+        {/* Filtro por Subtemas */}
         <div className="mt-4">
           <h2 className="text-lg font-semibold">Añadir subtemas</h2>
           <div className="flex flex-wrap items-center gap-2">
@@ -110,7 +119,7 @@ export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
           </div>
         </div>
 
-        {/* Offcanvas para Subtemas (Formateamos antes de enviar) */}
+        {/* Offcanvas para Subtemas */}
         <Offcanvas
           isOpen={isSubtemasOpen}
           onClose={() => setIsSubtemasOpen(false)}
@@ -120,17 +129,21 @@ export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
           onSelect={setSelectedSubtemas}
         />
         
-        {/* Año */}
+        {/* Filtro por Año */}
         <FilterByYear preguntas={preguntas} onYearSelect={setSelectedYear} />
       </div>
 
       {/* Botón Aplicar */}
-      <ApplyButton onApply={aplicarFiltros} preguntas={preguntas.length} />
+      <ApplyButton
+        onApply={aplicarFiltros}
+        preguntas={preguntas.length}
+        isDisabled={isApplyButtonDisabled} // Propiedad para controlar si está deshabilitado
+      />
     </>
   );
 };
 
-
+// Función para formatear los módulos antes de enviarlos
 const formatModulos = (modulos) => {
   return modulos.map((modulo) => ({
     id: modulo.id_Modulo,
@@ -138,17 +151,18 @@ const formatModulos = (modulos) => {
   }));
 };
 
-
+// Función para formatear los temas antes de enviarlos
 const formatTemas = (temas) => {
   return temas.map((tema) => ({
-    id: tema.id_Tema,
-    nombre: tema.Nombre_Tema,
+    id: tema.id_tema,
+    nombre: tema.nombre_tema,
   }));
 };
 
+// Función para formatear los subtemas antes de enviarlos
 const formatSubtemas = (subtemas) => {
   return subtemas.map((subtema) => ({
-    id: subtema.id_Subtema,
-    nombre: subtema.Subtema,
+    id: subtema.id_subtema,
+    nombre: subtema.nombre_subtema,
   }));
 };

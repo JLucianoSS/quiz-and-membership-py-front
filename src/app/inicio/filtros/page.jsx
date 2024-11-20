@@ -1,13 +1,13 @@
 
 import { HeroTitle, ViewFilters } from "../components";
-import { Modulos } from "../../../data/modulos";
-import { Temas } from "../../../data/temas";
-import { Subtemas } from "../../../data/subtemas";
-import { Preguntas } from "../../../data/preguntas";
+import { getModulos, getTemas, getSubtemas, getPreguntas } from "../../../actions";
 
 export default async function FiltrosPage() {
-  // const especialidades = await getEspecialidades();
-  // y para traer lo demás ...
+
+  const modulos = await getModulos();
+  const temas = await getTemas();
+  const subtemas = await getSubtemas();
+  const preguntas = await getPreguntas();
 
   return (
     <>
@@ -16,10 +16,10 @@ export default async function FiltrosPage() {
 
       <div className="bg-white sm:bg-gray-200 sm:pt-6 sm:pb-[85px]">
         <ViewFilters
-          modulos={Modulos}
-          temas={Temas}
-          subtemas={Subtemas}
-          preguntas={Preguntas}
+          modulos={modulos.data}
+          temas={temas.data}
+          subtemas={subtemas.data}
+          preguntas={preguntas.data}
         />
       </div>
     </>
