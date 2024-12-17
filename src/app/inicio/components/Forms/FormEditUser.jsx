@@ -11,7 +11,7 @@ export const FormEditUser = ({ user }) => {
     formState: { isDirty, isSubmitting },
   } = useForm({
     defaultValues: {
-      email: "maysasha@gmail.com",
+      email: user.email,
       password: "•••••••••••••••",
     },
   });
@@ -58,13 +58,13 @@ export const FormEditUser = ({ user }) => {
             disabled={!isEditing.email}
           />
         </div>
-        <button
+        {/* <button
           type="button"
           onClick={() => handleEditClick("email")}
           className="ml-2 hover:text-primary transition-colors"
         >
           <FaEdit className="text-gray-500" />
-        </button>
+        </button> */}
       </div>
 
       {/* Password */}
@@ -82,13 +82,13 @@ export const FormEditUser = ({ user }) => {
             disabled={!isEditing.password}
           />
         </div>
-        <button
+        {/* <button
           type="button"
           onClick={() => handleEditClick("password")}
           className="ml-2 hover:text-primary transition-colors"
         >
           <FaEdit className="text-gray-500" />
-        </button>
+        </button> */}
       </div>
 
       {/* Botón Guardar */}

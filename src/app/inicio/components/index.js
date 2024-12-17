@@ -16,6 +16,8 @@ export * from "./Filters/FilterByYear"
 export * from "./Filters/ApplyButton"
 
 export * from "./Contenedor/ViewFilters"
+export * from "./Contenedor/ViewDesempeno"
+export * from "./Contenedor/ViewEstadisticas"
 
 export * from "./Forms/FormEditUser"
 
@@ -23,4 +25,6 @@ export * from "./Hero/HeroTitle"
 
 export * from "./UploadAvatar/UploadAvatar"
 export * from "./UploadAvatar/ProfileAvatar"
+
+
 
