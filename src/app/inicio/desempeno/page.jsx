@@ -9,9 +9,9 @@ export default function DesempenoPage() {
     <>
       <HeroTitle imgSrc="/imgs/heroimgdes.jpg" title="Desempeño" imgPositionY="15%"/>
       <div className="px-6 lg:px-20 xl:px-44">
-        <Headerpage titulo="Desempeño"/>
+        <Headerpage titulo="Mi desempeño"/>
         <ViewDesempeno/>
-        <ViewEstadisticas/>
+        {/* <ViewEstadisticas/> */}
       </div>
     </>
   );

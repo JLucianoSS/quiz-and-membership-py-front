@@ -1,19 +1,19 @@
 import { Headerpage } from "@/components";
-import { FavoriteCard, HeroTitle } from "../components";
-import { favoritas } from "@/data/favroitas";
+import { FavoriteGrid, HeroTitle } from "../components";
+import { authOptions } from "@/app/auth.config";
+import { getServerSession } from "next-auth";
 
 
-export default function FavoritosPage() {
+export default async function FavoritosPage() {
+  const session = await getServerSession(authOptions);
+
+
   return (
     <>
-      <HeroTitle title="Favoritas" imgSrc="/imgs/heroimgfav.jpg" imgPositionY="40%"/>
-      <div className="px-6 lg:px-20 xl:px-44">
+      <HeroTitle title="Favoritas" imgSrc="/imgs/heroimgfav.jpg" imgPositionY="40%" />
+      <div className="px-6 lg:px-20 xl:px-44 bg-red">
         <Headerpage titulo="Preguntas favoritas" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
-          {favoritas.map((favorita, index) => (
-            <FavoriteCard key={index} {...favorita} />
-          ))}
-        </div>
+        <FavoriteGrid iduser={session.user.id}/>
       </div>
     </>
   );

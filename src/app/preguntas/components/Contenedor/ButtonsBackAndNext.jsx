@@ -6,7 +6,7 @@ import { IoArrowForward } from "react-icons/io5";
 export const ButtonsBackAndNext = ({ preguntas, slugTema, isQuestionCompleted, isAnswered, page }) => {
   const router = useRouter();
   const handleFinalizar = () => {
-    router.push("/inicio");
+    router.push("/preguntas/final");
   };
 
   return (

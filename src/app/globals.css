@@ -39,7 +39,7 @@
   @apply bg-[#d9b16b]
 }
 .bg-secondary {
-  @apply bg-[#e8cf9a]
+  @apply bg-[rgb(232,207,154)]
 }
 .bg-tertiary {
   @apply bg-[#f1e5cb]

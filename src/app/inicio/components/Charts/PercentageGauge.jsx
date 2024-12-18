@@ -50,7 +50,10 @@ export const PercentageGauge = () => {
           width: 15,
         }}
         labels={{
-          valueLabel: { formatTextValue: (value) => value + "" },
+          valueLabel: { formatTextValue: (value) => value + "",style: {
+            // fill: "#e8cf9a",
+          }, },
+          
           tickLabels: {
             type: "outer",
             defaultTickValueConfig: {

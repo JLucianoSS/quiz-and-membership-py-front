@@ -10,6 +10,7 @@ export * from "./Cards/FavoriteCard"
 export * from "./Grids/ModulosGrid"
 export * from "./Grids/TemasGrid"
 export * from "./Grids/SubTemasGrid"
+export * from "./Grids/FavoriteGrid"
 
 export * from "./Filters/FilterBy"
 export * from "./Filters/FilterByYear"
