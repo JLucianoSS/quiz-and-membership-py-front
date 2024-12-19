@@ -11,7 +11,7 @@ export default async function FavoritosPage() {
   return (
     <>
       <HeroTitle title="Favoritas" imgSrc="/imgs/heroimgfav.jpg" imgPositionY="40%" />
-      <div className="px-6 lg:px-20 xl:px-44 bg-red">
+      <div className="px-6 lg:px-20 xl:px-44 bg-red min-h-screen pb-[100px]">
         <Headerpage titulo="Preguntas favoritas" />
         <FavoriteGrid iduser={session.user.id}/>
       </div>

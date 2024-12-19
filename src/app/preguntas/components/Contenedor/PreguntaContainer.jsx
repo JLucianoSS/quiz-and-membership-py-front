@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
 import { ExplicationSection, RespuestaCard } from "..";
+import { createResultado } from "@/actions";
 
-export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer }) => {
+export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [tachedOptions, setTachedOptions] = useState([]);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const currentPregunta = preguntas[parseInt(page - 1)];
 
@@ -16,17 +18,44 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer }) => 
     }
   };
 
-  const handleAnswer = () => {
+  const handleAnswer = async() => {
     if (selectedOption !== null && !isAnswered) {
       const isCorrect = currentPregunta.opciones[selectedOption].es_correcta;
-      setShowExplanation(true);
-      setIsAnswered(true);
-      onComplete();
-      onAnswer(isCorrect);
+     
+      try {
+        setLoading(true);
+        const response = await createResultado({
+          id_user: user.id_user,
+          id_pregunta: currentPregunta.opciones[selectedOption].id_pregunta,
+          respuesta_dada: currentPregunta.opciones[selectedOption].texto_opcion,
+          es_correcta: isCorrect,
+          fecha_respuesta: new Date().toISOString().slice(0, 19) 
+        })
 
-      console.log(`Opción seleccionada: ${currentPregunta.opciones[selectedOption].texto_opcion}`);
-      console.log(`¿Es correcta?: ${isCorrect ? 'Sí' : 'No'}`);
-      console.log(`Explicación: ${currentPregunta.explicacion_correcta}`);
+        /* Si todo salio correcto en la consulta desbloquea él paso a la siguiente pregunta */
+        if(response.success){
+          setShowExplanation(true);
+          setIsAnswered(true);
+          onComplete();
+          onAnswer(isCorrect);
+        }
+        // console.log({
+        //   id_user: user.id_user,
+        //   id_pregunta: currentPregunta.opciones[selectedOption].id_pregunta,
+        //   respuesta_dada: currentPregunta.opciones[selectedOption].texto_opcion,
+        //   es_correcta: isCorrect,
+        //   fecha_respuesta: new Date().toISOString().slice(0, 19) 
+        // });
+        
+      } catch (error) {
+        console.error("Error al crear el resulta:", error);
+      }finally{
+        setLoading(false);
+      }
+
+      // console.log(`Opción seleccionada: ${currentPregunta.opciones[selectedOption].texto_opcion}`);
+      // console.log(`¿Es correcta?: ${isCorrect ? 'Sí' : 'No'}`);
+      // console.log(`Explicación: ${currentPregunta.explicacion_correcta}`);
     }
   };
 
@@ -82,6 +111,7 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer }) => 
         <button 
           onClick={handleAnswer}
           className="mt-4 py-2 px-4 bg-primary text-white rounded-md"
+          disabled={loading}
         >
           Responder
         </button>

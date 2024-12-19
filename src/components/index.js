@@ -2,6 +2,7 @@
 
 export * from "./ui/Navbar";
 export * from "./ui/Footer";
+export * from "./ui/Footer2";
 export * from "./ui/Headerpage";
 export * from "./ui/Sidebar";
 export * from "./ui/HeaderQuiz";

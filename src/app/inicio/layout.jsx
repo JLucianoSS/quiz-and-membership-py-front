@@ -1,4 +1,4 @@
-import { Navbar, Sidebar, AccessRestriction } from "@/components";
+import { Navbar, Sidebar, AccessRestriction, Footer2 } from "@/components";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth.config";
 import { redirect } from "next/navigation";
@@ -28,6 +28,7 @@ export default async function HomeLayout({ children }) {
           <div className="pt-[52px]">
             {children}
           </div>
+          <Footer2/>
           <Sidebar user={userData} />
         </>
       ) : (

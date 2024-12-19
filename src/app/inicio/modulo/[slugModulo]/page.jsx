@@ -14,7 +14,7 @@ export default async function ModuloPage({ params }) {
     const filteredTemas = data.filter(tema => tema.id_modulo === id);
 
   return (
-    <div className="px-6 lg:px-20 xl:px-44">
+    <div className="px-6 lg:px-20 xl:px-44 min-h-screen pb-[100px]">
       <Headerpage titulo={ name + ` - Escoge un tema` }/>
       {!filteredTemas || filteredTemas.length !== 0 ? 
       <TemasGrid temas={filteredTemas}/> :  

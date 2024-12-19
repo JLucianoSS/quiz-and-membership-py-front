@@ -11,6 +11,7 @@ export * from "./Grids/ModulosGrid"
 export * from "./Grids/TemasGrid"
 export * from "./Grids/SubTemasGrid"
 export * from "./Grids/FavoriteGrid"
+export * from "./Grids/HistorialGrid"
 
 export * from "./Filters/FilterBy"
 export * from "./Filters/FilterByYear"

@@ -11,7 +11,7 @@ export default async function TemaPage({ params }) {
   const filteredSubTemas = data.filter(subtema => subtema.id_tema === id);
 
   return (
-    <div className="px-6 lg:px-20 xl:px-44">
+    <div className="px-6 lg:px-20 xl:px-44 min-h-screen pb-[100px]">
       <Headerpage titulo={name + ` - Escoge un subtema`}/>
       { !filteredSubTemas || filteredSubTemas.length !== 0 ? 
         <SubTemasGrid subtemas={filteredSubTemas}/> :

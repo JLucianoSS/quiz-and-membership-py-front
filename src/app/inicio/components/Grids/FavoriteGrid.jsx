@@ -27,7 +27,7 @@ export const FavoriteGrid = ({ iduser }) => {
             };
           })
         );
-        setPreguntas(preguntas);
+        setPreguntas(preguntas.sort((a, b) => b.id_pregunta - a.id_pregunta));
       } catch (error) {
         console.error("Error fetching favorite questions:", error);
       } finally {
@@ -54,13 +54,13 @@ export const FavoriteGrid = ({ iduser }) => {
         <button onClick={ ()=>setReload(!reload) }>Actualizar</button>
       </div>
       {preguntas.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-[120px]">
           {preguntas.map((pregunta, index) => (
             <FavoriteCard key={index} user={user} {...pregunta} />
           ))}
         </div>
       ) : (
-        <div className="flex justify-center border text-gray-400 border-gray-300 rounded-lg p-3">
+        <div className="flex justify-center border text-gray-400 border-gray-300 rounded-lg p-3 mb-[120px]">
           No tienes preguntas favoritas.
         </div>
       )}

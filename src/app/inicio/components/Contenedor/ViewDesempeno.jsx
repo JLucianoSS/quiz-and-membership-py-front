@@ -1,56 +1,170 @@
-"use client";
 
-import { useState } from "react";
-import { FaFilter, FaUnicorn } from "react-icons/fa"
+"use client"
+import { useEffect, useState } from "react";
+import { FaFilter } from "react-icons/fa";
 import { PercentageGauge } from "../Charts/PercentageGauge";
 import Link from "next/link";
+import { getPreguntaById, getUserById } from "@/actions";
+import { CustomLoading } from "@/components";
+import moment from "moment";
+import "moment/locale/es";
+import toast from "react-hot-toast";
 
-export const ViewDesempeno = () => {
-  // const [selectedFilter, setSelectedFilter] = useState("día");
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+export const ViewDesempeno = ({ userid }) => {
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [preguntasConResultados, setPreguntasConResultados] = useState([]);
+  const [preguntasFiltradas, setPreguntasFiltradas] = useState([]);
+  const [ultimaPregunta, setUltimaPregunta] = useState(null);
+  const [respuestasPorDia, setRespuestasPorDia] = useState([]);
+  const [filtroAplicado, setFiltroAplicado] = useState(false);
+  const [errorFecha, setErrorFecha] = useState("");
+  moment.locale("es");
 
-  // const handleFilterChange = (filter) => {
-  //   setSelectedFilter(filter);
-  // };
+  // Validar fechas cuando cambien
+  useEffect(() => {
+    if (startDate && endDate) {
+      const inicio = moment(startDate);
+      const fin = moment(endDate);
+      
+      if (fin.isBefore(inicio)) {
+        toast.error("La fecha final debe ser mayor o igual a la fecha inicial");
+      } else {
+        setErrorFecha("");
+      }
+    }
+  }, [startDate, endDate]);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    const fetchResultados = async () => {
+      try {
+        const user = await getUserById(userid);
+        const resultados = user.data.resultados;
+        const preguntas = await Promise.all(
+          resultados.map(async (resultado) => {
+            const pregunta = await getPreguntaById(resultado.id_pregunta);
+            return {
+              ...pregunta.data,
+              ...resultado,
+            };
+          })
+        );
+
+        const preguntasOrdenadas = preguntas.sort(
+          (a, b) => new Date(b.fecha_respuesta) - new Date(a.fecha_respuesta)
+        );
+
+        setPreguntasConResultados(preguntasOrdenadas);
+        setPreguntasFiltradas(preguntasOrdenadas);
+        setUltimaPregunta(preguntasOrdenadas[0]);
+
+        // Calcular respuestas por día iniciales
+        actualizarRespuestasPorDia(preguntasOrdenadas);
+      } catch (error) {
+        console.error("Error fetching resultados:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchResultados();
+  }, [userid]);
+
+  const actualizarRespuestasPorDia = (preguntas) => {
+    const respuestasAgrupadas = preguntas.reduce((acc, respuesta) => {
+      const fecha = moment(respuesta.fecha_respuesta).format('DD/MM/YYYY');
+      if (!acc[fecha]) {
+        acc[fecha] = { total: 0, aciertos: 0 };
+      }
+      acc[fecha].total += 1;
+      if (respuesta.es_correcta) acc[fecha].aciertos += 1;
+      return acc;
+    }, {});
+
+    const respuestasArray = Object.entries(respuestasAgrupadas)
+      .sort(([fechaA], [fechaB]) => 
+        moment(fechaB, 'DD/MM/YYYY') - moment(fechaA, 'DD/MM/YYYY'))
+      .slice(0, 6)
+      .map(([fecha, datos]) => ({
+        fecha,
+        preguntas: datos.total,
+        aciertos: datos.aciertos,
+      }));
+
+    setRespuestasPorDia(respuestasArray);
+  };
+
+  const aplicarFiltros = (e) => {
     e.preventDefault();
-    console.log('Fecha inicial:', startDate);
-    console.log('Fecha final:', endDate);
-    // Aquí puedes manejar la lógica de filtrado por fechas
+     // Validación de fechas
+     if (!startDate || !endDate) {
+      toast.error("Ambas fechas son requeridas");
+      return;
+    }
+
+    const inicio = moment(startDate);
+    const fin = moment(endDate);
+    
+    if (fin.isBefore(inicio)) {
+      toast.error("La fecha final debe ser mayor o igual a la fecha inicial");
+      return;
+    }
+
+    const preguntasFiltradas = preguntasConResultados.filter((pregunta) => {
+      const fechaRespuesta = moment(pregunta.fecha_respuesta);
+      return fechaRespuesta.isBetween(startDate, endDate, 'day', '[]');
+    });
+
+    setPreguntasFiltradas(preguntasFiltradas);
+    setFiltroAplicado(true);
   };
 
-  const toggleFilters = () => {
-    setShowFilters(!showFilters); // Alterna el estado para mostrar/ocultar los filtros
+  const contarAciertosYFallos = (preguntas) => {
+    return preguntas.reduce(
+      (contador, pregunta) => {
+        if (pregunta.es_correcta) {
+          contador.aciertos += 1;
+        } else {
+          contador.fallos += 1;
+        }
+        return contador;
+      },
+      { aciertos: 0, fallos: 0 }
+    );
   };
+
+  const { aciertos, fallos } = contarAciertosYFallos(preguntasFiltradas);
+
+  if (loading) {
+    return (
+      <CustomLoading
+        color="#d9b16b"
+        height={24}
+        width={24}
+        className="flex justify-center items-center h-[50vh]"
+      />
+    );
+  }
 
   return (
     <div className="pb-10">
-
       <div className="pb-2">
-
-        {/* Botón para filtrar con el ícono de unicornio */}
-        <div className="flex justify-end ">
+        <div className="flex justify-end">
           <button
-            onClick={toggleFilters}
-            className=" text-blue-500 font-bold rounded flex items-center text-sm transition duration-300"
+            onClick={() => setShowFilters(!showFilters)}
+            className="text-blue-500 font-bold rounded flex items-center text-sm transition duration-300"
           >
-             <FaFilter className="mr-2"/> Filtrar
+            <FaFilter className="mr-2" /> Filtrar
           </button>
         </div>
 
-
-        {/* INPUTS FILTROS POR FECHA */}
-        <div
-          className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
-            showFilters ? 'max-h-96' : 'max-h-0'
-          }`}
-        >
-          <div className="flex flex-col items-center justify-center px-1 py-2 sm:py-4 ">
+        <div className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
+          showFilters ? "max-h-96" : "max-h-0"
+        }`}>
+          <div className="flex flex-col items-center justify-center px-1 py-2 sm:py-4">
             <form
-              onSubmit={handleSubmit}
+              onSubmit={aplicarFiltros}
               className="bg-white shadow-md rounded-lg p-6 w-full flex flex-col sm:flex-row sm:gap-4"
             >
               <div className="mb-4 sm:mb-0 sm:w-1/3">
@@ -63,7 +177,6 @@ export const ViewDesempeno = () => {
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                   className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring focus:border-blue-500"
-                  required
                 />
               </div>
               <div className="mb-4 sm:mb-0 sm:w-1/3">
@@ -76,7 +189,6 @@ export const ViewDesempeno = () => {
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                   className="w-full px-3 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring focus:border-blue-500"
-                  required
                 />
               </div>
               <div className="flex justify-center items-end sm:mb-0 sm:w-1/3">
@@ -92,86 +204,93 @@ export const ViewDesempeno = () => {
         </div>
       </div>
 
-
-
-      <div className=" flex flex-col gap-2">
-        {/* Mi porcentaje de respuestas correctas */}
-
+      <div className="flex flex-col gap-2">
         <div className="flex gap-2">
           <div className="p-4 flex flex-col justify-start sm:items-center bg-white shadow-sm rounded-lg border border-gray-100 w-[60%]">
-            <h2 className="text-xl sm:text-4xl font-semibold text-gray-700 sm:text-center leading-tight pb-2">4 de Octubre del 2024</h2>
-            <h3 className="text-sm  text-gray-600 mb-1">Última actualización</h3>
-            {/* <p className="text-4xl font-bold text-blue-600">120</p> */}
+            <h2 className="text-xl sm:text-4xl font-semibold text-gray-700 sm:text-center leading-tight pb-2">
+              {filtroAplicado
+                ? `Del ${moment(startDate).format("D [de] MMMM [del] YYYY")} al ${moment(
+                    endDate
+                  ).format("D [de] MMMM [del] YYYY")}`
+                : moment(ultimaPregunta?.fecha_respuesta).format(
+                    "D [de] MMMM [del] YYYY [a las] H:mm"
+                  )}
+            </h2>
+            <h3 className="text-sm text-gray-600 mb-1">
+              {filtroAplicado ? "Periodo filtrado" : "Última actualización"}
+            </h3>
           </div>
           <div className="p-4 flex flex-col justify-start items-center bg-white shadow-sm rounded-lg border border-gray-100 w-[40%]">
-            <h2 className="text-lg font-semibold text-gray-700 text-center leading-tight pb-2">Preguntas resueltas</h2>
-            <h3 className="text-sm  text-gray-600 mb-1">En el periodo</h3>
-            <p className="text-4xl font-bold text-primary">336</p>
+            <h2 className="text-lg font-semibold text-gray-700 text-center leading-tight pb-2">
+              Preguntas resueltas
+            </h2>
+            <h3 className="text-sm text-gray-600 mb-1">En el periodo</h3>
+            <p className="text-4xl font-bold text-primary">{preguntasFiltradas.length}</p>
           </div>
         </div>
 
-        
-
-        <div className="flex flex-col gap-2 sm:flex-row ">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <div className="p-6 flex flex-col justify-center items-center bg-white shadow-sm rounded-lg border border-gray-100 sm:w-[60%]">
-            <h2 className="text-lg font-semibold text-gray-700 text-center pb-2">Mi rendimiento</h2>
-            <PercentageGauge/>
+            <h2 className="text-lg font-semibold text-gray-700 text-center pb-2">
+              {filtroAplicado ? "Rendimiento en el periodo" : "Mi rendimiento"}
+            </h2>
+            <PercentageGauge 
+              aciertos={aciertos} 
+              totalRespuestas={preguntasFiltradas.length} 
+            />
           </div>
-          
+
           <div className="flex w-full gap-2 sm:flex-col sm:w-[40%]">
             <div className="p-6 flex flex-col justify-center items-center bg-white shadow-sm rounded-lg border border-gray-100 w-1/2 sm:w-full">
               <h2 className="text-lg font-semibold text-gray-700">Aciertos</h2>
-              <h3 className="text-sm  text-gray-600 mb-1">12/12/2024</h3>
-              <p className="text-4xl font-bold text-green-600">45</p>
+              <p className="text-4xl font-bold text-green-600">{aciertos}</p>
+              <p className="text-sm text-gray-600">
+                {((aciertos / preguntasFiltradas.length) * 100).toFixed(1)}%
+              </p>
             </div>
+
             <div className="p-6 flex flex-col justify-center items-center bg-white shadow-sm rounded-lg border border-gray-100 w-1/2 sm:w-full">
-              <h2 className="text-lg font-semibold text-gray-700">Falladas</h2>
-              <h3 className="text-sm  text-gray-600 mb-1">12/12/2024</h3>
-              <p className="text-4xl font-bold text-red-600">5</p>
+              <h2 className="text-lg font-semibold text-gray-700">Fallos</h2>
+              <p className="text-4xl font-bold text-red-600">{fallos}</p>
+              <p className="text-sm text-gray-600">
+                {((fallos / preguntasFiltradas.length) * 100).toFixed(1)}%
+              </p>
             </div>
           </div>
         </div>
 
-
         <div className="p-6 flex flex-col justify-center items-center bg-white shadow-sm rounded-lg border border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-700">Últimas preguntas respondidas</h2>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Últimas preguntas respondidas
+          </h2>
           <div className="w-full overflow-x-auto mt-4">
             <table className="min-w-full text-sm text-left text-gray-600">
               <thead className="bg-gray-100 text-gray-700 uppercase">
                 <tr>
                   <th className="px-4 py-2">FECHA</th>
                   <th className="px-4 py-2">PREGUNTAS</th>
-                  <th className="px-4 py-2">ACIERTOS (%)</th>
+                  <th className="px-4 py-2">ACIERTOS</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white">
-                  <td className="px-4 py-2">27 set, 2024</td>
-                  <td className="px-4 py-2">8</td>
-                  <td className="px-4 py-2">62.5%</td>
-                </tr>
-                <tr className="bg-gray-50">
-                  <td className="px-4 py-2">28 set, 2024</td>
-                  <td className="px-4 py-2">70</td>
-                  <td className="px-4 py-2">68.57%</td>
-                </tr>
-                <tr className="bg-white">
-                  <td className="px-4 py-2">29 set, 2024</td>
-                  <td className="px-4 py-2">96</td>
-                  <td className="px-4 py-2">68.75%</td>
-                </tr>
-                <tr className="bg-gray-50">
-                  <td className="px-4 py-2">30 set, 2024</td>
-                  <td className="px-4 py-2">42</td>
-                  <td className="px-4 py-2">64.29%</td>
-                </tr>
+                {respuestasPorDia.map((dato, index) => (
+                  <tr key={index} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    <td className="px-4 py-2">{dato.fecha}</td>
+                    <td className="px-4 py-2">{dato.preguntas}</td>
+                    <td className="px-4 py-2">{dato.aciertos}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-          <Link href="inicio/historial" className="text-blue-500 hover:underline text-sm pt-4">Ver todo</Link> 
+          <Link
+            href="inicio/historial"
+            className="text-blue-500 hover:underline text-sm pt-4"
+          >
+            Ver historial
+          </Link>
         </div>
       </div>
-
     </div>
   );
 };

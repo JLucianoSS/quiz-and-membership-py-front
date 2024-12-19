@@ -8,7 +8,7 @@ export default async function PlanesPage() {
   const user = await getUserById(session?.user?.id);
 
   return (
-    <div className="px-6 lg:px-20 xl:px-44 mb-10">
+    <div className="px-6 lg:px-20 xl:px-44 mb-10 min-h-screen">
       <Headerpage titulo="Planes" />
       <PlansGrid user={user.data}/>
     </div>

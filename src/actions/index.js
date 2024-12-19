@@ -37,4 +37,7 @@ export { deleteOpcion } from "./opcion/deleteOpcion";
 export { createFavorito } from "./favoritos/createFavorito";
 export { deleteFavorito } from "./favoritos/deleteFavorito";
 
+export { getResultados } from "./resultado/getResultados";
+export { createResultado } from "./resultado/createResultado";
+
 export { loginUser } from "./auth/login";

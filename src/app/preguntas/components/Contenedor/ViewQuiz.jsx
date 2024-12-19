@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ButtonsBackAndNext, PreguntaContainer } from "..";
 
-export const ViewQuiz = ({ preguntas, page, slugTema }) => {
+export const ViewQuiz = ({ preguntas, page, slugTema, user }) => {
   const [isQuestionCompleted, setIsQuestionCompleted] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
 
@@ -24,6 +24,7 @@ export const ViewQuiz = ({ preguntas, page, slugTema }) => {
             page={page}
             onComplete={handleQuestionCompletion}
             onAnswer={handleAnswer}
+            user={user}
           />
         ) : (
           <p className="flex justify-center text-sm items-center w-full h-[70vh]  text-gray-700">

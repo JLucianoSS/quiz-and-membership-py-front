@@ -8,7 +8,7 @@ export default async function IniciarQuizPage() {
   const modulos = await getModulos(); 
 
   return (
-    <div className="px-4 lg:px-20 xl:px-44 ">
+    <div className="px-4 lg:px-20 xl:px-44 min-h-screen pb-[100px]">
       <Headerpage titulo="Escoge un módulo"/>
       { !modulos || modulos.length !== 0 ? 
       <ModulosGrid modulos={modulos?.data}/> : 

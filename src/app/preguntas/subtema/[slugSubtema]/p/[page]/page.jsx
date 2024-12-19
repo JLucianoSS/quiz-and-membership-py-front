@@ -23,7 +23,7 @@ export default async function PreguntasSubTemaPage({ params }) {
           IdFavoriteQuestion={filteredPreguntas.length > 0 ? filteredPreguntas[parseInt(page - 1)].id_pregunta : null} 
           user={user.data}
         />
-        <ViewQuiz preguntas={filteredPreguntas} slugTema={slugSubtema} page={page}/>
+        <ViewQuiz preguntas={filteredPreguntas} slugTema={slugSubtema} page={page} user={user.data}/>
       </div>
 
   );
