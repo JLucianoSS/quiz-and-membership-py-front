@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ExplicationSection, RespuestaCard } from "..";
+import { CommentsSection, ExplicationSection, RespuestaCard } from "..";
 import { createResultado } from "@/actions";
 import { usePathname } from "next/navigation";
 
@@ -118,7 +118,8 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user 
             isAnswered: true,
             showExplanation: true,
             userId: user.id_user,
-            totalQuestions: preguntas.length
+            totalQuestions: preguntas.length,
+            currentUrl:pathname
           });
           
           onComplete();
@@ -154,7 +155,8 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user 
         isAnswered,
         showExplanation,
         userId: user.id_user,
-        totalQuestions: preguntas.length
+        totalQuestions: preguntas.length,
+        currentUrl:pathname
       });
     }
   };
@@ -213,6 +215,15 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user 
             explication={selectedExplanation}
             videoOrImage={currentPregunta.imagen_video}
             isCorrect={currentPregunta.opciones[selectedOption].es_correcta}
+          />
+        </div>
+      )}
+
+      {showExplanation && (
+        <div className="mt-6 mb-[100px]">
+          <CommentsSection 
+            user={user} 
+            idPregunta={currentPregunta.id_pregunta}
           />
         </div>
       )}

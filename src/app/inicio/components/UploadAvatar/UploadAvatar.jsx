@@ -2,12 +2,15 @@
 import { IoCameraOutline, IoTrashOutline } from "react-icons/io5";
 import { useRef, useState } from "react";
 import { uploadFile, deleteFile } from "../../../../firebase/config"; // Importa la función deleteFile
+import { updateUsuario } from "@/actions";
 import toast from "react-hot-toast";
 
-export const UploadAvatar = ({ avatarImg, setAvatarImg }) => {
+export const UploadAvatar = ({ avatarImg, setAvatarImg, user }) => {
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null); // Creamos una referencia para el input de archivo
 
+  console.log(user);
+  
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -23,8 +26,14 @@ export const UploadAvatar = ({ avatarImg, setAvatarImg }) => {
       const resultUploadFile = await uploadFile(file, "/avatars/");
       // Establecer la URL del avatar
       setAvatarImg(resultUploadFile);
-      toast.success("Imagen subida correctamente.");
-      console.log("Archivo subido correctamente:", resultUploadFile);
+      //guarda en la bd la url
+      const resp = await updateUsuario(user.id_user, {avatar_img:avatarImg});
+      console.log(resp);
+      
+      if(resp.success){
+        toast.success("Imagen subida correctamente.");
+        console.log("Archivo subido correctamente:", resultUploadFile);
+      }
     } catch (error) {
       toast.error("Error al subir el archivo.");
       console.error("Error al subir el archivo:", error);

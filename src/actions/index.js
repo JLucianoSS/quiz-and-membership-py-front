@@ -40,4 +40,7 @@ export { deleteFavorito } from "./favoritos/deleteFavorito";
 export { getResultados } from "./resultado/getResultados";
 export { createResultado } from "./resultado/createResultado";
 
+export { getComentariosByPregunta } from "./comentarios/getComentariosByPregunta";
+export { createComentarioByPregunta } from "./comentarios/createComentarioByPregunta";
+
 export { loginUser } from "./auth/login";

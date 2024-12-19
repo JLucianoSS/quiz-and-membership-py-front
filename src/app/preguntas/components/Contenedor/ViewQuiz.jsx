@@ -39,6 +39,7 @@ export const ViewQuiz = ({ preguntas, page, slugTema, user }) => {
         slugTema={slugTema}
         isQuestionCompleted={isQuestionCompleted}
         isAnswered={isAnswered}
+        user={user}
       />
     </>
   );
