@@ -284,7 +284,7 @@ export const ViewDesempeno = ({ userid }) => {
             </table>
           </div>
           <Link
-            href="inicio/historial"
+            href="/inicio/historial"
             className="text-blue-500 hover:underline text-sm pt-4"
           >
             Ver historial

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui"; // Ruta donde guardaste el store
 import { LOGO } from "@/config/theme";
-import { routeActions } from "@/config/routes";
+import { getRouteActions } from "@/config/routes";
 import { ActionCard } from "..";
 
 export const Navbar = ({ user }) => {
@@ -47,7 +47,7 @@ export const Navbar = ({ user }) => {
           </div>
 
           <div className="hidden lg:flex ">
-            {routeActions.map(({ action, icon, link }, index) => (
+            {getRouteActions(user.id_user).map(({ action, icon, link }, index) => (
               <ActionCard key={index} action={action} icon={icon} link={link} />
             ))}
           </div>

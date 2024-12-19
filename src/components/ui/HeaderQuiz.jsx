@@ -53,12 +53,12 @@ export const HeaderQuiz = ({ titulo = "Sin Titulo", IdFavoriteQuestion, user }) 
   return (
     <div className="fixed z-10 bg-white w-full flex gap-2 items-center py-2 border-b-2 px-4 lg:px-20 xl:px-44">
       <div className="flex gap-2 items-center">
-        <button 
+        {/* <button 
           className="text-primary hover:underline text-sm" 
           onClick={() => { router.back(); }}
         >
           <IoArrowBack size={25} />
-        </button>
+        </button> */}
         <h1 className="text-lg font-semibold text-gray-700">{titulo}</h1>
       </div>
       <button 

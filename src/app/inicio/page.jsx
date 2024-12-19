@@ -17,7 +17,7 @@ export default async function HomePage() {
         <SwiperCategories modulos={modulos?.data}/>
         <div className="pb-32"></div>
       </div>
-      <SwiperActions/>
+      <SwiperActions user={resp.data}/>
     </div>
   );
 }

@@ -9,7 +9,7 @@ import {
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui";
 import { signOut } from "next-auth/react";
-import { routeActions } from "../../config/routes";
+import { getRouteActions, routeActions } from "../../config/routes";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -119,7 +119,7 @@ export const Sidebar = ({ user }) => {
               <span className="mx-2 font-medium text-sm">Inicio</span>
             </Link>
 
-            {routeActions.map((item, index) => (
+            {getRouteActions(user.id_user).map((item, index) => (
               <Link
                 key={index}
                 href={item.link}

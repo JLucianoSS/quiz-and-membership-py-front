@@ -1,7 +1,57 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ExplicationSection, RespuestaCard } from "..";
 import { createResultado } from "@/actions";
+import { usePathname } from "next/navigation";
+
+// Utility functions for localStorage
+const QUIZ_STORAGE_KEY = 'quiz_progress';
+
+const saveQuizProgress = ({
+  page,
+  selectedOption,
+  tachedOptions,
+  isAnswered,
+  showExplanation,
+  userId,
+  totalQuestions,
+  currentUrl,
+}) => {
+  const existingProgress = JSON.parse(localStorage.getItem(QUIZ_STORAGE_KEY) || '{}');
+  
+  const progress = {
+    ...existingProgress,
+    currentPage: page,
+    answers: {
+      ...existingProgress.answers,
+      [page]: {
+        selectedOption,
+        tachedOptions,
+        isAnswered,
+        showExplanation
+      }
+    },
+    userId,
+    totalQuestions,
+    lastUpdated: new Date().toISOString(),
+    completed: isAnswered && parseInt(page) === totalQuestions,
+    currentUrl
+  };
+  
+  localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(progress));
+};
+
+const getQuizProgress = (page, userId) => {
+  try {
+    const progress = JSON.parse(localStorage.getItem(QUIZ_STORAGE_KEY));
+    if (progress && progress.userId === userId) {
+      return progress.answers?.[page] || null;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
 
 export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user }) => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -9,12 +59,36 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user 
   const [tachedOptions, setTachedOptions] = useState([]);
   const [isAnswered, setIsAnswered] = useState(false);
   const [loading, setLoading] = useState(false);
+  const pathname = usePathname();
 
   const currentPregunta = preguntas[parseInt(page - 1)];
+
+  // Cargar progreso guardado cuando el componente se monta
+  useEffect(() => {
+    const savedProgress = getQuizProgress(page, user.id_user);
+    if (savedProgress) {
+      setSelectedOption(savedProgress.selectedOption);
+      setTachedOptions(savedProgress.tachedOptions || []);
+      setIsAnswered(savedProgress.isAnswered);
+      setShowExplanation(savedProgress.showExplanation);
+    }
+  }, [page, user.id_user]);
 
   const handleSelectOption = (index) => {
     if (!isAnswered) {
       setSelectedOption(index);
+      
+      // Guardar progreso al seleccionar opción
+      saveQuizProgress({
+        page,
+        selectedOption: index,
+        tachedOptions,
+        isAnswered: false,
+        showExplanation: false,
+        userId: user.id_user,
+        totalQuestions: preguntas.length,
+        currentUrl:pathname
+      });
     }
   };
 
@@ -30,42 +104,58 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user 
           respuesta_dada: currentPregunta.opciones[selectedOption].texto_opcion,
           es_correcta: isCorrect,
           fecha_respuesta: new Date().toISOString().slice(0, 19) 
-        })
+        });
 
-        /* Si todo salio correcto en la consulta desbloquea él paso a la siguiente pregunta */
         if(response.success){
           setShowExplanation(true);
           setIsAnswered(true);
+          
+          // Guardar progreso después de responder
+          saveQuizProgress({
+            page,
+            selectedOption,
+            tachedOptions,
+            isAnswered: true,
+            showExplanation: true,
+            userId: user.id_user,
+            totalQuestions: preguntas.length
+          });
+          
           onComplete();
           onAnswer(isCorrect);
         }
-        // console.log({
-        //   id_user: user.id_user,
-        //   id_pregunta: currentPregunta.opciones[selectedOption].id_pregunta,
-        //   respuesta_dada: currentPregunta.opciones[selectedOption].texto_opcion,
-        //   es_correcta: isCorrect,
-        //   fecha_respuesta: new Date().toISOString().slice(0, 19) 
-        // });
         
       } catch (error) {
-        console.error("Error al crear el resulta:", error);
-      }finally{
+        console.error("Error al crear el resultado:", error);
+      } finally {
         setLoading(false);
       }
-
-      // console.log(`Opción seleccionada: ${currentPregunta.opciones[selectedOption].texto_opcion}`);
-      // console.log(`¿Es correcta?: ${isCorrect ? 'Sí' : 'No'}`);
-      // console.log(`Explicación: ${currentPregunta.explicacion_correcta}`);
     }
   };
 
   const handleToggleStrike = (index) => {
     if (!isAnswered) {
+      let newTachedOptions;
       if (tachedOptions.includes(index)) {
-        setTachedOptions(tachedOptions.filter((i) => i !== index));
+        newTachedOptions = tachedOptions.filter((i) => i !== index);
       } else if (tachedOptions.length < currentPregunta.opciones.length - 1) {
-        setTachedOptions([...tachedOptions, index]);
+        newTachedOptions = [...tachedOptions, index];
+      } else {
+        return;
       }
+      
+      setTachedOptions(newTachedOptions);
+      
+      // Guardar progreso al tachar opciones
+      saveQuizProgress({
+        page,
+        selectedOption,
+        tachedOptions: newTachedOptions,
+        isAnswered,
+        showExplanation,
+        userId: user.id_user,
+        totalQuestions: preguntas.length
+      });
     }
   };
 
@@ -113,7 +203,7 @@ export const PreguntaContainer = ({ preguntas, page, onComplete, onAnswer, user 
           className="mt-4 py-2 px-4 bg-primary text-white rounded-md"
           disabled={loading}
         >
-          Responder
+          {loading ? "Procesando..." : "Responder"}
         </button>
       )}
 

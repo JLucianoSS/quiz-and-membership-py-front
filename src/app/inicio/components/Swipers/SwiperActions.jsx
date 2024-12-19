@@ -1,8 +1,10 @@
+"use client"
 import { ActionCard, CustomSwiper } from "@/components";
-import { routeActions } from "../../../../config/routes";
+import { getRouteActions } from "../../../../config/routes";
 
-export const SwiperActions = () => {
-  const actionSlides = routeActions.map(({ action, icon, link }, index) => (
+
+export const SwiperActions = ({user}) => {
+  const actionSlides = getRouteActions(user.id_user).map(({ action, icon, link }, index) => (
     <ActionCard key={index} action={action} icon={icon} link={link} />
   ));
 
