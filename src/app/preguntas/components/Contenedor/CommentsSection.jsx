@@ -1,8 +1,7 @@
-
 "use client"
 import { useState, useEffect } from 'react';
 import { FaUserCircle, FaPaperPlane } from 'react-icons/fa';
-import { getComentariosByPregunta, createComentarioByPregunta } from '@/actions';
+import { getComentariosByPregunta, createComentarioByPregunta, getUserById } from '@/actions';
 
 export const CommentsSection = ({ user, idPregunta }) => {
   const [newComment, setNewComment] = useState('');
@@ -14,9 +13,19 @@ export const CommentsSection = ({ user, idPregunta }) => {
     const loadComments = async () => {
       try {
         const response = await getComentariosByPregunta(idPregunta);
-        if (response.data) {
-          setComments(response.data);
-        }
+        
+        // Obtener los comentarios y enriquecerlos con la información del usuario
+        const commentsWithUsers = await Promise.all(
+          response.data.map(async (comentario) => {
+            const userResponse = await getUserById(comentario.id_user);
+            return {
+              ...comentario,
+              usuario: userResponse.data
+            };
+          })
+        );
+
+        setComments(commentsWithUsers);
       } catch (error) {
         console.error('Error al cargar comentarios:', error);
       } finally {
@@ -34,22 +43,24 @@ export const CommentsSection = ({ user, idPregunta }) => {
 
     try {
       const commentData = {
-        id_pregunta:idPregunta,
+        id_pregunta: idPregunta,
         texto_comentario: newComment,
         id_user: user.id_user
       };
-      console.log(commentData);
-      
 
       const response = await createComentarioByPregunta(idPregunta, commentData);
       
       if (response.data) {
-        setComments(prevComments => [response.data, ...prevComments]);
+        // Agregar el usuario al nuevo comentario
+        const newCommentWithUser = {
+          ...response.data,
+          usuario: user // Asumiendo que el objeto user ya tiene la información necesaria
+        };
+        setComments(prevComments => [newCommentWithUser, ...prevComments]);
         setNewComment('');
       }
     } catch (error) {
       console.error('Error al crear comentario:', error);
-      // Aquí podrías agregar una notificación de error
     }
   };
 
@@ -127,7 +138,7 @@ export const CommentsSection = ({ user, idPregunta }) => {
                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="font-semibold text-sm text-gray-800">
-                          {comment.user?.nombre || 'Usuario'}
+                          {comment.usuario?.nombre || 'Usuario'}
                         </h4>
                         <p className="text-xs text-gray-500">
                           {formatDate(comment.fecha_comentario)}

@@ -213,7 +213,7 @@ export const ViewDesempeno = ({ userid }) => {
                     endDate
                   ).format("D [de] MMMM [del] YYYY")}`
                 : moment(ultimaPregunta?.fecha_respuesta).format(
-                    "D [de] MMMM [del] YYYY [a las] H:mm"
+                    "D [de] MMMM [del] YYYY"
                   )}
             </h2>
             <h3 className="text-sm text-gray-600 mb-1">

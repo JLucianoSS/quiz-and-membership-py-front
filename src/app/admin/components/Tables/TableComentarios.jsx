@@ -205,7 +205,7 @@ export const TableComentarios = () => {
                                 </p>
                                 <p className="text-sm text-gray-600">
                                   <span className="font-medium">Rol:</span>{" "}
-                                  {comment.user.role}
+                                  {comment.user.role === "Visitante" ? "Estudiante" : comment.user.role}
                                 </p>
                                 <p className="text-sm text-gray-600">
                                   <span className="font-medium">
