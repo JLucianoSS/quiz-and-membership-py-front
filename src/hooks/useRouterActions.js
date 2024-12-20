@@ -10,7 +10,7 @@ import {
   IoTimeOutline 
 } from "react-icons/io5";
 
-// Función auxiliar para obtener el progreso del quiz (solo en cliente)
+// Función auxiliar para obtener el progreso del quiz
 const getQuizProgress = () => {
   try {
     const progress = JSON.parse(localStorage.getItem('quiz_progress'));
@@ -25,10 +25,10 @@ const clearQuizProgress = () => {
   localStorage.removeItem('quiz_progress');
 };
 
-export const getRouteActions = (userId) => {
+// Hook personalizado que devuelve las acciones según el progreso
+export const useRouteActions = (userId) => {
   const [quizProgress, setQuizProgress] = useState(null);
 
-  // Ejecutar solo en cliente
   useEffect(() => {
     const progress = getQuizProgress();
     setQuizProgress(progress);

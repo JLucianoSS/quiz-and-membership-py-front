@@ -4,11 +4,12 @@ import Link from "next/link";
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui"; // Ruta donde guardaste el store
 import { LOGO } from "@/config/theme";
-import { getRouteActions } from "@/config/routes";
 import { ActionCard } from "..";
+import { useRouteActions } from "@/hooks/useRouterActions";
 
 export const Navbar = ({ user }) => {
   const { toggleSidebar } = useSidebarStore();
+  const actions = useRouteActions(user.id_user);
 
   // Definir el texto y color según el rol del usuario
   const getRoleLabel = (role) => {
@@ -47,7 +48,7 @@ export const Navbar = ({ user }) => {
           </div>
 
           <div className="hidden lg:flex ">
-            {getRouteActions(user.id_user).map(({ action, icon, link }, index) => (
+            {actions.map(({ action, icon, link }, index) => (
               <ActionCard key={index} action={action} icon={icon} link={link} />
             ))}
           </div>

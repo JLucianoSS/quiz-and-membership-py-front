@@ -9,13 +9,14 @@ import {
 import { UserAvatar } from "../UserAvatar/UserAvatar";
 import { useSidebarStore } from "@/store/ui";
 import { signOut } from "next-auth/react";
-import { getRouteActions, routeActions } from "../../config/routes";
 import { usePathname } from "next/navigation";
+import { useRouteActions } from "@/hooks/useRouterActions";
 import Link from "next/link";
 
 export const Sidebar = ({ user }) => {
   const { isOpen, closeSidebar } = useSidebarStore();
   const pathname = usePathname();
+  const actions = useRouteActions(user.id_user);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -119,7 +120,7 @@ export const Sidebar = ({ user }) => {
               <span className="mx-2 font-medium text-sm">Inicio</span>
             </Link>
 
-            {getRouteActions(user.id_user).map((item, index) => (
+            {actions.map((item, index) => (
               <Link
                 key={index}
                 href={item.link}

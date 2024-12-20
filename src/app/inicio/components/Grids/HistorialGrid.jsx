@@ -58,7 +58,7 @@ export const HistorialGrid = ({ iduser }) => {
       {preguntasConResultados.length > 0 ? (
         <div className="grid grid-cols-1  gap-3 mb-[150px]" style={{ gridAutoRows: 'minmax(100px, auto)' }}>
           {preguntasConResultados.map((resultado, index) => (
-            <div className="">
+            <div key={index} className="">
                 <HistorialCard key={index} user={user} {...resultado} />
             </div>
           ))}
