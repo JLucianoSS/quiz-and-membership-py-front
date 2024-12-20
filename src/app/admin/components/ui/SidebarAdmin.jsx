@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useSideBarStore2 } from "@/store/ui/useSideBarStore2";
-import { IoHomeSharp, IoHelpCircleSharp, IoPersonSharp, IoCardSharp, IoWalletSharp } from "react-icons/io5"; 
+import { IoHomeSharp, IoHelpCircleSharp, IoPersonSharp, IoCardSharp, IoWalletSharp, IoChatbox } from "react-icons/io5"; 
 import { FaSignOutAlt } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -36,6 +36,7 @@ export const SidebarAdmin = () => {
     { path: "/admin", label: "Dashboard", icon: <IoHomeSharp /> },
     { path: "/admin/preguntas", label: "Preguntas", icon: <IoHelpCircleSharp /> },
     { path: "/admin/usuarios", label: "Usuarios", icon: <IoPersonSharp /> },
+    { path: "/admin/comentarios", label: "Comentarios", icon: <IoChatbox /> },
     { path: "/admin/suscripciones", label: "Suscripciones", icon: <IoCardSharp /> },
     { path: "/admin/pagos", label: "Pagos", icon: <IoWalletSharp /> },
   ];
