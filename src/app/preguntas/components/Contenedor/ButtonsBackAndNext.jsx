@@ -26,6 +26,10 @@ export const ButtonsBackAndNext = ({
 }) => {
   const router = useRouter();
   const [canNavigateNext, setCanNavigateNext] = useState(false);
+  const questions = JSON.parse(localStorage.getItem("questions"));
+  const queryString = localStorage.getItem("queryString");
+
+  
 
   // Efecto para verificar si la pregunta actual está respondida
   useEffect(() => {
@@ -59,7 +63,11 @@ export const ButtonsBackAndNext = ({
   const handleSkip = () => {
     const nextPage = parseInt(page) + 1;
     if (nextPage <= preguntas.length) {
-      router.push(`/preguntas/subtema/${slugTema}/p/${nextPage}`);
+      if (questions && questions.length > 0) {
+        router.push(`/preguntas/subtema/p/${nextPage}/?values=${queryString}`);
+      } else {
+        router.push(`/preguntas/subtema/${slugTema}/p/${nextPage}`);
+      }
     }
   };
 
@@ -79,29 +87,31 @@ export const ButtonsBackAndNext = ({
         </div>
 
         {/* Botón Finalizar/Siguiente - siempre pegado a la derecha */}
-
-          {parseInt(page) === preguntas.length ? (
-            <button
-              className={`py-1 sm:py-2 sm:text-base px-7 rounded-md text-sm text-white bg-primary ${
-                !canNavigateNext && "pointer-events-none opacity-50"
-              }`}
-              onClick={handleFinalizar}
-            >
-              Finalizar
-            </button>
-          ) : (
-            <Link
-              href={`/preguntas/subtema/${slugTema}/p/${parseInt(page) + 1}`}
-              className={`py-1 sm:py-2 sm:text-base px-7 rounded-md text-sm text-white bg-primary ${
-                !canNavigateNext && "pointer-events-none opacity-50"
-              }`}
-            >
-              <span className="flex gap-1 items-center">
-                Siguiente <IoArrowForward />
-              </span>
-            </Link>
-          )}
-
+        {parseInt(page) === preguntas.length ? (
+          <button
+            className={`py-1 sm:py-2 sm:text-base px-7 rounded-md text-sm text-white bg-primary ${
+              !canNavigateNext && "pointer-events-none opacity-50"
+            }`}
+            onClick={handleFinalizar}
+          >
+            Finalizar
+          </button>
+        ) : (
+          <Link
+            href={
+              questions && questions.length > 0
+                ? `/preguntas/subtema/p/${parseInt(page) + 1}/?values=${queryString}`
+                : `/preguntas/subtema/${slugTema}/p/${parseInt(page) + 1}`
+            }
+            className={`py-1 sm:py-2 sm:text-base px-7 rounded-md text-sm text-white bg-primary ${
+              !canNavigateNext && "pointer-events-none opacity-50"
+            }`}
+          >
+            <span className="flex gap-1 items-center">
+              Siguiente <IoArrowForward />
+            </span>
+          </Link>
+        )}
       </div>
     </div>
   );

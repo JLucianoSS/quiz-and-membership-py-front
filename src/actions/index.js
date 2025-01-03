@@ -16,6 +16,7 @@ export { getTemas } from "./tema/getTemas";
 export { getTemaById } from "./tema/getTemaById";
 export { updateTema } from "./tema/updateTema";
 export { deleteTema } from "./tema/deleteTema";
+export { getTemasByModulos } from "./tema/getTemasByModulos";
 
 export { createSubtema } from "./subtema/createSubtema";
 export { getSubtemas } from "./subtema/getSubtemas";
@@ -28,6 +29,7 @@ export { getPreguntas } from "./pregunta/getPreguntas";
 export { getPreguntaById } from "./pregunta/getPreguntaById";
 export { updatePregunta } from "./pregunta/updatePregunta";
 export { deletePregunta } from "./pregunta/deletePregunta";
+export { getFilterPreguntas } from "./pregunta/getFilterPreguntas";
 
 export { createOpcion } from "./opcion/createOpcion";
 export { getOpciones } from "./opcion/getOpciones";

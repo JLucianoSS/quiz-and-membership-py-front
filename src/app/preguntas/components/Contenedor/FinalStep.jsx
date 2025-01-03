@@ -8,8 +8,8 @@ export const FinalStep = () => {
   // limpia el local sotrage al llegar a esta pagina porque ya finalizp el quiz
   useEffect(() => {
     localStorage.removeItem("quiz_progress");
-
-
+    localStorage.removeItem("questions");
+    localStorage.removeItem("queryString");
   }, []);
 
   return (

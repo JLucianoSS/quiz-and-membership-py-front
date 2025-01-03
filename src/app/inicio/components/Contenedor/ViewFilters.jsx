@@ -1,157 +1,301 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ApplyButton, FilterBy, FilterByYear } from "..";
 import { Headerpage, Offcanvas } from "@/components";
-import { IoAddCircleOutline } from "react-icons/io5"; // Importamos solo el ícono de agregar
+import { IoAddCircleOutline } from "react-icons/io5";
+import { getFilterPreguntas, getTemasByModulos } from "@/actions";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-export const ViewFilters = ({ modulos, temas, subtemas, preguntas }) => {
+export const ViewFilters = ({ modulos }) => {
+  // Estados para nombres (UI)
   const [selectedModulos, setSelectedModulos] = useState([]);
   const [selectedTemas, setSelectedTemas] = useState([]);
   const [selectedSubtemas, setSelectedSubtemas] = useState([]);
-  const [selectedYear, setSelectedYear] = useState([]); // Estado para controlar el año seleccionado
+  const [selectedYear, setSelectedYear] = useState(null);
 
-  // Estados para controlar el Offcanvas
+  // Estados para IDs
+  const [modulosIds, setModulosIds] = useState([]);
+  const [temasIds, setTemasIds] = useState([]);
+  const [subtemasIds, setSubtemasIds] = useState([]);
+
+  // Estado para temas filtrados
+  const [availableTemas, setAvailableTemas] = useState([]);
+  const [availableSubtemas, setAvailableSubtemas] = useState([]);
+
   const [isTemasOpen, setIsTemasOpen] = useState(false);
   const [isSubtemasOpen, setIsSubtemasOpen] = useState(false);
 
-  // Determinar si el botón debe estar habilitado
+   // Nuevo estado para el conteo de preguntas filtradas
+   const [filteredQuestionsCount, setFilteredQuestionsCount] = useState(0);
+   const [questions, setQuestions] = useState([])
+
+   const router = useRouter();
+
   const isApplyButtonDisabled = !(
     selectedModulos.length > 0 &&
     selectedTemas.length > 0 &&
     selectedSubtemas.length > 0
   );
+  
 
-  // Manejar selección de módulos
-  const toggleModulo = (modulo) => {
+  // Efecto para contar preguntas filtradas
+  useEffect(() => {
+    const fetchFilteredQuestions = async () => {
+      // Solo hacer la consulta si tenemos al menos un filtro seleccionado
+      if (modulosIds.length > 0) {
+        try {
+          const response = await getFilterPreguntas({
+            modulos: modulosIds,
+            temas: temasIds,
+            subtemas: subtemasIds,
+            anio: selectedYear ? selectedYear : undefined
+          });
+
+
+          if (response.success) {
+            // console.log('Preguntas filtradas:', response.data);
+            // console.log('Número de preguntas:', response.data.length);
+            setQuestions(response.data)
+            setFilteredQuestionsCount(response.data.length);
+          }
+        } catch (error) {
+          console.error("Error al obtener preguntas filtradas:", error);
+        }
+      } else {
+        setFilteredQuestionsCount(0);
+      }
+    };
+
+    fetchFilteredQuestions();
+  }, [modulosIds, temasIds, subtemasIds, selectedYear]);
+
+  // Efecto para actualizar subtemas cuando cambian los temas seleccionados
+  useEffect(() => {
+    const updateSubtemas = () => {
+      if (temasIds.length > 0) {
+        // Filtrar subtemas basados en los temas seleccionados
+        const filteredSubtemas = availableTemas
+          .filter(tema => temasIds.includes(tema.id_tema))
+          .flatMap(tema => tema.subtemas);
+        
+        setAvailableSubtemas(filteredSubtemas);
+
+        // Limpiar subtemas seleccionados que ya no corresponden a los temas actuales
+        const validSubtemasIds = filteredSubtemas.map(subtema => subtema.id_subtema);
+        const newSubtemasIds = subtemasIds.filter(id => 
+          validSubtemasIds.includes(id)
+        );
+        const newSelectedSubtemas = selectedSubtemas.filter((_, index) =>
+          validSubtemasIds.includes(subtemasIds[index])
+        );
+
+        setSubtemasIds(newSubtemasIds);
+        setSelectedSubtemas(newSelectedSubtemas);
+      } else {
+        // Si no hay temas seleccionados, limpiar subtemas
+        setAvailableSubtemas([]);
+        setSelectedSubtemas([]);
+        setSubtemasIds([]);
+      }
+    };
+
+    updateSubtemas();
+  }, [temasIds, availableTemas]);
+
+  // Efecto para actualizar temas cuando cambian los módulos seleccionados
+  useEffect(() => {
+    const updateTemas = async () => {
+      if (modulosIds.length > 0) {
+        try {
+          const response = await getTemasByModulos(modulosIds);
+          
+          if (response.success) {
+            setAvailableTemas(response.data);
+
+            // Filtrar temas seleccionados que ya no están disponibles
+            const validTemasIds = response.data.map(tema => tema.id_tema);
+            const newTemasIds = temasIds.filter(id => validTemasIds.includes(id));
+            const newSelectedTemas = selectedTemas.filter((_, index) => 
+              validTemasIds.includes(temasIds[index])
+            );
+            
+            setTemasIds(newTemasIds);
+            setSelectedTemas(newSelectedTemas);
+
+            // Los subtemas se actualizarán automáticamente por el otro useEffect
+          }
+        } catch (error) {
+          console.error("Error fetching temas:", error);
+        }
+      } else {
+        // Si no hay módulos seleccionados, limpiar todo
+        setAvailableTemas([]);
+        setSelectedTemas([]);
+        setTemasIds([]);
+        // Los subtemas se limpiarán automáticamente por el otro useEffect
+      }
+    };
+
+    updateTemas();
+  }, [modulosIds]);
+
+  const toggleModulo = (modulo, id) => {
     if (selectedModulos.includes(modulo)) {
       setSelectedModulos(selectedModulos.filter((m) => m !== modulo));
+      setModulosIds(modulosIds.filter((currentId) => currentId !== id));
     } else {
       setSelectedModulos([...selectedModulos, modulo]);
+      setModulosIds([...modulosIds, id]);
     }
   };
 
-  // Función para remover tema o subtema al hacer clic
-  const toggleTema = (tema) => {
+  const toggleTema = (tema, id) => {
     if (selectedTemas.includes(tema)) {
       setSelectedTemas(selectedTemas.filter((t) => t !== tema));
+      setTemasIds(temasIds.filter((currentId) => currentId !== id));
     } else {
       setSelectedTemas([...selectedTemas, tema]);
+      setTemasIds([...temasIds, id]);
     }
   };
 
-  const toggleSubtema = (subtema) => {
+  const toggleSubtema = (subtema, id) => {
     if (selectedSubtemas.includes(subtema)) {
       setSelectedSubtemas(selectedSubtemas.filter((s) => s !== subtema));
+      setSubtemasIds(subtemasIds.filter((currentId) => currentId !== id));
     } else {
       setSelectedSubtemas([...selectedSubtemas, subtema]);
+      setSubtemasIds([...subtemasIds, id]);
     }
   };
 
-  // Función para aplicar filtros y consolear los resultados
   const aplicarFiltros = () => {
-    const filtros = {
-      modulos: selectedModulos,
-      temas: selectedTemas,
-      subtemas: selectedSubtemas,
-      year: selectedYear,
-    };
-    console.log(filtros); // Mostrar en consola los filtros seleccionados
+    if (questions.length > 0) {
+      // Guardar las preguntas en localStorage
+      localStorage.setItem("questions", JSON.stringify(questions));
+      
+      // Crear la query string con los subtemas seleccionados
+      const subtemasQuery = selectedSubtemas.join(",");
+      const queryString = `values=${subtemasQuery.toString()}`;
+
+      localStorage.setItem("queryString", subtemasQuery);
+      
+      // Redirigir a la nueva URL con los subtemas seleccionados
+      router.push(`/preguntas/subtema/p/1/?${queryString}`);
+   
+    } else {
+      toast.error("No se han encontrado preguntas");
+    }
   };
+  
 
   return (
     <>
       <div className="bg-white max-w-[600px] mx-auto px-6 h-full pb-[4rem]">
         <Headerpage titulo="Encuentra tus preguntas" />
         
-        {/* Filtro por Módulos */}
         <FilterBy
           titulo="Selecciona módulos"
-          filterBy={formatModulos(modulos)} // Formateamos los módulos antes de enviarlos
+          filterBy={formatModulos(modulos)}
           selectedItems={selectedModulos}
-          toggleItem={toggleModulo}
+          toggleItem={(modulo, id) => {
+            console.log(modulo,id);
+            toggleModulo(modulo, id)
+          }}
         />
         
-        {/* Filtro por Temas */}
         <div className="mt-4">
           <h2 className="text-lg font-semibold">Añadir temas</h2>
           <div className="flex flex-wrap items-center gap-2">
-            {selectedTemas.map((tema) => (
+            {selectedTemas.map((tema, index) => (
               <button
-                key={tema}
-                onClick={() => toggleTema(tema)} // Al hacer clic se remueve
+                key={temasIds[index]}
+                onClick={() => toggleTema(tema, temasIds[index])}
                 className="bg-gray-200 px-3 py-1 rounded-lg"
               >
                 {tema}
               </button>
             ))}
-            <button onClick={() => setIsTemasOpen(true)}>
+            <button 
+              onClick={() => setIsTemasOpen(true)}
+              disabled={modulosIds.length === 0}
+              className={`${modulosIds.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
               <IoAddCircleOutline size={32} className="text-primary" />
             </button>
           </div>
         </div>
 
-        {/* Offcanvas para Temas */}
         <Offcanvas
           isOpen={isTemasOpen}
           onClose={() => setIsTemasOpen(false)}
           title="Temas"
-          items={formatTemas(temas)} // Formateamos los temas antes de enviarlos
+          items={formatTemas(availableTemas)}
           selectedItems={selectedTemas}
-          onSelect={setSelectedTemas}
+          onSelect={(items) => {
+            const nombres = items.map(item => item.nombre);
+            const ids = items.map(item => item.id);
+            setSelectedTemas(nombres);
+            setTemasIds(ids);
+          }}
         />
 
-        {/* Filtro por Subtemas */}
         <div className="mt-4">
           <h2 className="text-lg font-semibold">Añadir subtemas</h2>
           <div className="flex flex-wrap items-center gap-2">
-            {selectedSubtemas.map((subtema) => (
+            {selectedSubtemas.map((subtema, index) => (
               <button
-                key={subtema}
-                onClick={() => toggleSubtema(subtema)} // Al hacer clic se remueve
+                key={subtemasIds[index]}
+                onClick={() => toggleSubtema(subtema, subtemasIds[index])}
                 className="bg-gray-200 px-3 py-1 rounded-lg"
               >
                 {subtema}
               </button>
             ))}
-            <button onClick={() => setIsSubtemasOpen(true)}>
+            <button 
+              onClick={() => setIsSubtemasOpen(true)}
+              disabled={temasIds.length === 0}
+              className={`${temasIds.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
               <IoAddCircleOutline size={32} className="text-primary" />
             </button>
           </div>
         </div>
 
-        {/* Offcanvas para Subtemas */}
         <Offcanvas
           isOpen={isSubtemasOpen}
           onClose={() => setIsSubtemasOpen(false)}
           title="Subtemas"
-          items={formatSubtemas(subtemas)} // Formateamos los subtemas antes de enviarlos
+          items={formatSubtemas(availableSubtemas)}
           selectedItems={selectedSubtemas}
-          onSelect={setSelectedSubtemas}
+          onSelect={(items) => {
+            const nombres = items.map(item => item.nombre);
+            const ids = items.map(item => item.id);
+            setSelectedSubtemas(nombres);
+            setSubtemasIds(ids);
+          }}
         />
         
-        {/* Filtro por Año */}
-        <FilterByYear preguntas={preguntas} onYearSelect={setSelectedYear} />
+        <FilterByYear onYearSelect={setSelectedYear} />
       </div>
 
-      {/* Botón Aplicar */}
       <ApplyButton
         onApply={aplicarFiltros}
-        preguntas={preguntas.length}
-        isDisabled={isApplyButtonDisabled} // Propiedad para controlar si está deshabilitado
+        preguntas={filteredQuestionsCount}
+        isDisabled={isApplyButtonDisabled}
       />
     </>
   );
 };
 
-// Función para formatear los módulos antes de enviarlos
 const formatModulos = (modulos) => {
   return modulos.map((modulo) => ({
-    id: modulo.id_Modulo,
-    nombre: modulo.nombre_modulo, // Aseguramos que 'nombre' esté en el formato esperado
+    id: modulo.id_modulo,
+    nombre: modulo.nombre_modulo,
   }));
 };
 
-// Función para formatear los temas antes de enviarlos
 const formatTemas = (temas) => {
   return temas.map((tema) => ({
     id: tema.id_tema,
@@ -159,7 +303,6 @@ const formatTemas = (temas) => {
   }));
 };
 
-// Función para formatear los subtemas antes de enviarlos
 const formatSubtemas = (subtemas) => {
   return subtemas.map((subtema) => ({
     id: subtema.id_subtema,

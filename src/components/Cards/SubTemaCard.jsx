@@ -9,6 +9,8 @@ export const SubTemaCard = ({ id,name }) => {
 
   const handleClic = () => {
     localStorage.removeItem('quiz_progress');
+    localStorage.removeItem('questions');
+    localStorage.removeItem('queryString');
     router.push(`/preguntas/subtema/${convertToSlug(`${name}-${id}`)}/p/1`)
   }
 
