@@ -1,18 +1,10 @@
 import { GaugeComponent } from "react-gauge-component";
 
 export const PercentageGauge = ({ aciertos, totalRespuestas }) => {
-  // Calcular el rendimiento basado en la cantidad de aciertos
-  let value = 0;
-
-  if (aciertos <= 60) {
-    value = aciertos; // Asignamos el valor directamente a los aciertos para el rango bajo
-  } else if (aciertos <= 75) {
-    value = aciertos; // Asignamos el valor directamente a los aciertos para el rango bueno
-  } else if (aciertos <= 88) {
-    value = aciertos; // Asignamos el valor directamente a los aciertos para el rango muy bueno
-  } else {
-    value = aciertos; // Asignamos el valor directamente a los aciertos para el rango excelente
-  }
+  // Calcular el porcentaje de aciertos
+  const porcentaje = totalRespuestas > 0 
+    ? Math.round((aciertos / totalRespuestas) * 100) 
+    : 0;
 
   return (
     <GaugeComponent
@@ -23,35 +15,35 @@ export const PercentageGauge = ({ aciertos, totalRespuestas }) => {
         cornerRadius: 1,
         subArcs: [
           {
-            limit: 60, // Rango rojo (0-60 aciertos)
+            limit: 60,
             color: "#FF6E76",
             showTick: true,
             tooltip: {
-              text: "Bajo",
+              text: "Bajo rendimiento",
             },
           },
           {
-            limit: 75, // Rango amarillo (61-75 aciertos)
+            limit: 75,
             color: "#FDDD60",
             showTick: true,
             tooltip: {
-              text: "Bueno",
+              text: "Buen rendimiento",
             },
           },
           {
-            limit: 88, // Rango verde (76-88 aciertos)
+            limit: 88,
             color: "#55BF3B",
             showTick: true,
             tooltip: {
-              text: "Muy bueno",
+              text: "Muy buen rendimiento",
             },
           },
           {
-            limit: 100, // Rango azul (89-100 aciertos)
-            color: "#3B8EB5", // Azul más oscuro
+            limit: 100,
+            color: "#3B8EB5",
             showTick: true,
             tooltip: {
-              text: "Excelente",
+              text: "Excelente rendimiento",
             },
           },
         ],
@@ -63,21 +55,27 @@ export const PercentageGauge = ({ aciertos, totalRespuestas }) => {
       }}
       labels={{
         valueLabel: {
-          formatTextValue: (value) => value + "",
-          style: {},
+          formatTextValue: (value) => `${value}%`,
+          style: {
+            fontSize: '16px',
+            fontWeight: 'bold'
+          },
         },
-
         tickLabels: {
           type: "outer",
           defaultTickValueConfig: {
-            formatTextValue: (value) => value + "",
-            style: { fontSize: 13 },
+            formatTextValue: (value) => `${value}%`,
+            style: { 
+              fontSize: 13,
+              fontWeight: 'medium'
+            },
           },
         },
       }}
-      value={value}
+      value={porcentaje}
       minValue={0}
       maxValue={100}
     />
   );
 };
+

@@ -41,27 +41,24 @@ export const ViewDesempeno = ({ userid }) => {
     setLoading(true);
     const fetchResultados = async () => {
       try {
-        console.log("Comienza el fetching getUserById");
-        console.log({userid});
-        
         const user = await getUserById(userid);
-        console.log(user);
+        console.log(user.data.resultados);
         
         const resultados = user.data.resultados;
-        const preguntas = await Promise.all(
-          resultados.map(async (resultado) => {
-            const pregunta = await getPreguntaById(resultado.id_pregunta);
-            return {
-              ...pregunta.data,
-              ...resultado,
-            };
-          })
-        );
+        // const preguntas = await Promise.all(
+        //   resultados.map(async (resultado) => {
+        //     const pregunta = await getPreguntaById(resultado.id_pregunta);
+        //     return {
+        //       ...pregunta.data,
+        //       ...resultado,
+        //     };
+        //   })
+        // );
 
-        console.log("comienza el Promise all getPreguntaById");
+        // console.log({preguntas});
 
 
-        const preguntasOrdenadas = preguntas.sort(
+        const preguntasOrdenadas = resultados.sort(
           (a, b) => new Date(b.fecha_respuesta) - new Date(a.fecha_respuesta)
         );
 
@@ -71,8 +68,6 @@ export const ViewDesempeno = ({ userid }) => {
 
         // Calcular respuestas por día iniciales
         actualizarRespuestasPorDia(preguntasOrdenadas);
-
-        console.log("finalizar despues del sort");
 
       } catch (error) {
         console.error("Error fetching resultados:", error);
