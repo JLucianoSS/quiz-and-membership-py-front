@@ -56,10 +56,6 @@ export const PercentageGauge = ({ aciertos, totalRespuestas }) => {
       labels={{
         valueLabel: {
           formatTextValue: (value) => `${value}%`,
-          style: {
-            fontSize: '16px',
-            fontWeight: 'bold'
-          },
         },
         tickLabels: {
           type: "outer",
@@ -67,7 +63,6 @@ export const PercentageGauge = ({ aciertos, totalRespuestas }) => {
             formatTextValue: (value) => `${value}%`,
             style: { 
               fontSize: 13,
-              fontWeight: 'medium'
             },
           },
         },
