@@ -78,6 +78,7 @@ export const Sidebar = ({ user }) => {
             classHeight="h-24"
             classWidth="w-24"
             classText="text-3xl"
+            avatarUrl={user.avatar_img}
           />
           <h4 className="mt-2 font-medium text-gray-100 text-center">
             {user.nombre} {user.apellido}

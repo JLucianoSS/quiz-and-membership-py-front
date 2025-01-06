@@ -27,12 +27,13 @@ export const UploadAvatar = ({ avatarImg, setAvatarImg, user }) => {
       // Establecer la URL del avatar
       setAvatarImg(resultUploadFile);
       //guarda en la bd la url
-      const resp = await updateUsuario(user.id_user, {avatar_img:avatarImg});
-      console.log(resp);
+      const resp = await updateUsuario(user.id_user, {avatar_img:resultUploadFile});
+      // console.log(resp);
       
       if(resp.success){
-        toast.success("Imagen subida correctamente.");
-        console.log("Archivo subido correctamente:", resultUploadFile);
+        // toast.success("Avatar actualizado.");
+        // console.log("Archivo subido correctamente:", resultUploadFile);
+        window.location.reload();
       }
     } catch (error) {
       toast.error("Error al subir el archivo.");
@@ -56,7 +57,10 @@ export const UploadAvatar = ({ avatarImg, setAvatarImg, user }) => {
       // Eliminar el archivo de Firebase
       await deleteFile(avatarImg);
       setAvatarImg(null); // Eliminar la imagen del estado local
-      toast.success("Avatar eliminado correctamente.");
+      await updateUsuario(user.id_user, {avatar_img:""});
+      // toast.success("Avatar eliminado correctamente.");
+      window.location.reload();
+
     } catch (error) {
       toast.error("Error al eliminar el avatar.");
       console.error("Error al eliminar el avatar:", error);

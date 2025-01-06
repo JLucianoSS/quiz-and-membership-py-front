@@ -18,7 +18,7 @@ export const UserAvatar = ({
           width={300}
           height={300}
           alt={"avatar_" + userName}
-          className="w-full h-full border-2 rounded-full p-[6px] border-blue-700 mx-auto object-cover"
+          className="w-full h-full border-2 rounded-full p-[4px] border-blue-700 mx-auto object-cover"
         />
       ) : (
         <div

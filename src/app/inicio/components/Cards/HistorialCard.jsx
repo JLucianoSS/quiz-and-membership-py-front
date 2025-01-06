@@ -10,11 +10,10 @@ import {
 } from "react-icons/io5";
 
 export const HistorialCard = ({
-  texto_pregunta,
   respuesta_dada,
   fecha_respuesta,
   es_correcta,
-  opciones,
+  pregunta,
 }) => {
   const [showOpciones, setShowOpciones] = useState(false); // Estado para controlar visibilidad
 
@@ -26,11 +25,10 @@ export const HistorialCard = ({
     <div className="w-full p-4 bg-white rounded-lg border border-gray-100 shadow-md">
       <div className="flex items-center text-sm">
         <span className="text-xs font-semibold text-gray-600">
-          Respondida el {moment(fecha_respuesta).format("DD/MM/YYYY")} a las{" "}
-          {moment(fecha_respuesta).format("HH:mm")}
+          Respondida el {moment(fecha_respuesta).format("DD/MM/YYYY")}
         </span>
       </div>
-      <div className="text-gray-500 text font-semibold">{texto_pregunta}</div>
+      <div className="text-gray-500 text font-semibold">{pregunta.texto_pregunta}</div>
 
       <hr className="mb-3 mt-1" />
 
@@ -72,7 +70,7 @@ export const HistorialCard = ({
         }`}
       >
         <ul className="mt-3">
-          {opciones.map((opcion) => (
+          {pregunta.opciones.map((opcion) => (
             <li
               key={opcion.id_opcion}
               className="flex items-center text-sm text-gray-600 mt-2"

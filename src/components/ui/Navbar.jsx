@@ -35,7 +35,7 @@ export const Navbar = ({ user }) => {
             {/* DRAWER AVATAR PERFIL */}
             {user ? (
               <button className="flex-shrink-0" onClick={toggleSidebar}>
-                <UserAvatar userName={`${user.nombre} ${user.apellido}`} />
+                <UserAvatar userName={`${user.nombre} ${user.apellido}`} avatarUrl={user.avatar_img}/>
               </button>
             ) : (
               <Link
