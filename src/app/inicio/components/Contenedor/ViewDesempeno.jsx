@@ -41,6 +41,8 @@ export const ViewDesempeno = ({ userid }) => {
     setLoading(true);
     const fetchResultados = async () => {
       try {
+        console.log("Comienza el fetching getUserById");
+        
         const user = await getUserById(userid);
         const resultados = user.data.resultados;
         const preguntas = await Promise.all(
@@ -53,6 +55,9 @@ export const ViewDesempeno = ({ userid }) => {
           })
         );
 
+        console.log("comienza el Promise all getPreguntaById");
+
+
         const preguntasOrdenadas = preguntas.sort(
           (a, b) => new Date(b.fecha_respuesta) - new Date(a.fecha_respuesta)
         );
@@ -63,6 +68,9 @@ export const ViewDesempeno = ({ userid }) => {
 
         // Calcular respuestas por día iniciales
         actualizarRespuestasPorDia(preguntasOrdenadas);
+
+        console.log("finalizar despues del sort");
+
       } catch (error) {
         console.error("Error fetching resultados:", error);
       } finally {
