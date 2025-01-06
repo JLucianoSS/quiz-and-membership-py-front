@@ -14,7 +14,7 @@ export const ViewDesempeno = ({ userid }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [preguntasConResultados, setPreguntasConResultados] = useState([]);
   const [preguntasFiltradas, setPreguntasFiltradas] = useState([]);
   const [ultimaPregunta, setUltimaPregunta] = useState(null);
@@ -38,6 +38,7 @@ export const ViewDesempeno = ({ userid }) => {
   }, [startDate, endDate]);
 
   useEffect(() => {
+    setLoading(true);
     const fetchResultados = async () => {
       try {
         const user = await getUserById(userid);
