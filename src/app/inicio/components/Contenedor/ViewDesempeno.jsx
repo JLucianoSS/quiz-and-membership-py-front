@@ -45,6 +45,8 @@ export const ViewDesempeno = ({ userid }) => {
         console.log({userid});
         
         const user = await getUserById(userid);
+        console.log(user);
+        
         const resultados = user.data.resultados;
         const preguntas = await Promise.all(
           resultados.map(async (resultado) => {
