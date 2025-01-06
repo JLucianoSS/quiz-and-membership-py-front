@@ -42,6 +42,7 @@ export const ViewDesempeno = ({ userid }) => {
     const fetchResultados = async () => {
       try {
         console.log("Comienza el fetching getUserById");
+        console.log({userid});
         
         const user = await getUserById(userid);
         const resultados = user.data.resultados;
