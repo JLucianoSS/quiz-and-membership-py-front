@@ -10,7 +10,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // Estilos de React Quill
+import "react-quill/dist/quill.snow.css";
 
 const currentYear = new Date().getFullYear();
 const años = Array.from({ length: currentYear - 2005 }, (_, i) => (currentYear - i).toString());
@@ -37,11 +37,22 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
       try {
         const { data } = await getPreguntaById(preguntaId);
         setPregunta(data);
+        
+        // Ordenar las opciones por id_opcion de menor a mayor
+        const opcionesOrdenadas = [...data.opciones].sort((a, b) => a.id_opcion - b.id_opcion);
+        
+        // Transformar las opciones ordenadas al formato esperado por el formulario
+        const opcionesFormateadas = opcionesOrdenadas.map(opcion => ({
+          id_opcion: opcion.id_opcion,
+          textOpcion: opcion.texto_opcion,
+          esCorrecta: opcion.es_correcta
+        }));
+
         reset({
           pregunta: data.texto_pregunta,
           subtemaId: data.id_subtema,
           año: data.year.toString(),
-          opciones: obtenerOpcionesFiltradas(data),
+          opciones: opcionesFormateadas,
           explicacionCorrecta: data.explicacion_correcta,
           explicacionIncorrecta: data.explicacion_incorrecta,
         });
@@ -87,22 +98,21 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
       });
 
       if (resultUpdatePregunta.success) {
-        const updatedOptions = data.opciones.map((opcion, index) => ({
-          ...opcion,
-          id_opcion: pregunta.opciones[index]?.id_opcion 
-        }));
+        // Ordenar las opciones por id_opcion antes de actualizarlas
+        const opcionesOrdenadas = [...data.opciones].sort((a, b) => a.id_opcion - b.id_opcion);
+        
+        // Actualizar cada opción en orden
+        for (const opcion of opcionesOrdenadas) {
+          const opcionData = {
+            texto_opcion: opcion.textOpcion,
+            es_correcta: opcion.esCorrecta
+          };
 
-        for (const opcion of updatedOptions) {
-          if (opcion.id_opcion) {
-            const resultUpdateOpcion = await updateOpcion(opcion.id_opcion, {
-              texto_opcion: opcion.texto_opcion,
-              es_correcta: opcion.es_correcta,
-            });
+          const resultUpdateOpcion = await updateOpcion(opcion.id_opcion, opcionData);
 
-            if (!resultUpdateOpcion.success) {
-              toast.error(`Error al actualizar la opción: ${resultUpdateOpcion.message}`);
-              throw new Error("Error al actualizar una opción");
-            }
+          if (!resultUpdateOpcion.success) {
+            toast.error(`Error al actualizar la opción: ${resultUpdateOpcion.message}`);
+            throw new Error("Error al actualizar una opción");
           }
         }
 
@@ -132,7 +142,7 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
     try {
       setIsLoading(true);
       const result = await updatePregunta(preguntaId, {
-        imagen_video: "", // Establecemos la propiedad imagen_video como una cadena vacía
+        imagen_video: "",
       });
       if (result.success) {
         setExistingFile(null);
@@ -197,6 +207,36 @@ export const FormEditPregunta = ({ subtemas = [], onClose, preguntaId }) => {
           placeholder="Ingresa la pregunta"
         />
         {errors.pregunta && <span className="text-red-500 text-sm">{errors.pregunta.message}</span>}
+      </div>
+
+      {/* Sección de Opciones */}
+      <div>
+        <label className="block text-gray-700">Opciones (Máximo {MAX_OPCIONES})</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {fields.map((field, index) => (
+            <div key={field.id} className="flex flex-col gap-2 mb-2">
+              <input
+                {...register(`opciones.${index}.textOpcion`, { required: "Este campo es obligatorio" })}
+                placeholder="Texto de la opción"
+                className="px-4 py-2 border rounded-md"
+              />
+              {errors.opciones?.[index]?.textOpcion && (
+                <span className="text-red-500 text-sm">{errors.opciones[index].textOpcion.message}</span>
+              )}
+              <label className="flex gap-1">
+                <input
+                  type="checkbox"
+                  {...register(`opciones.${index}.esCorrecta`)}
+                />
+                Correcta
+              </label>
+              <input
+                type="hidden"
+                {...register(`opciones.${index}.id_opcion`)}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="flex flex-col gap-20 mb-16">

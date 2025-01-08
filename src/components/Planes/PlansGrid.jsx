@@ -5,9 +5,9 @@ export const PlansGrid = ({ user }) => {
   // Definir los planes
   const plans = [
     {
-      title: "Plan Free",
-      description: "Perfecto para aquellos que quieren comenzar y ver las ventajas sin compromisos",
-      features: ["Acceso a contenido básico", "5 preguntas por día", "Soporte por correo electrónico", "Prueba diaria"],
+      title: "Plan Básico",
+      description: "Acceso desde el 1 de febrero hasta el día del primer examen parcial.",
+      features: ["Banco completo de preguntas", "simulacros interactivos", "Material específico para el 1er Parcial"],
       link: "/register?plan=free",
       buttonText: "Empezar gratis",
       planRole: "Visitante",
