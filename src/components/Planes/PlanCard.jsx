@@ -1,13 +1,16 @@
 "use client"
 import Link from "next/link";
 
-export const PlanCard = ({ title, description, features, link, buttonText, currentPlan, disabled, icon }) => {
+export const PlanCard = ({ title, description, features, link, buttonText, currentPlan, disabled, icon, price }) => {
   return (
-    <div className={`bg-white p-8 shadow-sm rounded-md border md:px-12 md:py-14 ${currentPlan ? 'border-green-500 border-2' : 'border-gray-100'}`}>
+    <div className={`bg-white p-8 shadow-lg rounded-md border md:px-12 md:py-14 ${currentPlan ? 'border-green-500 border-2' : 'border-gray-100'}`}>
       {/* Mostrar el ícono antes del título */}
-      <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-2xl font-bold">{title}</h3>
-        {icon && <div className="text-2xl">{icon}</div>}
+      <div className="flex justify-between items-center gap-2 mb-4">
+        <div className="flex gap-2 items-center">
+          <h3 className="text-2xl font-bold">{title}</h3>
+          {icon && <div className="text-2xl">{icon}</div>}
+        </div>
+        <h5 className="text-xl font-semibold">{price} <span className="text-sm">PYG</span></h5>
       </div>
 
       <p className="text-gray-600 mb-6">{description}</p>

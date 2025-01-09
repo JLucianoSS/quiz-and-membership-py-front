@@ -1,5 +1,6 @@
 import { FaStar, FaCrown } from "react-icons/fa"; // Importar los íconos
 import { PlanCard } from "..";
+import { formatStringForUrl } from "@/utils/formatStringForUrl";
 
 export const PlansGrid = ({ user }) => {
   // Definir los planes
@@ -7,20 +8,38 @@ export const PlansGrid = ({ user }) => {
     {
       title: "Plan Básico",
       description: "Acceso desde el 1 de febrero hasta el día del primer examen parcial.",
-      features: ["Banco completo de preguntas", "simulacros interactivos", "Material específico para el 1er Parcial"],
-      link: "/register?plan=free",
-      buttonText: "Empezar gratis",
+      features: ["Material específico para el 1er Parcial", "Banco completo de preguntas", "Simulacros interactivos"],
+      link: `/register?plan=${formatStringForUrl("Plan Básico")}`,
+      buttonText: "Adquirir plan",
       planRole: "Visitante",
-      icon: <FaStar className="text-primary" />, // Icono para el plan Free
+      price: "179.000"
     },
     {
-      title: "Plan Premium",
-      description: "Ideal para profesionales que buscan más control y herramientas avanzadas.",
-      features: ["Acceso a todo el contenido premium", "Preguntas ilimitadas", "Soporte prioritario 24/7", "Guarda tus preguntas favoritas"],
-      link: user ? "/inicio/comprar" : "/register?plan=premium",
-      buttonText: "Contratar Premium",
+      title: "Plan Invierno",
+      description: "Desde el 1 de febrero hasta el día del segundo examen parcial.",
+      features: ["Todo el contenido del 1er y 2do Parcial.", "Banco completo de preguntas", "Ideal para quienes buscan continuidad"],
+      link: `/register?plan=${formatStringForUrl("Plan Invierno")}`,
+      buttonText: "Adquirir plan",
       planRole: "Suscriptor",
-      icon: <FaCrown className="text-primary" />, // Icono para el plan Premium
+      price:"329.000"
+    },
+    {
+      title: "Plan Completo 3x3",
+      description: " Desde el 1 de febrero hasta el día del tercer examen parcial.",
+      features: ["Recursos para los 3 parciales.", "Banco completo de preguntas", "Simulacros interactivos"],
+      link: `/register?plan=${formatStringForUrl("Plan Completo 3x3")}`,
+      buttonText: "Adquirir plan",
+      planRole: "Suscriptor",
+      price:"439.000"
+    },
+    {
+      title: "Plan Premium Anual",
+      description: "Desde el 1 de febrero hasta el día del examen final.",
+      features: ["Todo el contenido de los 3 parciales.", "Recursos exclusivos", "Simulacros para el examen final."],
+      link: `/register?plan=${formatStringForUrl("Plan Premium Anual")}`,
+      buttonText: "Adquirir plan",
+      planRole: "Suscriptor",
+      price:"549.000"
     },
   ];
 
@@ -41,6 +60,7 @@ export const PlansGrid = ({ user }) => {
           currentPlan={user?.role === plan.planRole} // Aplicar contorno y etiqueta si coincide con el rol
           disabled={isFreeAcquired && plan.planRole === "Visitante" || isPremiumAcquired} // Deshabilitar según el rol
           icon={plan.icon} // Pasar el ícono al componente
+          price={plan.price}
         />
       ))}
     </div>

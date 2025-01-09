@@ -38,9 +38,13 @@ export const FormEditUser = ({ user }) => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-xs rounded-lg shadow-sm bg-white p-6"
     >
-      <p className="text-center text-gray-500 text-sm mb-4 flex flex-col gap-[6px] items-center justify-center">
+      {/* <p className="text-center text-gray-500 text-sm mb-4 flex flex-col gap-[6px] items-center justify-center">
         Plan {user.role === "Suscriptor" ? "Premium" : "Free"}
         <Link href="/inicio/planes" className="bg-primary py-1 px-2 rounded text-white">Renovar</Link>
+      </p> */}
+      <p className="text-center text-gray-500 mb-4 flex flex-col gap-[6px] items-center justify-center">
+        Plan Básico
+        <Link href="/inicio/planes" className="bg-primary py-1 px-2 rounded text-white">Ver plan</Link>
       </p>
 
       {/* Email */}
@@ -92,7 +96,7 @@ export const FormEditUser = ({ user }) => {
       </div>
 
       {/* Botón Guardar */}
-      <button
+      {/* <button
         type="submit"
         className={`bg-primary text-white py-2 px-4 rounded-lg w-full mt-6 transition-opacity duration-150 ${
           isDirty ? "opacity-100" : "opacity-50"
@@ -100,7 +104,7 @@ export const FormEditUser = ({ user }) => {
         disabled={!isDirty || isSubmitting}
       >
         Guardar
-      </button>
+      </button> */}
 
       {/* Botón Suscribirse */}
       {user.role === "Free" && (

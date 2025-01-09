@@ -37,7 +37,7 @@ export const SidebarAdmin = () => {
     { path: "/admin/preguntas", label: "Preguntas", icon: <IoHelpCircleSharp /> },
     { path: "/admin/usuarios", label: "Usuarios", icon: <IoPersonSharp /> },
     { path: "/admin/comentarios", label: "Comentarios", icon: <IoChatbox /> },
-    { path: "/admin/suscripciones", label: "Suscripciones", icon: <IoCardSharp /> },
+    { path: "/admin/planes", label: "Planes", icon: <IoCardSharp /> },
     { path: "/admin/pagos", label: "Pagos", icon: <IoWalletSharp /> },
   ];
 

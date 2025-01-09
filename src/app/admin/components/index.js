@@ -20,7 +20,6 @@ export * from "./Tables/TableTemas.jsx";
 export * from "./Tables/TableSubTemas";
 export * from "./Tables/TablePreguntas";
 export * from "./Tables/TableUsers";
-export * from "./Tables/TableSuscriptions";
 export * from "./Tables/TablePayments";
 export * from "./Tables/TableComentarios";
 
@@ -32,3 +31,4 @@ export * from "./Forms/FormEditPregunta";
 export * from "./Forms/FormEditModulo";
 export * from "./Forms/FormEditTema";
 export * from "./Forms/FormEditSubTema";
+
