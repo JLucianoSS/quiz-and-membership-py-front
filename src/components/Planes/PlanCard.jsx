@@ -1,7 +1,8 @@
 "use client"
+import { formatStringForUrl } from "@/utils/formatStringForUrl";
 import Link from "next/link";
 
-export const PlanCard = ({ title, description, features, link, buttonText, currentPlan, disabled, icon, price }) => {
+export const PlanCard = ({id, title, description, features, currentPlan, disabled, icon, price }) => {
   return (
     <div className={`bg-white p-8 shadow-lg rounded-md border md:px-12 md:py-14 ${currentPlan ? 'border-green-500 border-2' : 'border-gray-100'}`}>
       {/* Mostrar el ícono antes del título */}
@@ -28,11 +29,11 @@ export const PlanCard = ({ title, description, features, link, buttonText, curre
 
       {/* Condicional para deshabilitar el botón si el plan está adquirido */}
       <Link
-        href={link}
+        href={`/adquirir/plan/checkout/${id}`}
         className={`flex justify-center w-full max-w-full sm:max-w-[250px] ${disabled ? 'bg-gray-300 cursor-not-allowed' : 'bg-primary hover:bg-primary-dark'} text-white py-2 rounded-lg transition-all duration-300`}
         onClick={(e) => disabled && e.preventDefault()}
       >
-        {disabled ? "Adquirido" : buttonText}
+        {disabled ? "Adquirido" : "Adquirir Plan"}
       </Link>
     </div>
   );

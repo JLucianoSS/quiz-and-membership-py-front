@@ -1,51 +1,37 @@
 
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoAddCircle } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { Offcanvas2 } from "@/components";
 import { PaginationAdmin, SearchInputAdmin, TableActionsAdmin } from "..";
+import { extractDescriptionWithoutFeatures, extractFeaturesFromDescription } from "@/utils/extractDescription";
 import { FormAddPlans } from "../Forms/FormAddPlans";
+import { deletePlan, getPlanes } from "@/actions";
+import { FaBolt } from "react-icons/fa";
+import { useRedrawStore } from "@/store/redraw/useRedrawStore";
+import dayjs from "dayjs";
 
-
-// Mock data for plans
-const mockPlans = [
-  {
-    id: 1,
-    name: "Plan Básico",
-    type: "basic",
-    price: 0,
-    description: "Acceso desde el 1 de febrero hasta el día del primer examen parcial.",
-    features: [
-      "Banco completo de preguntas",
-      "simulacros interactivos",
-      "Material específico para el 1er Parcial"
-    ],
-    status: "active"
-  },
-  {
-    id: 2,
-    name: "Plan Premium",
-    type: "premium",
-    price: 99.99,
-    description: "Ideal para profesionales que buscan más control y herramientas avanzadas.",
-    features: [
-      "Acceso a todo el contenido premium",
-      "Preguntas ilimitadas",
-      "Soporte prioritario 24/7",
-      "Guarda tus preguntas favoritas"
-    ],
-    status: "active"
-  }
-];
-
-export const TablePlans = () => {
-  const [plans, setPlans] = useState(mockPlans);
+export const TablePlans = ({user}) => {
+  const [plans, setPlans] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [currentView, setCurrentView] = useState("table");
+  const { refreshTable, toggleRefreshTable } = useRedrawStore();
+
+  useEffect(() => {
+    const fetch = async() => {
+      try {
+        const respPlan = await getPlanes();
+        setPlans(respPlan.data.sort((a, b) => b.id_Plan - a.id_Plan));
+      } catch (error) {
+        console.log("Error al traer los planes: ",error);
+      }
+    }
+    fetch();
+  }, [refreshTable])
 
   const handleOpenOffcanvas = (plan = null) => {
     setSelectedPlan(plan);
@@ -59,17 +45,21 @@ export const TablePlans = () => {
 
   const handleDeletePlan = async (id) => {
     try {
-      // TODO: Implement API call
-      // await deletePlan(id);
-      setPlans(plans.filter(plan => plan.id !== id));
-      toast.success("Plan eliminado con éxito");
+      const respDeletePlan = await deletePlan(id);
+      if(respDeletePlan.success){
+        toast.success("Plan eliminado con éxito");
+        toggleRefreshTable();
+      }else{
+        toast.error("Error al eliminar el plan");
+        console.log(respDeletePlan.message);
+      }
     } catch (error) {
       toast.error("Error al eliminar el plan");
     }
   };
 
   const filteredPlans = plans.filter(plan =>
-    plan.name.toLowerCase().includes(searchTerm.toLowerCase())
+    plan.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const ITEMS_PER_PAGE = 10;
@@ -79,7 +69,35 @@ export const TablePlans = () => {
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
   const currentPlans = filteredPlans.slice(startIndex, endIndex);
 
-  const renderTable = () => (
+  const EmptyState = () => (
+    <div className="text-center py-12 px-4">
+      <div className="inline-block p-4 rounded-full bg-gray-100 mb-4">
+        <IoAddCircle size={40} className="text-gray-400" />
+      </div>
+      <h3 className="text-lg font-medium text-gray-900 mb-2">No hay planes disponibles</h3>
+      <p className="text-gray-500 mb-4">
+        {searchTerm 
+          ? "No se encontraron planes que coincidan con tu búsqueda" 
+          : "Comienza agregando tu primer plan"}
+      </p>
+      <button
+        onClick={() => handleOpenOffcanvas()}
+        className="inline-flex items-center text-sm gap-2 text-white bg-primary px-4 py-2 rounded-md hover:bg-primary/90"
+      >
+        <IoAddCircle size={20} />
+        <span>Agregar Plan</span>
+      </button>
+    </div>
+  );
+
+  const renderTable = () => {
+    if (currentPlans.length === 0) {
+      return <EmptyState />;
+    }
+    
+    
+    return (
+    
     <div className="overflow-x-auto">
       <table className="min-w-full border-collapse border border-gray-200">
         <thead className="bg-gray-100">
@@ -88,23 +106,23 @@ export const TablePlans = () => {
             <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Tipo</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Precio</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Estado</th>
+            <th className="border border-gray-300 px-4 py-2 text-left">Finaliza</th>
             <th className="border border-gray-300 px-4 py-2 text-left">Acciones</th>
           </tr>
         </thead>
         <tbody>
           {currentPlans.map((plan) => (
-            <tr key={plan.id} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{plan.id}</td>
-              <td className="border border-gray-300 px-4 py-2">{plan.name}</td>
-              <td className="border border-gray-300 px-4 py-2">{plan.type}</td>
-              <td className="border border-gray-300 px-4 py-2">${plan.price}</td>
-              <td className="border border-gray-300 px-4 py-2">{plan.status}</td>
+            <tr key={plan.id_Plan} className="hover:bg-gray-50">
+              <td className="border border-gray-300 px-4 py-2">{plan.id_Plan}</td>
+              <td className="border border-gray-300 px-4 py-2">{plan.nombre}</td>
+              <td className="border border-gray-300 px-4 py-2">{plan.tipo_plan}</td>
+              <td className="border border-gray-300 px-4 py-2">{plan.precio} PYG</td>
+              <td className="border border-gray-300 px-4 py-2">{dayjs(plan.fecha_fin).format('DD/MM/YYYY')}</td>
               <td className="border border-gray-300 px-4 py-2">
                 <TableActionsAdmin
-                  id={plan.id}
+                  id={plan.id_Plan}
                   onEdit={() => handleOpenOffcanvas(plan)}
-                  onDelete={handleDeletePlan}
+                  onDelete={()=> handleDeletePlan(plan.id_Plan)}
                   itemName="el plan"
                 />
               </td>
@@ -113,25 +131,31 @@ export const TablePlans = () => {
         </tbody>
       </table>
     </div>
-  );
+  );}
 
-  const renderGrid = () => (
+  const renderGrid = () => {
+
+    if (currentPlans.length === 0) {
+      return <EmptyState />;
+    }
+    
+    return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
       {currentPlans.map((plan) => (
-        <div key={plan.id} className="border rounded-lg p-6 shadow-md">
+        <div key={plan.id_Plan} className="border rounded-lg p-6 shadow-md">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-2xl font-bold">
-              {plan.name} {plan.type === "premium" ? "👑" : "⭐"}
+              {plan.nombre} {plan.tipo_plan === "Intensivo" ? <FaBolt/> : ""}
             </h3>
             {plan.price === 0 ? (
               <span className="text-xl font-semibold text-green-600">Gratis</span>
             ) : (
-              <span className="text-xl font-semibold">${plan.price}/mes</span>
+              <span className="text-xl font-semibold">${plan.precio} PYG</span>
             )}
           </div>
-          <p className="text-gray-600 mb-4">{plan.description}</p>
+          <p className="text-gray-600 mb-4">{extractDescriptionWithoutFeatures(plan.descripcion)}</p>
           <ul className="space-y-2">
-            {plan.features.map((feature, index) => (
+            {extractFeaturesFromDescription(plan.descripcion).map((feature, index) => (
               <li key={index} className="flex items-center">
                 <span className="text-green-500 mr-2">✓</span>
                 {feature}
@@ -145,12 +169,12 @@ export const TablePlans = () => {
                 : "border border-primary text-primary hover:bg-gray-50"
             }`}
           >
-            {plan.type === "premium" ? "Contratar Premium" : "Empezar gratis"}
+            {plan.type === "premium" ? "Contratar Premium" : "Adquirir Plan"}
           </button>
         </div>
       ))}
     </div>
-  );
+  );}
 
   return (
     <div className="mt-4">
@@ -218,6 +242,7 @@ export const TablePlans = () => {
         <FormAddPlans
           plan={selectedPlan}
           onClose={handleCloseOffcanvas}
+          user={user}
         />
       </Offcanvas2>
     </div>

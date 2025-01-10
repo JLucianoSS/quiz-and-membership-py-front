@@ -1,32 +1,52 @@
-
 "use client"
-import { useState } from 'react';
-import { FaCheckCircle, FaMoneyBillWave, FaQrcode } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { FaMoneyBillWave, FaQrcode } from 'react-icons/fa';
+import { buscarPlanPorId } from '@/data/plans';
+import { useRouter } from 'next/navigation';
 
-export const Checkout = () => {
+export const Checkout = ({ idPlan, user }) => {
   const [selectedPayment, setSelectedPayment] = useState('');
-  const [showThankYou, setShowThankYou] = useState(false);
+  const [plan, setPlan] = useState({});
+  const [loading, setLoading] = useState(false);
+  const router =  useRouter();
 
-  const planDetails = {
-    title: "Plan Premium AnatoPlus",
-    description: "Acceso ilimitado a la plataforma para responder preguntas",
-    features: [
-      "Preguntas ilimitadas",
-      "Acceso 24/7",
-      "Soporte personalizado",
-      "Material descargable"
-    ],
-    price: "99.99"
-  };
+  useEffect(() => {
+    setLoading(true);
+    const fetchPlan = () => {
+      try {
+        //CONSULTA PARA TRAER EL PLAN POR ID
+        const respPlan = buscarPlanPorId(idPlan)
+        setPlan(respPlan);
+       
+      } catch (error) {
+        console.log("Error al buscar el plan: ", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlan();
+  }, []); // Aquí estamos dependiendo de idPlan y pagos
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowThankYou(true);
+    //CONSULTA PARA CREAR EL PAGO POR EL PLAN DEL USUARIO ACTUAL
+    const nuevoPago = {
+      id_user: user.id_user,
+      id_plan: idPlan,
+      monto: plan.precio,
+      fecha_pago: new Date().toISOString(), // Current date and time
+      metodo_pago: selectedPayment,
+      estado: "pendiente", // Example status, could be 'pendiente', 'confirmado', etc.
+    };
+    // Logging the payment data
+    console.log("Datos para crear el pago:", nuevoPago);
+    // Aquí iría la lógica para crear el pago, como una llamada API o guardarlo en tu base de datos
+
+
+    router.push(`/adquirir/plan/thankyou/${idPlan}`)
   };
 
-  if (showThankYou) {
-    return <ThankYouPage paymentMethod={selectedPayment} />;
-  }
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -35,32 +55,23 @@ export const Checkout = () => {
           <h1 className="text-2xl font-bold mb-6">Resumen de tu compra</h1>
           
           <div className="space-y-6">
-            {/* Plan Details */}
+            {/* Detalles del plan */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold">{planDetails.title}</h2>
-              <p className="text-gray-600">{planDetails.description}</p>
-              
-              <div className="space-y-2">
-                {planDetails.features.map((feature, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <FaCheckCircle className="w-5 h-5 text-green-500" />
-                    <span>{feature}</span>
-                  </div>
-                ))}
-              </div>
+              <h2 className="text-xl font-semibold">{plan.nombre}</h2>
+              <p className="text-gray-600">{plan.descripcion}</p>
               
               <div className="text-2xl font-bold">
-                ${planDetails.price}
+                ${plan.precio}
               </div>
             </div>
 
-            {/* Payment Methods */}
+            {/* Métodos de pago */}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <h3 className="text-lg font-semibold mb-4">Métodos de pago</h3>
                 
                 <div className="space-y-4">
-                  {/* Transferencia Option */}
+                  {/* Opción Transferencia */}
                   <label className="block">
                     <div className={`flex items-center border rounded-lg p-4 cursor-pointer transition duration-200 ${selectedPayment === 'transferencia' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-200'}`}>
                       <input
@@ -83,7 +94,7 @@ export const Checkout = () => {
                     </div>
                   </label>
 
-                  {/* PIX Option */}
+                  {/* Opción PIX */}
                   <label className="block">
                     <div className={`flex items-center border rounded-lg p-4 cursor-pointer transition duration-200 ${selectedPayment === 'pix' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-200'}`}>
                       <input
@@ -119,33 +130,6 @@ export const Checkout = () => {
                 Confirmar Pago
               </button>
             </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ThankYouPage = ({ paymentMethod }) => {
-  return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-lg">
-        <div className="p-8 text-center space-y-6">
-          <FaCheckCircle className="w-16 h-16 text-green-500 mx-auto" />
-          <h1 className="text-2xl font-bold">¡Gracias por tu compra!</h1>
-          <p className="text-gray-600">
-            Tu acceso será activado una vez que recibamos la confirmación de tu pago.
-          </p>
-          
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <p className="text-sm text-gray-600">
-              No olvides adjuntar la captura de tu pago para agilizar el proceso de activación.
-              Puedes enviarla a través de nuestro sistema de soporte.
-            </p>
-          </div>
-          
-          <div className="text-sm text-gray-500">
-            Método de pago seleccionado: {paymentMethod === 'transferencia' ? 'Transferencia bancaria' : 'PIX'}
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ export * from "./ui/HeaderQuiz";
 export * from "./ui/HeaderNoAccess";
 export * from "./ui/CustomToggle";
 export * from "./ui/Checkout";
+export * from "./ui/ThankYouPage";
 
 export * from "./CustomSwiper/CustomSwiper";
 

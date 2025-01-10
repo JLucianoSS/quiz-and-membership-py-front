@@ -1,18 +1,15 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { LOGO } from "@/config/theme";
 import { IoMailOutline, IoLockClosedOutline, IoEyeOff, IoEye, IoPersonOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { createUser } from "@/actions";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { CustomLoading } from "@/components";
 
 export const FormSignUp = () => {
-  const searchParams = useSearchParams()
   const {
     register,
     handleSubmit,
@@ -20,54 +17,38 @@ export const FormSignUp = () => {
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [plan, setPlan] = useState("free");
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      if (plan === "free") {
-        // Crear el usuario con rol de visitante
-        const resultCreate = await createUser({
-          username: data.firstName,
-          nombre:data.firstName,
-          apellido:data.lastName,
+      // Crear el usuario con rol de visitante
+      const resultCreate = await createUser({
+        username: data.firstName,
+        nombre:data.firstName,
+        apellido:data.lastName,
+        email:data.email,
+        password:data.password,
+        role: "Visitante"
+      });
+      if (resultCreate.success) {
+        // toast.success(resultCreate.message); // Muestra el mensaje de éxito del back
+        toast.success("Te has registrado correctamente");
+        /* INICIA SESIÓN */
+        const resultLogin = await signIn('credentials', {
+          redirect: false,
           email:data.email,
-          password:data.password,
-          role: "Visitante"
+          password:data.password
         });
-        if (resultCreate.success) {
-          // toast.success(resultCreate.message); // Muestra el mensaje de éxito del back
-          toast.success("Te has registrado correctamente");
-          /* INICIA SESIÓN */
-          const resultLogin = await signIn('credentials', {
-            redirect: false,
-            email:data.email,
-            password:data.password
-          });
+        if (resultLogin.ok) {
+          toast.success("Iniciando sesión...");
+          window.location.replace("/inicio");
           
-          if (resultLogin.ok) {
-            toast.success("Iniciando sesión...");
-            window.location.replace("/inicio");
-          } else {
-            toast.error("Error al iniciar sesión");
-            setLoading(false);
-          }
         } else {
-          toast.error(resultCreate.message); // Muestra el mensaje de error
+          toast.error("Error al iniciar sesión");
+          setLoading(false);
         }
-      } else if (plan === "premium") {
-        // Crear el usuario con rol premium
-        console.log({
-          username: data.firstName,
-          npmbre:data.firstName,
-          apellido:data.lastName,
-          email:data.email,
-          password:data.password,
-          role: "Suscriptor"
-        });
-        // await registerUser({ ...data, role: "premium" });
-        // toast.success("Registro exitoso, redirigiendo al pago");
-        // router.push("/inicio/comprar"); // Redirige a la vista de pago
+      } else {
+        toast.error(resultCreate.message); // Muestra el mensaje de error
       }
     } catch (error) {
       toast.error("Error durante el registro");
@@ -79,14 +60,6 @@ export const FormSignUp = () => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-
-  // Obtener el plan de los query parameters
-  useEffect(() => {
-    const queryPlan = searchParams.get("plan") || "free";
-    setPlan(queryPlan);
-  }, []);
-  
 
   return (
     <form 
