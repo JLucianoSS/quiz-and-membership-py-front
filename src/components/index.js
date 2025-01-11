@@ -26,6 +26,7 @@ export * from "./OffCanvas/OffCanvas2";
 export * from "./Planes/PlansGrid";
 export * from "./Planes/PlanCard";
 export * from "./Planes/PlansGridIntesive";
+export * from "./Planes/MyPlan";
 
 export * from "./ux/CustomLoading";
 export * from "./ux/AccessRestriction";

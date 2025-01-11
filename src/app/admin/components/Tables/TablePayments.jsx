@@ -23,8 +23,8 @@ export const TablePayments = () => {
       setLoading(true); // Inicia el loading
       try {
         const fetchedPayments = await getPagos();
-        setPayments(fetchedPayments.data);
-        setFilteredPayments(fetchedPayments.data); // Asegúrate de setear correctamente los pagos.
+        setPayments(fetchedPayments.data.sort((a, b) => b.id_Pago - a.id_Pago));
+        setFilteredPayments(fetchedPayments.data.sort((a, b) => b.id_Pago - a.id_Pago)); // Asegúrate de setear correctamente los pagos.
       } catch (error) {
         console.log(error);
       } finally {
@@ -147,7 +147,7 @@ export const TablePayments = () => {
                 <th className="border border-gray-300 px-4 py-2 text-left">Monto</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Usuario</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Plan</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Fecha</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Creado el</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Método de Pago</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Estado</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Acción</th>

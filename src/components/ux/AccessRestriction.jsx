@@ -2,10 +2,10 @@
 import Link from "next/link";
 import { HeaderNoAccess } from "..";
 
-export const AccessRestriction = ({isPlan}) => {
+export const AccessRestriction = ({isPlan, user}) => {
     return (
       <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col z-40">
-        <HeaderNoAccess />
+        <HeaderNoAccess user={user}/>
         <div className="flex-grow flex items-center justify-center">
           <div className="flex flex-col gap-4 justify-center bg-white p-8 rounded-lg shadow-lg max-w-md w-full m-4">
             <h2 className="text-2xl font-bold text-center text-gray-800">Acceso Restringido</h2>
