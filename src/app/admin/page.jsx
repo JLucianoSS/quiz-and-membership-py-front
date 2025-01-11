@@ -1,12 +1,16 @@
 import { Headerpage } from "@/components";
 import { AdminDashboard } from "./components";
-import { getPreguntas, getTemas, getUsers } from "@/actions";
+import { getComentarios, getPagos, getPlanes, getPreguntas, getTemas, getUsers } from "@/actions";
 
 export default async function AdminHomePage() {
 
   const users = await getUsers();
   const preguntas = await getPreguntas();
   const temas = await getTemas();
+  const planes = await getPlanes();
+  const pagos = await getPagos();
+  const comentarios = await getComentarios();
+  // const temas = await getTemas();
 
   // agregar más ..
 
@@ -17,7 +21,9 @@ export default async function AdminHomePage() {
         totalUsers={users.data.length}
         totalQuestions={preguntas.data.length}
         totalThemes={temas.data.length}
-        totalSubscriptions={0}
+        totalPlanes={planes.data.length}
+        totalComentarios={comentarios.data.length}
+        totalPlanesComprados={pagos.data.length}
       />
     </div>
   );

@@ -1,5 +1,4 @@
-
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import { IoAddCircle } from "react-icons/io5";
 import toast from "react-hot-toast";
@@ -12,26 +11,27 @@ import { FaBolt } from "react-icons/fa";
 import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 import dayjs from "dayjs";
 
-export const TablePlans = ({user}) => {
+export const TablePlans = ({ user }) => {
   const [plans, setPlans] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isOffcanvasOpen, setIsOffcanvasOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [currentView, setCurrentView] = useState("table");
+  const [planFilter, setPlanFilter] = useState("all");
   const { refreshTable, toggleRefreshTable } = useRedrawStore();
 
   useEffect(() => {
-    const fetch = async() => {
+    const fetch = async () => {
       try {
         const respPlan = await getPlanes();
         setPlans(respPlan.data.sort((a, b) => b.id_Plan - a.id_Plan));
       } catch (error) {
-        console.log("Error al traer los planes: ",error);
+        console.log("Error al traer los planes: ", error);
       }
-    }
+    };
     fetch();
-  }, [refreshTable])
+  }, [refreshTable]);
 
   const handleOpenOffcanvas = (plan = null) => {
     setSelectedPlan(plan);
@@ -46,10 +46,10 @@ export const TablePlans = ({user}) => {
   const handleDeletePlan = async (id) => {
     try {
       const respDeletePlan = await deletePlan(id);
-      if(respDeletePlan.success){
+      if (respDeletePlan.success) {
         toast.success("Plan eliminado con éxito");
         toggleRefreshTable();
-      }else{
+      } else {
         toast.error("Error al eliminar el plan");
         console.log(respDeletePlan.message);
       }
@@ -58,8 +58,9 @@ export const TablePlans = ({user}) => {
     }
   };
 
-  const filteredPlans = plans.filter(plan =>
-    plan.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPlans = plans.filter((plan) =>
+    plan.nombre.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (planFilter === "all" || plan.tipo_plan === planFilter)
   );
 
   const ITEMS_PER_PAGE = 10;
@@ -76,8 +77,8 @@ export const TablePlans = ({user}) => {
       </div>
       <h3 className="text-lg font-medium text-gray-900 mb-2">No hay planes disponibles</h3>
       <p className="text-gray-500 mb-4">
-        {searchTerm 
-          ? "No se encontraron planes que coincidan con tu búsqueda" 
+        {searchTerm
+          ? "No se encontraron planes que coincidan con tu búsqueda"
           : "Comienza agregando tu primer plan"}
       </p>
       <button
@@ -94,87 +95,83 @@ export const TablePlans = ({user}) => {
     if (currentPlans.length === 0) {
       return <EmptyState />;
     }
-    
-    
+
     return (
-    
-    <div className="overflow-x-auto">
-      <table className="min-w-full border-collapse border border-gray-200">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Tipo</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Precio</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Finaliza</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentPlans.map((plan) => (
-            <tr key={plan.id_Plan} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{plan.id_Plan}</td>
-              <td className="border border-gray-300 px-4 py-2">{plan.nombre}</td>
-              <td className="border border-gray-300 px-4 py-2">{plan.tipo_plan}</td>
-              <td className="border border-gray-300 px-4 py-2">{plan.precio} PYG</td>
-              <td className="border border-gray-300 px-4 py-2">{dayjs(plan.fecha_fin).format('DD/MM/YYYY')}</td>
-              <td className="border border-gray-300 px-4 py-2">
-                <TableActionsAdmin
-                  id={plan.id_Plan}
-                  onEdit={() => handleOpenOffcanvas(plan)}
-                  onDelete={()=> handleDeletePlan(plan.id_Plan)}
-                  itemName="el plan"
-                />
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse border border-gray-200">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Tipo</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Precio</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Finaliza</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );}
+          </thead>
+          <tbody>
+            {currentPlans.map((plan) => (
+              <tr key={plan.id_Plan} className="hover:bg-gray-50">
+                <td className="border border-gray-300 px-4 py-2">{plan.id_Plan}</td>
+                <td className="border border-gray-300 px-4 py-2">{plan.nombre}</td>
+                <td className="border border-gray-300 px-4 py-2">{plan.tipo_plan}</td>
+                <td className="border border-gray-300 px-4 py-2">{plan.precio} PYG</td>
+                <td className="border border-gray-300 px-4 py-2">{dayjs(plan.fecha_fin).format("DD/MM/YYYY")}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <TableActionsAdmin
+                    id={plan.id_Plan}
+                    onEdit={() => handleOpenOffcanvas(plan)}
+                    onDelete={() => handleDeletePlan(plan.id_Plan)}
+                    itemName="el plan"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   const renderGrid = () => {
-
     if (currentPlans.length === 0) {
       return <EmptyState />;
     }
-    
+
     return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-      {currentPlans.map((plan) => (
-        <div key={plan.id_Plan} className="border rounded-lg p-6 shadow-md">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-2xl font-bold">
-              {plan.nombre} {plan.tipo_plan === "Intensivo" ? <FaBolt/> : ""}
-            </h3>
-            {plan.price === 0 ? (
-              <span className="text-xl font-semibold text-green-600">Gratis</span>
-            ) : (
-              <span className="text-xl font-semibold">${plan.precio} PYG</span>
-            )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+        {currentPlans.map((plan) => (
+          <div key={plan.id_Plan} className="border rounded-lg p-6 shadow-md">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="flex items-center gap-2 text-2xl font-bold">
+                {plan.nombre} {plan.tipo_plan === "Intensivo" ? <FaBolt /> : ""}
+              </h3>
+              {plan.precio === 0 ? (
+                <span className="text-xl font-semibold text-green-600">Gratis</span>
+              ) : (
+                <span className="text-xl font-semibold">{plan.precio} PYG</span>
+              )}
+            </div>
+            <p className="text-gray-600 mb-4">{extractDescriptionWithoutFeatures(plan.descripcion)}</p>
+            <ul className="space-y-2">
+              {extractFeaturesFromDescription(plan.descripcion).map((feature, index) => (
+                <li key={index} className="flex items-center">
+                  <span className="text-green-500 mr-2">✓</span>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => handleOpenOffcanvas(plan)}
+              className="w-full mt-6 px-4 py-2 rounded-md border border-primary text-primary hover:bg-gray-50"
+            >
+              Editar
+            </button>
           </div>
-          <p className="text-gray-600 mb-4">{extractDescriptionWithoutFeatures(plan.descripcion)}</p>
-          <ul className="space-y-2">
-            {extractFeaturesFromDescription(plan.descripcion).map((feature, index) => (
-              <li key={index} className="flex items-center">
-                <span className="text-green-500 mr-2">✓</span>
-                {feature}
-              </li>
-            ))}
-          </ul>
-          <button 
-            className={`w-full mt-6 px-4 py-2 rounded-md ${
-              plan.type === "premium" 
-                ? "bg-primary text-white hover:bg-primary/90" 
-                : "border border-primary text-primary hover:bg-gray-50"
-            }`}
-          >
-            {plan.type === "premium" ? "Contratar Premium" : "Adquirir Plan"}
-          </button>
-        </div>
-      ))}
-    </div>
-  );}
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="mt-4">
@@ -190,9 +187,7 @@ export const TablePlans = ({user}) => {
           <button
             onClick={() => setCurrentView("table")}
             className={`px-4 py-2 rounded-md ${
-              currentView === "table"
-                ? "bg-primary text-white"
-                : "border border-gray-300 hover:bg-gray-50"
+              currentView === "table" ? "bg-primary text-white" : "border border-gray-300 hover:bg-gray-50"
             }`}
           >
             Vista Tabla
@@ -200,12 +195,37 @@ export const TablePlans = ({user}) => {
           <button
             onClick={() => setCurrentView("grid")}
             className={`px-4 py-2 rounded-md ${
-              currentView === "grid"
-                ? "bg-primary text-white"
-                : "border border-gray-300 hover:bg-gray-50"
+              currentView === "grid" ? "bg-primary text-white" : "border border-gray-300 hover:bg-gray-50"
             }`}
           >
             Vista Grid
+          </button>
+        </div>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setPlanFilter("all")}
+            className={`px-4 py-2 rounded-md ${
+              planFilter === "all" ? "bg-primary text-white" : "border border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            Todos
+          </button>
+          <button
+            onClick={() => setPlanFilter("Basico")}
+            className={`px-4 py-2 rounded-md ${
+              planFilter === "Basico" ? "bg-primary text-white" : "border border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            Básico
+          </button>
+          <button
+            onClick={() => setPlanFilter("Intensivo")}
+            className={`px-4 py-2 rounded-md ${
+              planFilter === "Intensivo" ? "bg-primary text-white" : "border border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            Intensivo
           </button>
         </div>
 
@@ -247,4 +267,4 @@ export const TablePlans = ({user}) => {
       </Offcanvas2>
     </div>
   );
-}
+};

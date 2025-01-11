@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaMoneyBillWave, FaQrcode } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { createPago, getPlanById } from "@/actions";
-import { CustomLoading } from "..";
+import { CustomLoading, Headerpage } from "..";
 import toast from "react-hot-toast";
 
 export const Checkout = ({ idPlan, user }) => {
@@ -70,6 +70,7 @@ export const Checkout = ({ idPlan, user }) => {
 
   return (
     <div className="max-w-full sm:max-w-2xl mx-auto p-6">
+      <Headerpage titulo="Regresar a planes"/>
       <div className="bg-white rounded-lg shadow-lg">
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-6">Resumen de tu compra</h1>
