@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { HeaderNoAccess } from "..";
 
-export const AccessRestriction = () => {
+export const AccessRestriction = ({isPlan}) => {
     return (
       <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex flex-col z-40">
         <HeaderNoAccess />
@@ -18,7 +18,7 @@ export const AccessRestriction = () => {
                 href="adquirir/plan"
                 className="bg-primary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               >
-                Comprar un plan
+                {isPlan ? "Ver plan" :"Comprar un plan"}
               </Link>
             </div>
 

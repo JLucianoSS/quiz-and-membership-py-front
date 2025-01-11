@@ -7,7 +7,7 @@ export const planes = [
     fecha_inicio: "2025-02-01",
     fecha_fin: "2025-03-15",
     precio: "179.000",
-    tipo_de_plan: "Plan Básico",
+    tipo_de_plan: "Basico",
   },
   {
     id_plan: 2,
@@ -17,7 +17,7 @@ export const planes = [
     fecha_inicio: "2025-02-01",
     fecha_fin: "2025-06-15",
     precio: "329.000",
-    tipo_de_plan: "Plan Básico",
+    tipo_de_plan: "Basico",
   },
   {
     id_plan: 3,
@@ -27,7 +27,7 @@ export const planes = [
     fecha_inicio: "2025-02-01",
     fecha_fin: "2025-09-15",
     precio: "439.000",
-    tipo_de_plan: "Plan Básico",
+    tipo_de_plan: "Basico",
   },
   {
     id_plan: 4,
@@ -37,7 +37,7 @@ export const planes = [
     fecha_inicio: "2025-02-01",
     fecha_fin: "2025-12-20",
     precio: "549.000",
-    tipo_de_plan: "Plan Básico",
+    tipo_de_plan: "Basico",
   },
   {
     id_plan: 5, // Cambié el id para hacerlo único
@@ -47,7 +47,7 @@ export const planes = [
     fecha_inicio: "2025-03-01",
     fecha_fin: "2025-03-15",
     precio: "99.000",
-    tipo_de_plan: "Plan Intensivo",
+    tipo_de_plan: "Intensivo",
   },
   {
     id_plan: 6, // Cambié el id para hacerlo único
@@ -57,7 +57,7 @@ export const planes = [
     fecha_inicio: "2025-06-01",
     fecha_fin: "2025-06-15",
     precio: "99.000",
-    tipo_de_plan: "Plan Intensivo",
+    tipo_de_plan: "Intensivo",
   },
   {
     id_plan: 7, // Cambié el id para hacerlo único
@@ -67,7 +67,7 @@ export const planes = [
     fecha_inicio: "2025-09-01",
     fecha_fin: "2025-09-15",
     precio: "99.000",
-    tipo_de_plan: "Plan Intensivo",
+    tipo_de_plan: "Intensivo",
   },
   {
     id_plan: 8, // Cambié el id para hacerlo único
@@ -77,7 +77,7 @@ export const planes = [
     fecha_inicio: "2025-12-05",
     fecha_fin: "2025-12-20",
     precio: "150.000",
-    tipo_de_plan: "Plan Intensivo",
+    tipo_de_plan: "Intensivo",
   },
 ];
 

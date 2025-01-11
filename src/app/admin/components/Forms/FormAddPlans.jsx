@@ -122,8 +122,8 @@ export const FormAddPlans = ({ plan, onClose, user }) => {
           onChange={(e) => setFormData({ ...formData, tipo_plan: e.target.value })}
           className="w-full p-2 border rounded"
         >
-          <option value="basic">Básico</option>
-          <option value="premium">Intensivo</option>
+          <option value="Basico">Básico</option>
+          <option value="Intensivo">Intensivo</option>
         </select>
       </div>
 

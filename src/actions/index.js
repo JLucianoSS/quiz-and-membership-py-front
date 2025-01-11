@@ -48,10 +48,13 @@ export { getComentarios } from "./comentarios/getComentarios";
 export { deleteComentario } from "./comentarios/deleteComentario";
 
 export { getPagos } from "./pago/getPagos";
+export { createPago } from "./pago/createPago";
+export { updatePago } from "./pago/updatePago";
 
 export { getPlanes } from "./planes/getPlanes";
 export { deletePlan } from "./planes/deletePlan";
 export { createPlan } from "./planes/createPlan";
 export { updatePlan } from "./planes/updatePlan";
+export { getPlanById } from "./planes/getPlanById";
 
 export { loginUser } from "./auth/login";

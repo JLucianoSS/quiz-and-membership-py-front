@@ -13,6 +13,11 @@ export default async function HomeLayout({ children }) {
   const resp = await getUserById(session?.user?.id);
   const userData = resp?.data;
 
+  const pagos = resp?.data?.pagos || [];
+  
+  // Verificar si el usuario tiene algún pago pendiente o completado
+  const usuarioYaPago = pagos.some(pago => pago.estado === "pendiente" || pago.estado === "completado");
+
   // Verificar si el usuario está aprobado o es administrador
   const isAdmin = userData?.role === 'Administrador';
   const isUserApproved = userData?.is_approved;
@@ -32,7 +37,7 @@ export default async function HomeLayout({ children }) {
           <Sidebar user={userData} />
         </>
       ) : (
-        <AccessRestriction />
+        <AccessRestriction isPlan={usuarioYaPago}/>
       )}
     </>
   );
