@@ -7,23 +7,14 @@ import toast from 'react-hot-toast';
 
 const ITEMS_PER_PAGE = 10;
 
-/** Componente de tabla para mostrar y gestionar usuarios */
 export const TableUsers = ({ users: initialUsers }) => {
-  // Estado para loading
   const [loading, setLoading] = useState(true);
-  
-  // Estados para datos
   const [users, setUsers] = useState(initialUsers);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  
-  // Estados para filtros y búsqueda
   const [searchTerm, setSearchTerm] = useState("");
-  const [planFilter, setPlanFilter] = useState("");
-  
-  // Estado para paginación
+  const [approvalFilter, setApprovalFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Efecto para inicialización
   useEffect(() => {
     if (initialUsers) {
       setUsers(initialUsers);
@@ -31,27 +22,33 @@ export const TableUsers = ({ users: initialUsers }) => {
     }
   }, [initialUsers]);
 
-  // Efecto para filtrado y búsqueda
   useEffect(() => {
     filterAndSearchUsers();
-  }, [searchTerm, planFilter, users]);
+  }, [searchTerm, approvalFilter, users]);
 
-  // Efecto para resetear página cuando cambian los filtros
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, planFilter]);
+  }, [searchTerm, approvalFilter]);
 
-  /**
-   * Filtra y busca usuarios basado en los criterios seleccionados
-   */
+  const getCurrentPlan = (user) => {
+    if (!user.pagos || user.pagos.length === 0) return "Sin plan activo";
+    
+    const currentDate = new Date();
+    const activePlan = user.pagos.find(pago => 
+      new Date(pago.plan.fecha_fin) > currentDate
+    );
+
+    return activePlan ? activePlan.plan.nombre : "Sin plan activo";
+  };
+
   const filterAndSearchUsers = () => {
     let updatedUsers = [...users];
 
-    // Filtro por plan
-    if (planFilter === "free") {
-      updatedUsers = updatedUsers.filter((user) => user.role === "Visitante");
-    } else if (planFilter === "premium") {
-      updatedUsers = updatedUsers.filter((user) => user.role === "Suscriptor");
+    // Filtro por aprobación
+    if (approvalFilter === "approved") {
+      updatedUsers = updatedUsers.filter((user) => user.is_approved === true);
+    } else if (approvalFilter === "not_approved") {
+      updatedUsers = updatedUsers.filter((user) => !user.is_approved);
     }
 
     // Búsqueda por texto
@@ -64,12 +61,10 @@ export const TableUsers = ({ users: initialUsers }) => {
       );
     }
 
-    // Ordenar por ID de mayor a menor
     updatedUsers.sort((a, b) => b.id_user - a.id_user);
     setFilteredUsers(updatedUsers);
   };
 
-  // Cálculos para paginación
   const totalItems = filteredUsers.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -81,9 +76,6 @@ export const TableUsers = ({ users: initialUsers }) => {
     setCurrentPage(1);
   };
 
-  /**
-   * Maneja el cambio de estado de aprobación de un usuario
-   */
   const handleApprovalToggle = async (userId, currentApprovalState) => {
     try {
       const result = await updateUsuario(userId, { is_approved: !currentApprovalState });
@@ -110,7 +102,6 @@ export const TableUsers = ({ users: initialUsers }) => {
   return (
     <div className="">
       <div className="mb-4 space-y-4 md:space-y-0 md:flex md:items-center md:space-x-4">
-        {/* Buscador */}
         <SearchInputAdmin
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
@@ -118,21 +109,19 @@ export const TableUsers = ({ users: initialUsers }) => {
           onClear={clearSearch}
         />
 
-        {/* Filtro por plan */}
         <div className="md:w-1/4">
           <select
             className="border p-2 rounded-md w-full"
-            value={planFilter}
-            onChange={(e) => setPlanFilter(e.target.value)}
+            value={approvalFilter}
+            onChange={(e) => setApprovalFilter(e.target.value)}
           >
-            <option value="">Todos los planes</option>
-            <option value="free">Plan Free</option>
-            <option value="premium">Plan Premium</option>
+            <option value="">Todos los usuarios</option>
+            <option value="approved">Aprobados</option>
+            <option value="not_approved">Registrados</option>
           </select>
         </div>
       </div>
 
-      {/* Tabla de usuarios */}
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse border border-gray-200">
           <thead className="bg-gray-100">
@@ -141,7 +130,7 @@ export const TableUsers = ({ users: initialUsers }) => {
               <th className="border border-gray-300 px-4 py-2 text-left">Nombre</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Apellido</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Correo</th>
-              <th className="border border-gray-300 px-4 py-2 text-left">Plan</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Plan Activo</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Aprobado</th>
             </tr>
           </thead>
@@ -154,7 +143,7 @@ export const TableUsers = ({ users: initialUsers }) => {
                   <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
                   <td className="border border-gray-300 px-4 py-2">{user.email}</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {user.role === "Visitante" ? "Free" : user.role === "Administrador" ? "Admin" : "Premium"}
+                    {getCurrentPlan(user)}
                   </td>
                   <td className="border border-gray-300 px-4 py-2">
                     <CustomToggle
@@ -175,7 +164,6 @@ export const TableUsers = ({ users: initialUsers }) => {
         </table>
       </div>
 
-      {/* Paginación */}
       {filteredUsers.length > 0 && (
         <PaginationAdmin
           currentPage={currentPage}
