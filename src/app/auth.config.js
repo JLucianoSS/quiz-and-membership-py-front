@@ -30,36 +30,27 @@ export const authOptions = {
           const userData = await getUserById(result.user.id_user);
 
           if (userData) {
-            return {
-              id: result.user.id_user,
-              name: `${result.user.nombre}`,
-              email: result.user.email,
-            };
+            if (userData.data.role === "Administrador") {
+              return {
+                id: result.user.id_user,
+                name: `${result.user.nombre}`,
+                email: result.user.email,
+              };
+            } else {
+              if(userData.data.is_user_active){
+                throw new Error('Ya existe una sesión activa');
+              }else{
+                await updateUsuario(result.user.id_user, {
+                  is_user_active: true
+                });
+                return {
+                  id: result.user.id_user,
+                  name: `${result.user.nombre}`,
+                  email: result.user.email,
+                };
+              }
+            }
           }
-
-          // Permitir múltiples sesiones si el usuario es "Administrador"
-          // if (userData.data.role === "Administrador") {
-          //   return {
-          //     id: result.user.id_user,
-          //     name: `${result.user.nombre}`,
-          //     email: result.user.email,
-          //   };
-          // }
-
-          // // Si no hay usuario activo, activar la sesión para este usuario
-          // if (!userData.data.is_user_active) {
-          //   await updateUsuario(result.user.id_user, {
-          //     is_user_active: true
-          //   });
-            
-          //   return {
-          //     id: result.user.id_user,
-          //     name: `${result.user.nombre}`,
-          //     email: result.user.email,
-          //   };
-          // } else {
-          //   throw new Error('Ya existe una sesión activa');
-          // }
         }
 
         return null;

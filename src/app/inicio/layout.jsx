@@ -31,9 +31,9 @@ export default async function HomeLayout({ children }) {
     });
 
     // Si no hay plan activo y el usuario está activo, actualizamos su estado
-    if (!planActivo && userData?.is_user_active) {
+    if (!planActivo && userData?.is_approved) {
       try {
-        await updateUsuario(session?.user?.id, { is_user_active: false });
+        await updateUsuario(session?.user?.id, { is_approved: false });
       } catch (error) {
         console.error("Error al actualizar el estado del usuario:", error);
       }
