@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import Link from "next/link";
 import { LOGO } from "@/config/theme";
 import { IoMailOutline, IoLockClosedOutline, IoEyeOff, IoEye, IoPersonOutline } from "react-icons/io5";
@@ -27,6 +27,7 @@ export const FormSignUp = () => {
         nombre:data.firstName,
         apellido:data.lastName,
         email:data.email,
+        is_user_active:false,
         password:data.password,
         role: "Visitante"
       });
@@ -39,6 +40,13 @@ export const FormSignUp = () => {
           email:data.email,
           password:data.password
         });
+        // console.log(resultLogin);
+        // console.log({
+        //   redirect: false,
+        //   email:data.email,
+        //   password:data.password
+        // });
+
         if (resultLogin.ok) {
           toast.success("Iniciando sesión...");
           window.location.replace("/inicio");
@@ -51,7 +59,8 @@ export const FormSignUp = () => {
         toast.error(resultCreate.message); // Muestra el mensaje de error
       }
     } catch (error) {
-      toast.error("Error durante el registro");
+      toast.error("Error durante el registro", error.message);
+      // console.log(error.message);
     } finally {
       setLoading(false);
     }
