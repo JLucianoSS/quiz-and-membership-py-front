@@ -1,9 +1,10 @@
-"use client";
+"use client"
 import { useState, useEffect } from "react";
 import { updateUsuario } from '@/actions';
 import { CustomLoading, CustomToggle } from "@/components";
 import { PaginationAdmin, SearchInputAdmin } from "..";
 import toast from 'react-hot-toast';
+import { FaPowerOff } from "react-icons/fa"; // Ícono para cerrar sesión
 
 const ITEMS_PER_PAGE = 10;
 
@@ -95,6 +96,28 @@ export const TableUsers = ({ users: initialUsers }) => {
     }
   };
 
+  const handleCloseSession = async (userId) => {
+    const confirmClose = window.confirm("¿Estás seguro de que deseas cerrar la sesión de este usuario?");
+    if (confirmClose) {
+      try {
+        const result = await updateUsuario(userId, { is_user_active: false });
+        if (result.success) {
+          setUsers(users.map(user => 
+            user.id_user === userId 
+              ? { ...user, is_user_active: false }
+              : user
+          ));
+          toast.success("Sesión cerrada exitosamente");
+        } else {
+          toast.error(result.message);
+        }
+      } catch (error) {
+        console.error('Error al cerrar la sesión:', error);
+        toast.error('Ocurrió un error al cerrar la sesión');
+      }
+    }
+  };
+
   if (loading) {
     return <CustomLoading className="h-[200px]" height={28} width={28}/>;
   }
@@ -132,6 +155,7 @@ export const TableUsers = ({ users: initialUsers }) => {
               <th className="border border-gray-300 px-4 py-2 text-left">Correo</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Plan Activo</th>
               <th className="border border-gray-300 px-4 py-2 text-left">Aprobado</th>
+              <th className="border border-gray-300 px-4 py-2 text-left">Sesión Activa</th>
             </tr>
           </thead>
           <tbody>
@@ -151,11 +175,29 @@ export const TableUsers = ({ users: initialUsers }) => {
                       onChange={() => handleApprovalToggle(user.id_user, user.is_approved)}
                     />
                   </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    <div className="flex items-center space-x-2">
+                      {user.is_user_active ? (
+                        <>
+                          <span className="text-green-500">Activa</span>
+                          <button
+                            onClick={() => handleCloseSession(user.id_user)}
+                            className="text-green-500 hover:text-green-700"
+                            title="Cerrar sesión"
+                          >
+                            <FaPowerOff />
+                          </button>
+                        </>
+                      ) : (
+                        <span className="text-red-500">Inactiva</span>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-center text-gray-500 py-4">
+                <td colSpan="7" className="text-center text-gray-500 py-4">
                   No se encontraron usuarios con los criterios seleccionados.
                 </td>
               </tr>
