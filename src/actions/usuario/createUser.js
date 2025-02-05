@@ -3,7 +3,7 @@
 
 export const createUser = async (userData) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
