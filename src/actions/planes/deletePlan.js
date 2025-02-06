@@ -14,9 +14,9 @@ export const deletePlan = async (idPlan) => {
       const result = await response.json();
   
       // Verificamos el statusCode retornado por el backend
-      if (result.statusCode !== 204) {
-        throw new Error(result.message || 'Error al eliminar el plan');
-      }
+      // if (result.statusCode !== 204) {
+      //   throw new Error(result.message || 'Error al eliminar el plan');
+      // }
   
       return {
         success: true,

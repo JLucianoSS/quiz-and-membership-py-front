@@ -30,12 +30,22 @@ export default async function HomeLayout({ children }) {
       return currentDate <= planEndDate;
     });
 
-    // Si no hay plan activo y el usuario está activo, actualizamos su estado
-    if (!planActivo && userData?.is_approved) {
-      try {
-        await updateUsuario(session?.user?.id, { is_approved: false });
-      } catch (error) {
-        console.error("Error al actualizar el estado del usuario:", error);
+    // Si no hay plan activo y el usuario está aprobado, verificamos si el admin lo activó manualmente
+    if (!planActivo) {
+      const ultimoPago = sortedPagos[0]; // El último plan registrado
+      const fechaFinUltimoPlan = ultimoPago ? new Date(ultimoPago.plan.fecha_fin) : null;
+
+      if (userData?.is_approved && fechaFinUltimoPlan) {
+        // Si el admin lo activó manualmente, no lo desactivamos hasta que acabe su último plan
+        if (currentDate <= fechaFinUltimoPlan) {
+          return true; // Se mantiene activo hasta la fecha de fin del último plan
+        } else {
+          try {
+            await updateUsuario(session?.user?.id, { is_approved: false });
+          } catch (error) {
+            console.error("Error al actualizar el estado del usuario:", error);
+          }
+        }
       }
     }
 

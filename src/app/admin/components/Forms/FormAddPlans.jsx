@@ -9,7 +9,7 @@ import { useRedrawStore } from "@/store/redraw/useRedrawStore";
 export const FormAddPlans = ({ plan, onClose, user }) => {
   const [formData, setFormData] = useState({
     nombre: "",
-    tipo_plan: "Básico",
+    tipo_plan: "Basico",
     precio: 0,
     descripcion: "",
     fecha_inicio: "",
