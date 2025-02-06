@@ -56,7 +56,7 @@ export const FormSignUp = () => {
           setLoading(false);
         }
       } else {
-        toast.error(resultCreate.message+"dsadsad"); // Muestra el mensaje de error
+        toast.error(resultCreate.message); // Muestra el mensaje de error
       }
     } catch (error) {
       toast.error("Error durante el registro", error.message);

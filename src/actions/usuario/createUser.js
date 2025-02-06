@@ -18,10 +18,10 @@ export const createUser = async (userData) => {
       
   
       // Verificamos el statusCode retornado por el backend
-      // if (result.statusCode !== 201) {
-      //   // Si no se creó el usuario correctamente, lanzamos un error con los mensajes del backend
-      //   throw new Error(result.message || 'Error al crear el usuario');
-      // }
+      if (result.error) {
+        // Si no se creó el usuario correctamente, lanzamos un error con los mensajes del backend
+        throw new Error(result.message || 'Error al crear el usuario');
+      }
   
       // Si todo salió bien, retornamos los datos del usuario creado
       return {
