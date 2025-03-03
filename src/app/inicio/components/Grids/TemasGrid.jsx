@@ -16,11 +16,8 @@ export const TemasGrid = ({ temas }) => {
       .toLowerCase();
   };
 
-  // Ordenar los temas por ID de mayor a menor
-  const sortedTemas = [...temas].sort((a, b) => b.id_tema - a.id_tema);
-
   // Filtrar temas según el término de búsqueda
-  const filteredTemas = sortedTemas.filter((tema) =>
+  const filteredTemas = temas.filter((tema) =>
     normalizeText(tema.nombre_tema).includes(normalizeText(searchTerm))
   );
 

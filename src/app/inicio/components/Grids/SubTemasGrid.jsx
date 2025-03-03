@@ -16,11 +16,8 @@ export const SubTemasGrid = ({ subtemas }) => {
       .toLowerCase();
   };
 
-  // Ordenar los subtemas por ID de mayor a menor
-  const sortedSubTemas = [...subtemas].sort((a, b) => b.id_subtema - a.id_subtema);
-
   // Filtrar subtemas según el término de búsqueda
-  const filteredSubTemas = sortedSubTemas.filter((subtema) =>
+  const filteredSubTemas = subtemas.filter((subtema) =>
     normalizeText(subtema.nombre_subtema).includes(normalizeText(searchTerm))
   );
 
