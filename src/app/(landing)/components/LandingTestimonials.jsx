@@ -36,8 +36,12 @@ export const LandingTestimonials = () => {
     autoplay: { delay: 5000 }, // Activa el autoplay
     pagination: { clickable: true }, // Muestra los puntos de paginación
     breakpoints: {
-      640: {
+      0: {
         slidesPerView: 1, // 1 slide en pantallas móviles
+        spaceBetween: 20,
+      },
+      540: {
+        slidesPerView: 2, // 1 slide en pantallas móviles
         spaceBetween: 20,
       },
       768: {
