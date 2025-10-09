@@ -64,7 +64,7 @@ export default async function PreguntasLayout({ children }) {
   const hasAccess = isAdmin || isUserApproved;
 
   if (!hasAccess) {
-    return <AccessRestriction isPlan={isPlanActivo} user={resp.data}/>;
+    return <AccessRestriction isPlan={isPlanActivo} user={userData}/>;
   }
 
   return (

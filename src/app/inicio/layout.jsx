@@ -74,7 +74,7 @@ export default async function HomeLayout({ children }) {
           <Sidebar user={userData} />
         </>
       ) : (
-        <AccessRestriction isPlan={isPlanActivo} user={resp.data}/>
+        <AccessRestriction isPlan={isPlanActivo} user={userData}/>
       )}
     </>
   );

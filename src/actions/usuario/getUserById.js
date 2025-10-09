@@ -1,9 +1,11 @@
 "use server"
 
-export const getUserById = async (idUser) => {
+import { apiClient } from "@/utils/apiClient";
+
+export const getUserById = async (idUser, options = {}) => {
     try {
-      // Realizamos la petición al backend externo
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${ idUser }`, {
+      // Temporalmente usar el método original hasta que el backend esté funcionando
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${idUser}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

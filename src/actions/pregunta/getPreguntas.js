@@ -1,8 +1,10 @@
 "use server"
 
-export const getPreguntas = async () => {
+import { apiClient } from "@/utils/apiClient";
+
+export const getPreguntas = async (options = {}) => {
     try {
-      // Realizamos la petición al backend externo
+      // Temporalmente usar el método original hasta que el backend esté funcionando
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pregunta`, {
         method: 'GET',
         headers: {

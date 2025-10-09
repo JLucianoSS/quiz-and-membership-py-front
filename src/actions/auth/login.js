@@ -4,10 +4,19 @@ import { apiClient } from "@/utils/apiClient";
 
 export const loginUser = async (credentials) => {
   try {
-    const result = await apiClient.post('/auth/login', credentials);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    // Convertimos la respuesta en JSON
+    const result = await response.json();
 
     // Verificamos si la respuesta es exitosa
-    if (result.message === "Login exitoso") {
+    if (response.ok && result.message === "Login exitoso") {
       // Si el login fue exitoso, retornamos los datos del usuario
       return {
         success: true,
