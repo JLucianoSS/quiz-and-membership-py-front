@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Optimizaciones de rendimiento */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-display: swap; /* Mejora la carga de fuentes */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Preload de recursos críticos */
+.preload-critical {
+  font-display: swap;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

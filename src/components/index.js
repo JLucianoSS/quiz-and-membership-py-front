@@ -31,6 +31,7 @@ export * from "./Planes/MyPlan";
 export * from "./ux/CustomLoading";
 export * from "./ux/AccessRestriction";
 
+export * from "./ui/LoadingSpinner";
 
 export * from "./HOC/InactivityProvider";
 
