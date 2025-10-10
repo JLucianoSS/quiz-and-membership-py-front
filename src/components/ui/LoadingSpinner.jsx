@@ -43,3 +43,4 @@ export const InlineLoading = ({ text }) => (
     <LoadingSpinner size="sm" text={text} />
   </div>
 );
+

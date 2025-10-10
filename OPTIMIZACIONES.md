@@ -148,3 +148,4 @@ npm start
 # Verificar en producción
 curl "https://tu-api.com/pregunta?page=1&limit=20"
 ```
+
