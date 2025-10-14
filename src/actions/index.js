@@ -1,8 +1,12 @@
 
 
 export { getUsers } from "./usuario/getUsers";
+export { getUsersOptimized } from "./usuario/getUsersOptimized";
 export { createUser } from "./usuario/createUser";
 export { getUserById } from "./usuario/getUserById";
+export { getUserBasic } from "./usuario/getUserBasic";
+export { getUserWithPayments } from "./usuario/getUserWithPayments";
+export { getUserForAccess } from "./usuario/getUserForAccess";
 export { updateUsuario } from "./usuario/updateUser";
 
 export { createModulo } from "./modulo/createModulo";
@@ -38,9 +42,12 @@ export { deleteOpcion } from "./opcion/deleteOpcion";
 
 export { createFavorito } from "./favoritos/createFavorito";
 export { deleteFavorito } from "./favoritos/deleteFavorito";
+export { getUserFavorites } from "./favorito/getUserFavorites";
 
 export { getResultados } from "./resultado/getResultados";
 export { createResultado } from "./resultado/createResultado";
+export { getUserResults } from "./resultado/getUserResults";
+export { getUserStats } from "./resultado/getUserStats";
 
 export { getComentariosByPregunta } from "./comentarios/getComentariosByPregunta";
 export { createComentarioByPregunta } from "./comentarios/createComentarioByPregunta";
@@ -50,6 +57,7 @@ export { deleteComentario } from "./comentarios/deleteComentario";
 export { getPagos } from "./pago/getPagos";
 export { createPago } from "./pago/createPago";
 export { updatePago } from "./pago/updatePago";
+export { getUserPayments } from "./pago/getUserPayments";
 
 export { getPlanes } from "./planes/getPlanes";
 export { deletePlan } from "./planes/deletePlan";

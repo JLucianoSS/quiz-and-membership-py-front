@@ -1,12 +1,12 @@
 import { Headerpage } from "@/components";
 import { TableUsers } from "../components";
-import { getUsers } from "@/actions";
+import { getUsersOptimized } from "@/actions";
 
 
 
 export default async function UsuariosAdminPage() {
 
-  const users = await getUsers(); 
+  const users = await getUsersOptimized(); 
   console.log(users);
   
 

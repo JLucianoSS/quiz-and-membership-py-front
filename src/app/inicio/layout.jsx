@@ -2,7 +2,7 @@ import { Navbar, Sidebar, AccessRestriction, Footer2 } from "@/components";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth.config";
 import { redirect } from "next/navigation";
-import { getUserById, updateUsuario } from "@/actions";
+import { getUserBasic, getUserForAccess, updateUsuario } from "@/actions";
 
 export default async function HomeLayout({ children }) {
   const session = await getServerSession(authOptions);
@@ -10,13 +10,24 @@ export default async function HomeLayout({ children }) {
     redirect("/login");
   }
 
-  const resp = await getUserById(session?.user?.id);
-  const userData = resp?.data;
+  // 1) Traer datos básicos primero (role, is_approved, etc.)
+  const basicResp = await getUserBasic(session?.user?.id);
+  const basicUser = basicResp?.data || {};
 
-  const pagos = resp?.data?.pagos || [];
+  // Si es admin, acceso directo sin cargar pagos
+  const isAdminBasic = basicUser?.role === 'Administrador';
+
+  // 2) Traer datos con pagos para mostrar información del plan en Navbar (todos los usuarios)
+  const accessResp = await getUserForAccess(session?.user?.id);
+  const accessUser = accessResp?.data || {};
+
+  // User data a usar en la UI: combinar datos básicos con datos de acceso
+  const userData = { ...basicUser, ...accessUser, pagos: accessUser?.pagos || [] };
+
+  const pagos = accessUser?.pagos || [];
   
-  // Función para verificar si hay un plan activo y actualizar el estado del usuario si es necesario
-  const tienePlanActivo = async () => {
+  // Función para verificar si hay un plan activo
+  const tienePlanActivo = () => {
     const currentDate = new Date();
     
     // Ordenar pagos por fecha de fin del plan (más reciente primero)
@@ -30,37 +41,36 @@ export default async function HomeLayout({ children }) {
       return currentDate <= planEndDate;
     });
 
-    // Si no hay plan activo y el usuario está aprobado, verificamos si el admin lo activó manualmente
-    if (!planActivo) {
-      const ultimoPago = sortedPagos[0]; // El último plan registrado
-      const fechaFinUltimoPlan = ultimoPago ? new Date(ultimoPago.plan.fecha_fin) : null;
-
-      if (userData?.is_approved && fechaFinUltimoPlan) {
-        // Si el admin lo activó manualmente, no lo desactivamos hasta que acabe su último plan
-        if (currentDate <= fechaFinUltimoPlan) {
-          return true; // Se mantiene activo hasta la fecha de fin del último plan
-        } else {
-          try {
-            await updateUsuario(session?.user?.id, { is_approved: false });
-          } catch (error) {
-            console.error("Error al actualizar el estado del usuario:", error);
-          }
-        }
-      }
-    }
-
     return planActivo;
   };
 
-  // Ejecutar la verificación y obtener el resultado
-  const isPlanActivo = await tienePlanActivo();
-
   // Verificar si el usuario está aprobado o es administrador
-  const isAdmin = userData?.role === 'Administrador';
-  const isUserApproved = userData?.is_approved;
+  const isAdmin = (basicUser?.role === 'Administrador');
+  const isUserApproved = !!basicUser?.is_approved;
+  const isPlanActivo = tienePlanActivo();
   
-  // Permitir acceso si es admin O si está aprobado
-  const hasAccess = isAdmin || isUserApproved;
+  // LÓGICA DE ACCESO CORREGIDA:
+  // 1. Administradores siempre tienen acceso
+  // 2. Usuarios con plan activo tienen acceso
+  // 3. Usuarios aprobados manualmente tienen acceso
+  const hasAccess = isAdmin || isPlanActivo || isUserApproved;
+
+  // Debug: Log para verificar el estado del usuario
+  console.log('🔍 Debug Access Check (inicio/layout):', {
+    userId: session?.user?.id,
+    roleBasic: basicUser?.role,
+    roleAccess: accessUser?.role,
+    isAdmin,
+    isUserApproved,
+    isPlanActivo,
+    hasAccess,
+    pagosCount: pagos.length,
+    userDataHasPagos: !!userData?.pagos,
+    userDataPagosLength: userData?.pagos?.length || 0,
+    accessRespSuccess: accessResp?.success,
+    accessRespData: accessResp?.data ? Object.keys(accessResp.data) : [],
+    accessRespError: accessResp?.message
+  });
 
   return (
     <>

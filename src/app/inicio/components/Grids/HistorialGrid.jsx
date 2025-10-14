@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { HistorialCard } from "..";
-import { getUserById } from "@/actions";
+import { getUserResults } from "@/actions";
 import { CustomLoading } from "@/components";
 import { IoChevronBackOutline, IoChevronForwardOutline, IoPlayBackOutline, IoPlayForwardOutline } from "react-icons/io5";
 
@@ -14,17 +14,30 @@ export const HistorialGrid = ({ iduser }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("todas");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchResultados = async () => {
       try {
-        const user = await getUserById(iduser);
-        setUser(user.data);
-        const resultados = user.data.resultados;
-        setPreguntasConResultados(
-          resultados.sort((a, b) => b.id_resultado - a.id_resultado)
-        );
+        setLoading(true);
+        const response = await getUserResults(iduser, currentPage, itemsPerPage, true);
+        
+        console.log('🔍 Debug HistorialGrid - getUserResults response:', {
+          success: response.success,
+          hasData: !!response.data,
+          dataLength: response.data?.length || 0,
+          pagination: response.pagination,
+          error: response.message
+        });
+        
+        if (response.success) {
+          setPreguntasConResultados(response.data);
+          setTotalPages(response.pagination.totalPages);
+          
+          // Para el usuario, usamos solo datos básicos
+          setUser({ id_user: iduser });
+        }
       } catch (error) {
         console.error("Error fetching resultados:", error);
       } finally {
@@ -32,7 +45,7 @@ export const HistorialGrid = ({ iduser }) => {
       }
     };
     fetchResultados();
-  }, [reload]);
+  }, [reload, currentPage, iduser]);
 
   const handleClearSearch = () => {
     setSearchTerm("");
@@ -55,6 +68,7 @@ export const HistorialGrid = ({ iduser }) => {
     return searchTerms.every(term => normalizedText.includes(term));
   };
 
+  // Los filtros ahora se aplican en el servidor, pero mantenemos la lógica local para búsqueda
   const filteredResults = preguntasConResultados.filter((resultado) => {
     // Si no hay término de búsqueda, solo aplicamos el filtro de estado
     if (!searchTerm.trim()) {
@@ -69,7 +83,7 @@ export const HistorialGrid = ({ iduser }) => {
     
     // Verificamos si el texto de la pregunta contiene todas las palabras de búsqueda
     const searchMatch = containsAllSearchTerms(
-      resultado.pregunta.texto_pregunta,
+      resultado.pregunta?.texto_pregunta || "",
       searchTerms
     );
     
@@ -81,10 +95,8 @@ export const HistorialGrid = ({ iduser }) => {
     return searchMatch;
   });
 
-  const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredResults.slice(indexOfFirstItem, indexOfLastItem);
+  // Usamos los resultados filtrados directamente ya que la paginación se maneja en el servidor
+  const currentItems = filteredResults;
 
   if (loading) {
     return (

@@ -19,7 +19,7 @@ export const FormEditUser = ({ user }) => {
     formState: { isDirty, isSubmitting },
   } = useForm({
     defaultValues: {
-      email: user.email,
+      email: user?.email || '',
       password: "•••••••••••••••",
     },
   });
@@ -28,6 +28,15 @@ export const FormEditUser = ({ user }) => {
     email: false,
     password: false,
   });
+
+  // Verificar que user existe después de los hooks
+  if (!user) {
+    return (
+      <div className="text-center p-4">
+        <div className="text-gray-500">Cargando datos del usuario...</div>
+      </div>
+    );
+  }
 
   const handleEditClick = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: !prev[field] }));
@@ -43,7 +52,7 @@ export const FormEditUser = ({ user }) => {
 
   // Lógica para el plan activo
   let planInfo = { label: "", color: "" };
-  if (user.pagos.length > 0 && isPlanActive(user.pagos[0].plan)) {
+  if (user?.pagos && user.pagos.length > 0 && isPlanActive(user.pagos[0].plan)) {
     planInfo = {
       label: user.pagos[0].plan.nombre,
       color: "bg-primary", // Puedes definir el color basado en el tipo de plan si es necesario
@@ -56,7 +65,7 @@ export const FormEditUser = ({ user }) => {
       className="w-full max-w-xs rounded-lg shadow-sm bg-white p-6"
     >
       {/* Plan del usuario */}
-      {user.role !== "Administrador" && planInfo.label && (
+      {user?.role !== "Administrador" && planInfo.label && (
         <p className="text-center text-gray-500 mb-4 flex flex-col gap-[6px] items-center justify-center">
           {planInfo.label}
           <Link href="/inicio/planes" className="bg-primary py-1 px-2 rounded text-white">
@@ -96,7 +105,7 @@ export const FormEditUser = ({ user }) => {
       </div>
 
       {/* Botón Suscribirse */}
-      {user.role === "Free" && (
+      {user?.role === "Free" && (
         <button
           type="button"
           className="bg-green-500 text-white py-2 px-4 rounded-lg w-full mt-4 hover:bg-green-600 transition-colors"

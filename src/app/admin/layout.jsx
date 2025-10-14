@@ -2,11 +2,11 @@ import { getServerSession } from "next-auth";
 import { NavbarAdmin, SidebarAdmin } from "./components";
 import { authOptions } from "../auth.config";
 import { redirect } from "next/navigation";
-import { getUserById } from "@/actions";
+import { getUserBasic } from "@/actions";
 
 export default async function AdminLayout({ children }) {
   const session = await getServerSession(authOptions);
-  const user = await getUserById(session?.user?.id);  
+  const user = await getUserBasic(session?.user?.id);  
 
   if (!session) {
     // Si no hay sesión, redirigir al login

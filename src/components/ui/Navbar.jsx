@@ -9,7 +9,7 @@ import { useRouteActions } from "@/hooks/useRouterActions";
 
 export const Navbar = ({ user }) => {
   const { toggleSidebar } = useSidebarStore();
-  const actions = useRouteActions(user.id_user);
+  const actions = useRouteActions(user?.id_user);
 
   // Función para verificar si el plan está activo
   const isPlanActive = (plan) => {
@@ -42,18 +42,30 @@ export const Navbar = ({ user }) => {
 
   // Obtener la información del plan solo si el plan está activo
   let planInfo = { label: "", color: "" };
-  if (user && user.pagos.length > 0) {
+  if (user && user.pagos && user.pagos.length > 0) {
     const ultimoPago = user.pagos[user.pagos.length - 1];
-    if (isPlanActive(ultimoPago.plan)) {
+    if (ultimoPago && ultimoPago.plan && isPlanActive(ultimoPago.plan)) {
       planInfo = getPlanInfo(ultimoPago.plan);
     }
   }
 
   // Si el rol es "Administrador", no mostrar el nombre del plan, sino "Admin" con su color
   const roleInfo =
-    user && user.role === "Administrador"
+    user && user?.role === "Administrador"
       ? { label: "Admin", color: "bg-blue-400" } // Color azul para Administrador
       : planInfo; // Si no es Admin, mostrar el plan y su color
+
+  // Debug para verificar la información del plan
+  console.log('🔍 Debug Navbar - Plan Info:', {
+    userExists: !!user,
+    userRole: user?.role,
+    pagosExists: !!user?.pagos,
+    pagosLength: user?.pagos?.length || 0,
+    pagosData: user?.pagos || [],
+    planInfo,
+    roleInfo,
+    userKeys: user ? Object.keys(user) : []
+  });
 
   return (
     <nav className="bg-[#212121] fixed w-full z-40">
@@ -63,7 +75,7 @@ export const Navbar = ({ user }) => {
             {/* DRAWER AVATAR PERFIL */}
             {user ? (
               <button className="flex-shrink-0" onClick={toggleSidebar}>
-                <UserAvatar userName={`${user.nombre} ${user.apellido}`} avatarUrl={user.avatar_img} />
+                <UserAvatar userName={`${user?.nombre || ''} ${user?.apellido || ''}`} avatarUrl={user?.avatar_img || ''} />
               </button>
             ) : (
               <Link

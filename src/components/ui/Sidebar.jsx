@@ -16,7 +16,7 @@ import Link from "next/link";
 export const Sidebar = ({ user }) => {
   const { isOpen, closeSidebar } = useSidebarStore();
   const pathname = usePathname();
-  const actions = useRouteActions(user.id_user);
+  const actions = useRouteActions(user?.id_user);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -74,24 +74,24 @@ export const Sidebar = ({ user }) => {
         {/* HEADER */}
         <div className="flex flex-col items-center px-4 py-6 flex-shrink-0">
           <UserAvatar
-            userName={`${user.nombre} ${user.apellido}`}
+            userName={`${user?.nombre || ''} ${user?.apellido || ''}`}
             classHeight="h-24"
             classWidth="w-24"
             classText="text-3xl"
-            avatarUrl={user.avatar_img}
+            avatarUrl={user?.avatar_img || ''}
           />
           <h4 className="mt-2 font-medium text-gray-100 text-center">
-            {user.nombre} {user.apellido}
+            {user?.nombre || ''} {user?.apellido || ''}
           </h4>
           <span className="mt-1 text-sm font-medium text-gray-100 no-underline text-center">
-            {user.email}
+            {user?.email || ''}
           </span>
         </div>
 
         {/* ITEMS CON SCROLL */}
         <div className="flex-1 overflow-y-auto px-4">
           <div className="space-y-1 text-gray-100">
-            {user.role === "Administrador" && (
+            {user?.role === "Administrador" && (
               <Link
                 href="/admin"
                 className={`flex items-center px-4 py-2  rounded-lg ${

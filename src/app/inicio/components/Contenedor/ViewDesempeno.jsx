@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import { PercentageGauge } from "../Charts/PercentageGauge";
 import Link from "next/link";
-import { getPreguntaById, getUserById } from "@/actions";
+import { getPreguntaById, getUserResults, getUserStats } from "@/actions";
 import { CustomLoading } from "@/components";
 import moment from "moment";
 import "moment/locale/es";
@@ -41,33 +41,31 @@ export const ViewDesempeno = ({ userid }) => {
     setLoading(true);
     const fetchResultados = async () => {
       try {
-        const user = await getUserById(userid);
-        console.log(user.data.resultados);
+        // Obtener resultados paginados (solo los más recientes para el dashboard)
+        const resultadosResponse = await getUserResults(userid, 1, 50, true);
         
-        const resultados = user.data.resultados;
-        // const preguntas = await Promise.all(
-        //   resultados.map(async (resultado) => {
-        //     const pregunta = await getPreguntaById(resultado.id_pregunta);
-        //     return {
-        //       ...pregunta.data,
-        //       ...resultado,
-        //     };
-        //   })
-        // );
+        console.log('🔍 Debug ViewDesempeno - getUserResults response:', {
+          success: resultadosResponse.success,
+          hasData: !!resultadosResponse.data,
+          dataLength: resultadosResponse.data?.length || 0,
+          pagination: resultadosResponse.pagination,
+          error: resultadosResponse.message
+        });
+        
+        if (resultadosResponse.success) {
+          const resultados = resultadosResponse.data;
+          
+          const preguntasOrdenadas = resultados.sort(
+            (a, b) => new Date(b.fecha_respuesta) - new Date(a.fecha_respuesta)
+          );
 
-        // console.log({preguntas});
+          setPreguntasConResultados(preguntasOrdenadas);
+          setPreguntasFiltradas(preguntasOrdenadas);
+          setUltimaPregunta(preguntasOrdenadas[0]);
 
-
-        const preguntasOrdenadas = resultados.sort(
-          (a, b) => new Date(b.fecha_respuesta) - new Date(a.fecha_respuesta)
-        );
-
-        setPreguntasConResultados(preguntasOrdenadas);
-        setPreguntasFiltradas(preguntasOrdenadas);
-        setUltimaPregunta(preguntasOrdenadas[0]);
-
-        // Calcular respuestas por día iniciales
-        actualizarRespuestasPorDia(preguntasOrdenadas);
+          // Calcular respuestas por día iniciales
+          actualizarRespuestasPorDia(preguntasOrdenadas);
+        }
 
       } catch (error) {
         console.error("Error fetching resultados:", error);

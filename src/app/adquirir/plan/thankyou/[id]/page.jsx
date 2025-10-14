@@ -1,4 +1,4 @@
-import { getUserById } from "@/actions";
+import { getUserWithPayments } from "@/actions";
 import { authOptions } from "@/app/auth.config";
 import { Footer2, HeaderNoAccess, ThankYouPage } from "@/components";
 import { getServerSession } from "next-auth";
@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export default async function AdquiriPlanThankYouPage({ params }) {
   const session = await getServerSession(authOptions);
-  const resp = await getUserById(session.user.id);
+  const resp = await getUserWithPayments(session.user.id);
 
   // Verificar si el usuario ha realizado el pago
   const pagos = resp?.data?.pagos || [];

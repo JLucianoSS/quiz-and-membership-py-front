@@ -1,4 +1,4 @@
-import { getUserById } from "@/actions";
+import { getUserWithPayments } from "@/actions";
 import { LandingPlanes } from "@/app/(landing)/components";
 import { authOptions } from "@/app/auth.config";
 import { Footer2, HeaderNoAccess } from "@/components";
@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function AdquirirPlanPage() {
   const session = await getServerSession(authOptions);
-  const resp = await getUserById(session?.user?.id);
+  const resp = await getUserWithPayments(session?.user?.id);
 
   const pagos = resp?.data?.pagos || [];
 

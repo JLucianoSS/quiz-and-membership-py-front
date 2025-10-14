@@ -56,9 +56,9 @@ export const TableUsers = ({ users: initialUsers }) => {
     if (searchTerm) {
       updatedUsers = updatedUsers.filter(
         (user) =>
-          user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.apellido.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchTerm.toLowerCase())
+          user?.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user?.apellido?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -163,9 +163,9 @@ export const TableUsers = ({ users: initialUsers }) => {
               currentUsers.map((user) => (
                 <tr key={user.id_user} className="hover:bg-gray-50">
                   <td className="border border-gray-300 px-4 py-2">{user.id_user}</td>
-                  <td className="border border-gray-300 px-4 py-2">{user.nombre}</td>
-                  <td className="border border-gray-300 px-4 py-2">{user.apellido}</td>
-                  <td className="border border-gray-300 px-4 py-2">{user.email}</td>
+                  <td className="border border-gray-300 px-4 py-2">{user?.nombre || ''}</td>
+                  <td className="border border-gray-300 px-4 py-2">{user?.apellido || ''}</td>
+                  <td className="border border-gray-300 px-4 py-2">{user?.email || ''}</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {getCurrentPlan(user)}
                   </td>
